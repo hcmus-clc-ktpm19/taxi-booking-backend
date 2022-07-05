@@ -42,14 +42,22 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
 
+    // Access token expires in 8 hour
+//    Date accessTokenExpiredDate = new Date(System.currentTimeMillis() + 28_800_000L); // 8 hours
+     /*TODO: this is for testing, remove it later
+     Access token expires in 30 seconds*/
+    Date accessTokenExpiredDate = new Date(System.currentTimeMillis() + 30_000L); // 30 seconds
     String accessToken = JWT.create()
         .withSubject(user.getUsername())
-        .withExpiresAt(new Date(System.currentTimeMillis() + 3600 * 1000))
+        .withExpiresAt(accessTokenExpiredDate)
         .withIssuer(request.getRequestURL().toString())
         .sign(algorithm);
+
+    // Refresh token expires in 3 months
+    Date refreshTokenExpiredDate = new Date(System.currentTimeMillis() + 777_7_600_000L); // 3 months
     String refreshToken = JWT.create()
         .withSubject(user.getUsername())
-        .withExpiresAt(new Date(System.currentTimeMillis() + 3600 * 1000))
+        .withExpiresAt(refreshTokenExpiredDate)
         .withIssuer(request.getRequestURL().toString())
         .sign(algorithm);
 
