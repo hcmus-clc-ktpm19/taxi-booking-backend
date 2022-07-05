@@ -1,4 +1,4 @@
-package com.hcmus.customerservice.security;
+package com.hcmus.customerservice.security.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -23,6 +23,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
   private final AuthenticationManager authenticationManager;
 
+  private final long EIGHT_HOURS = 28_800_000L;
+  private final long THREE_MONTHS = 7_889_400_000L;
+
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request,
       HttpServletResponse response) throws AuthenticationException {
@@ -43,7 +46,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
 
     // Access token expires in 8 hour
-//    Date accessTokenExpiredDate = new Date(System.currentTimeMillis() + 28_800_000L); // 8 hours
+//    Date accessTokenExpiredDate = new Date(System.currentTimeMillis() + EIGHT_HOURS); // 8 hours
      /*TODO: this is for testing, remove it later
      Access token expires in 30 seconds*/
     Date accessTokenExpiredDate = new Date(System.currentTimeMillis() + 30_000L); // 30 seconds
@@ -54,7 +57,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         .sign(algorithm);
 
     // Refresh token expires in 3 months
-    Date refreshTokenExpiredDate = new Date(System.currentTimeMillis() + 777_7_600_000L); // 3 months
+    Date refreshTokenExpiredDate = new Date(
+        System.currentTimeMillis() + THREE_MONTHS); // 3 months
     String refreshToken = JWT.create()
         .withSubject(user.getUsername())
         .withExpiresAt(refreshTokenExpiredDate)
@@ -64,12 +68,5 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     Map<String, String> tokens = Map.of("Access-Token", accessToken, "Refresh-Token", refreshToken);
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     new ObjectMapper().writeValue(response.getOutputStream(), tokens);
-  }
-
-  @Override
-  protected void unsuccessfulAuthentication(HttpServletRequest request,
-      HttpServletResponse response,
-      AuthenticationException failed) throws IOException {
-    response.setStatus(401);
   }
 }

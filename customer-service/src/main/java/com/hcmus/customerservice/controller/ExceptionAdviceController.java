@@ -1,6 +1,6 @@
 package com.hcmus.customerservice.controller;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.hcmus.customerservice.model.exception.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ExceptionAdviceController {
+
   private final Logger logger = LoggerFactory.getLogger(ExceptionAdviceController.class);
 
-  @ExceptionHandler(TokenExpiredException.class)
-  public ResponseEntity<String> handleTokenExpiredException(TokenExpiredException e) {
+  @ExceptionHandler(UnauthorizedException.class)
+  public ResponseEntity<String> handleTokenExpiredException(UnauthorizedException e) {
     String message = e.getMessage();
     logger.warn(message);
 
@@ -24,6 +25,7 @@ public class ExceptionAdviceController {
   public ResponseEntity<String> handleTokenExpiredException(Throwable e) {
     String message = e.getMessage();
     logger.warn(message);
+    logger.info("keke");
 
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(message);
   }

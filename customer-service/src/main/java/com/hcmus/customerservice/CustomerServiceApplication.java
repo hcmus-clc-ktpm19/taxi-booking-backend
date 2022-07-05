@@ -1,11 +1,13 @@
 package com.hcmus.customerservice;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
 public class CustomerServiceApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(CustomerServiceConfig.class, args);
+    SpringApplication.run(CustomerServiceApplication.class, args);
   }
 
 }

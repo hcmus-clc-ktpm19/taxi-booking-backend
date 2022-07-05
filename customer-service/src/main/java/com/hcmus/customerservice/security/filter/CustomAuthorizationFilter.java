@@ -1,4 +1,4 @@
-package com.hcmus.customerservice.security;
+package com.hcmus.customerservice.security.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -27,19 +27,25 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
       String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
       if (Objects.nonNull(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
-        String token = authorizationHeader.substring("Bearer ".length());
+        try {
+          String token = authorizationHeader.substring("Bearer ".length());
 
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-        JWTVerifier verifier = JWT.require(algorithm).build();
-        DecodedJWT jwt = verifier.verify(token);
+          Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+          JWTVerifier verifier = JWT.require(algorithm).build();
+          DecodedJWT jwt = verifier.verify(token);
 
-        String username = jwt.getSubject();
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-            username, null, null);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        filterChain.doFilter(request, response);
+          String username = jwt.getSubject();
+          UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+              username, null, null);
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+          filterChain.doFilter(request, response);
+        } catch (Exception e) {
+          logger.error("Error while trying to authenticate user", e);
+          response.setHeader("Error-Message", "Invalid token");
+          response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
       } else {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        filterChain.doFilter(request, response);
       }
     }
   }

@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    // TODO: This if for testing, remove it later
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     User user = new User("admin", bCryptPasswordEncoder.encode("admin"));
 
