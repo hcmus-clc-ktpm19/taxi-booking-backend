@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Sensitive ###
+**/src/main/resources/secret.yaml
