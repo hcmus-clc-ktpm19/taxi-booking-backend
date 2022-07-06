@@ -1,0 +1,2 @@
+spring.config.import=optional:secret.properties
+server.port=8080
