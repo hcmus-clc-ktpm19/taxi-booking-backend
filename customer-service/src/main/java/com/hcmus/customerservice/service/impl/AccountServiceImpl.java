@@ -1,9 +1,14 @@
 package com.hcmus.customerservice.service.impl;
 
-import com.hcmus.customerservice.model.entity.User;
-import com.hcmus.customerservice.service.UserService;
+import com.hcmus.customerservice.model.dto.AccountDto;
+import com.hcmus.customerservice.model.entity.Account;
+import com.hcmus.customerservice.model.exception.AccountNotFoundException;
+import com.hcmus.customerservice.model.exception.ExistedAccountException;
+import com.hcmus.customerservice.repository.AccountRepository;
+import com.hcmus.customerservice.service.AccountService;
 import java.util.HashSet;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,15 +17,38 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class AccountServiceImpl implements AccountService, UserDetailsService {
+
+  private final AccountRepository accountRepository;
+  private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    // TODO: This if for testing, remove it later
-    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-    User user = new User("admin", bCryptPasswordEncoder.encode("admin"));
+    Account user = accountRepository.findAccountByPhone(username)
+        .orElseThrow(
+            () -> new UsernameNotFoundException("Account not found with username: " + username));
 
-    return new org.springframework.security.core.userdetails.User(user.getPhone(),
-        user.getPassword(), new HashSet<>());
+    return new User(user.getPhone(), user.getPassword(), new HashSet<>());
+  }
+
+  @Override
+  public Account findAccountByPhone(String phone) {
+    return accountRepository.findAccountByPhone(phone)
+        .orElseThrow(() -> new AccountNotFoundException("Account not found", phone));
+  }
+
+  @Override
+  public String saveAccount(AccountDto accountDto) {
+    if (accountRepository.existsByPhone(accountDto.getPhone())) {
+      throw new ExistedAccountException("Account with phone already exists", accountDto.getPhone());
+    }
+
+    Account account = new Account();
+    account.setPhone(accountDto.getPhone());
+    account.setPassword(bCryptPasswordEncoder.encode(accountDto.getPassword()));
+
+    accountRepository.save(account);
+
+    return account.getId();
   }
 }

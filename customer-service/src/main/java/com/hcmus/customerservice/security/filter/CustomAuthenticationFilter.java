@@ -10,6 +10,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,8 +22,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+  @Value("${secret-key}")
+  private String secretKey = "DE2D6323AD62BD9F8A8BF55765DD7";
   private final AuthenticationManager authenticationManager;
-
+  // TODO: this is for testing, remove it later
+  /* 30 seconds expiration time */
+  private final long THIRTY_SECONDS = 30_000L;
   private final long EIGHT_HOURS = 28_800_000L;
   private final long THREE_MONTHS = 7_889_400_000L;
 
@@ -46,10 +51,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
 
     // Access token expires in 8 hour
-//    Date accessTokenExpiredDate = new Date(System.currentTimeMillis() + EIGHT_HOURS); // 8 hours
-     /*TODO: this is for testing, remove it later
-     Access token expires in 30 seconds*/
-    Date accessTokenExpiredDate = new Date(System.currentTimeMillis() + 30_000L); // 30 seconds
+    Date accessTokenExpiredDate = new Date(System.currentTimeMillis() + EIGHT_HOURS); // 8 hours
     String accessToken = JWT.create()
         .withSubject(user.getUsername())
         .withExpiresAt(accessTokenExpiredDate)

@@ -1,2 +1,14 @@
-package com.hcmus.customerservice.model.exception;public class ExistedAccountException {
+package com.hcmus.customerservice.model.exception;
+
+import lombok.Getter;
+
+@Getter
+public class ExistedAccountException extends RuntimeException {
+
+  private final String phone;
+
+  public ExistedAccountException(String message, String phone) {
+    super(message);
+    this.phone = phone;
+  }
 }
