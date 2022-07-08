@@ -1,0 +1,5 @@
+spring:
+  config:
+    import: optional:secret.yaml
+server:
+  port: '8081'
