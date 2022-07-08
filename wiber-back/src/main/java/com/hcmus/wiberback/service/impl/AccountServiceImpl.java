@@ -1,11 +1,11 @@
 package com.hcmus.wiberback.service.impl;
 
-import com.hcmus.customerservice.model.dto.AccountDto;
-import com.hcmus.customerservice.model.entity.Account;
-import com.hcmus.customerservice.model.exception.AccountNotFoundException;
-import com.hcmus.customerservice.model.exception.ExistedAccountException;
-import com.hcmus.customerservice.repository.AccountRepository;
-import com.hcmus.customerservice.service.AccountService;
+import com.hcmus.wiberback.entity.dto.AccountDto;
+import com.hcmus.wiberback.entity.entity.Account;
+import com.hcmus.wiberback.entity.exception.AccountNotFoundException;
+import com.hcmus.wiberback.entity.exception.ExistedAccountException;
+import com.hcmus.wiberback.repository.AccountRepository;
+import com.hcmus.wiberback.service.AccountService;
 import java.util.HashSet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;

@@ -1,7 +1,7 @@
 package com.hcmus.wiberback.security;
 
-import com.hcmus.customerservice.security.filter.CustomAuthenticationFilter;
-import com.hcmus.customerservice.security.filter.CustomAuthorizationFilter;
+import com.hcmus.wiberback.security.filter.CustomAuthenticationFilter;
+import com.hcmus.wiberback.security.filter.CustomAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +37,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManager());
-    filter.setFilterProcessesUrl("/api/login");
+    filter.setFilterProcessesUrl("/api/v1/user/login");
 
     http
         .csrf()
@@ -45,7 +45,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .authorizeRequests().antMatchers("/api/login").permitAll()
+        .authorizeRequests().antMatchers("/api/v1/user/login").permitAll()
+        .and()
+        .authorizeRequests().antMatchers("/api/v1/user/register").permitAll()
         .anyRequest().authenticated()
         .and()
         .addFilter(filter)
