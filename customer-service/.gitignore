@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### Sensitive ###
-**/src/main/resources/secret.properties
+**/src/main/resources/secret.yaml
