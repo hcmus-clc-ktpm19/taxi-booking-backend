@@ -8,6 +8,7 @@ import com.hcmus.wiberback.repository.AccountRepository;
 import com.hcmus.wiberback.service.AccountService;
 import java.util.HashSet;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Primary
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService, UserDetailsService {
 
