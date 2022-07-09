@@ -1,16 +1,13 @@
 package com.hcmus.wiberback.security.filter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hcmus.wiberback.util.JwtUtil;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Map;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,14 +19,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-  @Value("${secret-key}")
-  private String secretKey = "DE2D6323AD62BD9F8A8BF55765DD7";
   private final AuthenticationManager authenticationManager;
-  // TODO: this is for testing, remove it later
-  /* 30 seconds expiration time */
-  private final long THIRTY_SECONDS = 30_000L;
-  private final long EIGHT_HOURS = 28_800_000L;
-  private final long THREE_MONTHS = 7_889_400_000L;
+  private final JwtUtil jwtUtil;
+
 
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request,
@@ -48,24 +40,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     User user = (User) authentication.getPrincipal();
 
-    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-
     // Access token expires in 8 hour
-    Date accessTokenExpiredDate = new Date(System.currentTimeMillis() + EIGHT_HOURS); // 8 hours
-    String accessToken = JWT.create()
-        .withSubject(user.getUsername())
-        .withExpiresAt(accessTokenExpiredDate)
-        .withIssuer(request.getRequestURL().toString())
-        .sign(algorithm);
-
+    String accessToken = jwtUtil.generateToken(user.getUsername(), request.getRequestURL().toString());
     // Refresh token expires in 3 months
-    Date refreshTokenExpiredDate = new Date(
-        System.currentTimeMillis() + THREE_MONTHS); // 3 months
-    String refreshToken = JWT.create()
-        .withSubject(user.getUsername())
-        .withExpiresAt(refreshTokenExpiredDate)
-        .withIssuer(request.getRequestURL().toString())
-        .sign(algorithm);
+    String refreshToken = jwtUtil.generateRefreshToken(user.getUsername(), request.getRequestURL().toString());
 
     Map<String, String> tokens = Map.of("Access-Token", accessToken, "Refresh-Token", refreshToken);
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);

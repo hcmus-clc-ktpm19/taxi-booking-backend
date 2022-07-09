@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class ExceptionAdviceController {
+public class ExceptionController {
 
-  private final Logger logger = LoggerFactory.getLogger(ExceptionAdviceController.class);
+  private final Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 
   @ExceptionHandler(Throwable.class)
   public ResponseEntity<Map<String, String>> handleTokenExpiredException(Throwable e) {

@@ -2,7 +2,7 @@ package com.hcmus.wiberback.security;
 
 import com.hcmus.wiberback.security.filter.CustomAuthenticationFilter;
 import com.hcmus.wiberback.security.filter.CustomAuthorizationFilter;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.hcmus.wiberback.util.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,14 +19,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  @Qualifier("UserServiceImpl")
   private final UserDetailsService userDetailsService;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final JwtUtil jwtUtil;
 
   public WebSecurityConfiguration(UserDetailsService userDetailsService,
-      BCryptPasswordEncoder bCryptPasswordEncoder) {
+      BCryptPasswordEncoder bCryptPasswordEncoder, JwtUtil jwtUtil) {
     this.userDetailsService = userDetailsService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    this.jwtUtil = jwtUtil;
   }
 
   @Override
@@ -36,7 +37,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManager());
+    CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManager(), jwtUtil);
     filter.setFilterProcessesUrl("/api/v1/user/login");
 
     http

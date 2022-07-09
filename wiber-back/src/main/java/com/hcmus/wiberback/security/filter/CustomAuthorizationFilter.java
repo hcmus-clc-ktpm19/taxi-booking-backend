@@ -26,10 +26,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
-  Logger logger = LoggerFactory.getLogger(CustomAuthorizationFilter.class);
-
-  @Value("${secret-key}")
-//  private String secretKey = "DE2D6323AD62BD9F8A8BF55765DD7";
+  private static final Logger logger = LoggerFactory.getLogger(CustomAuthorizationFilter.class);
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -54,14 +51,13 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
           SecurityContextHolder.getContext().setAuthentication(authentication);
           filterChain.doFilter(request, response);
         } catch (Exception exception) {
-          logger.error("Error logging in: {}", exception.getMessage());
-          response.setHeader("error", exception.getMessage());
+          logger.error("Could not parse authentication token", exception);
+
+          response.setHeader("Error", exception.getMessage());
           response.setStatus(FORBIDDEN.value());
-          //response.sendError(FORBIDDEN.value());
-          Map<String, String> error = new HashMap<>();
-          error.put("error_message", exception.getMessage());
           response.setContentType(APPLICATION_JSON_VALUE);
-          new ObjectMapper().writeValue(response.getOutputStream(), error);
+
+          new ObjectMapper().writeValue(response.getOutputStream(), Map.of("Error-Message", exception.getMessage()));
         }
       } else {
         filterChain.doFilter(request, response);
