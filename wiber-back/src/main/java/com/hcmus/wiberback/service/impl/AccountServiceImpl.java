@@ -1,6 +1,6 @@
 package com.hcmus.wiberback.service.impl;
 
-import com.hcmus.wiberback.entity.dto.AccountDto;
+import com.hcmus.wiberback.entity.dto.AccountRequestDto;
 import com.hcmus.wiberback.entity.entity.Account;
 import com.hcmus.wiberback.entity.exception.AccountNotFoundException;
 import com.hcmus.wiberback.entity.exception.ExistedAccountException;
@@ -40,14 +40,14 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
   }
 
   @Override
-  public String saveAccount(AccountDto accountDto) {
-    if (accountRepository.existsByPhone(accountDto.getPhone())) {
-      throw new ExistedAccountException("Account with phone already exists", accountDto.getPhone());
+  public String saveAccount(AccountRequestDto accountRequestDto) {
+    if (accountRepository.existsByPhone(accountRequestDto.getPhone())) {
+      throw new ExistedAccountException("Account with phone already exists", accountRequestDto.getPhone());
     }
 
     Account account = new Account();
-    account.setPhone(accountDto.getPhone());
-    account.setPassword(bCryptPasswordEncoder.encode(accountDto.getPassword()));
+    account.setPhone(accountRequestDto.getPhone());
+    account.setPassword(bCryptPasswordEncoder.encode(accountRequestDto.getPassword()));
 
     accountRepository.save(account);
 
