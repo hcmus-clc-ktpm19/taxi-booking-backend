@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class CustomerRequestDto extends CustomerDto {
-  private AccountRequestDto account;
+  private AccountRequestDto account = new AccountRequestDto();
 }
