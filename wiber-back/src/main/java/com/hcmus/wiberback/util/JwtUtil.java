@@ -2,9 +2,13 @@ package com.hcmus.wiberback.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Date;
+import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,14 +26,17 @@ public class JwtUtil {
     return Algorithm.HMAC256(secret.getBytes());
   }
 
-  public String generateToken(String username, String issuer) {
+  public String generateAccessToken(User user, String issuer) {
     // Access token expires in 8 hour
     Date expiredDate = new Date(System.currentTimeMillis() + EIGHT_HOURS);
 
     return JWT.create()
-        .withSubject(username)
+        .withSubject(user.getUsername())
         .withExpiresAt(expiredDate)
         .withIssuer(issuer)
+        .withClaim("roles",
+            user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(
+                Collectors.toList()))
         .sign(setAlgorithm());
   }
 
@@ -42,5 +49,9 @@ public class JwtUtil {
         .withExpiresAt(refreshTokenExpiredDate)
         .withIssuer(issuer)
         .sign(setAlgorithm());
+  }
+
+  public DecodedJWT verifyToken(String token) {
+    return JWT.require(setAlgorithm()).build().verify(token);
   }
 }

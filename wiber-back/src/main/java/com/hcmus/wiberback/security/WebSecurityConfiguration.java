@@ -1,10 +1,13 @@
 package com.hcmus.wiberback.security;
 
+import com.hcmus.wiberback.entity.enums.Role;
 import com.hcmus.wiberback.security.filter.CustomAuthenticationFilter;
 import com.hcmus.wiberback.security.filter.CustomAuthorizationFilter;
 import com.hcmus.wiberback.util.JwtUtil;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,22 +40,29 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManager(), jwtUtil);
-    filter.setFilterProcessesUrl("/api/v1/user/login");
+    CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(authenticationManager(),
+        jwtUtil);
+    authenticationFilter.setFilterProcessesUrl("/api/v1/auth/login");
 
-    http
-        .csrf()
+    http.csrf()
         .disable()
         .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+    http.authorizeRequests().antMatchers("/api/v1/auth/login, /api/v1/auth/refresh-token")
+        .permitAll()
         .and()
-        .authorizeRequests().antMatchers("/api/v1/user/login").permitAll()
-        .and()
-        .authorizeRequests().antMatchers("/api/v1/user/register").permitAll()
-        .anyRequest().authenticated()
-        .and()
-        .addFilter(filter)
-        .addFilterBefore(new CustomAuthorizationFilter(),
+        .authorizeRequests()
+        .antMatchers("/api/v1/**/auth/register")
+        .permitAll();
+
+    http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/customer").hasAnyAuthority(Role.CUSTOMER.toString());
+    http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/v1/customer").hasAnyAuthority(Role.CUSTOMER.toString());
+    http.authorizeRequests().antMatchers(HttpMethod.PATCH, "/api/v1/customer").hasAnyAuthority(Role.CUSTOMER.toString());
+
+    http.authorizeRequests().anyRequest().authenticated();
+    http.addFilter(authenticationFilter)
+        .addFilterBefore(new CustomAuthorizationFilter(jwtUtil),
             UsernamePasswordAuthenticationFilter.class);
   }
 
