@@ -48,11 +48,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
         .authorizeRequests().antMatchers("/api/v1/user/login").permitAll()
         .and()
-        .authorizeRequests().antMatchers("/api/v1/**/register").permitAll()
+        .authorizeRequests().antMatchers("/api/v1/**/auth/register").permitAll()
         .anyRequest().authenticated()
         .and()
         .addFilter(filter)
-        .addFilterBefore(new CustomAuthorizationFilter(),
+        .addFilterBefore(new CustomAuthorizationFilter(jwtUtil),
             UsernamePasswordAuthenticationFilter.class);
   }
 

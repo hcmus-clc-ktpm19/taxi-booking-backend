@@ -1,8 +1,9 @@
 package com.hcmus.wiberback.service.impl;
 
-import com.hcmus.wiberback.entity.dto.CustomerRequestDto;
+import com.hcmus.wiberback.entity.dto.CustomerAuthRequestDto;
 import com.hcmus.wiberback.entity.entity.Customer;
 import com.hcmus.wiberback.entity.exception.AccountNotFoundException;
+import com.hcmus.wiberback.entity.exception.ExistedAccountException;
 import com.hcmus.wiberback.repository.CustomerRepository;
 import com.hcmus.wiberback.service.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +24,14 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public String saveAccount(CustomerRequestDto customerRequestDto) {
+  public String saveAccount(CustomerAuthRequestDto customerAuthRequestDto) {
+    if (customerRepository.existsByPhone(customerAuthRequestDto.getPhone())) {
+      throw new ExistedAccountException("Account with phone already exists", customerAuthRequestDto.getPhone());
+    }
+
     Customer customer = new Customer();
-    customer.setPhone(customerRequestDto.getAccount().getPhone());
-    customer.setPassword(bCryptPasswordEncoder.encode(customerRequestDto.getAccount().getPassword()));
-    customer.setName(customerRequestDto.getName());
+    customer.setPhone(customerAuthRequestDto.getPhone());
+    customer.setPassword(bCryptPasswordEncoder.encode(customerAuthRequestDto.getPassword()));
 
     return customerRepository.save(customer).getId();
   }

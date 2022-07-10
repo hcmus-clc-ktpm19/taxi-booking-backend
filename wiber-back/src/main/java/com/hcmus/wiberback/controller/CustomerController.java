@@ -1,6 +1,6 @@
 package com.hcmus.wiberback.controller;
 
-import com.hcmus.wiberback.entity.dto.CustomerRequestDto;
+import com.hcmus.wiberback.entity.dto.CustomerAuthRequestDto;
 import com.hcmus.wiberback.entity.dto.CustomerResponseDto;
 import com.hcmus.wiberback.service.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ public class CustomerController extends AbstractApplicationController {
     return ResponseEntity.ok(mapper.customerToCustomerResponseDto(customerService.findAccountByPhone(phone)));
   }
 
-  @PostMapping("/register")
-  public ResponseEntity<String> saveAccount(@RequestBody CustomerRequestDto customerRequestDto) {
-    return ResponseEntity.ok(customerService.saveAccount(customerRequestDto));
+  @PostMapping("/auth/register")
+  public ResponseEntity<String> saveAccount(@RequestBody CustomerAuthRequestDto customerAuthRequestDto) {
+    return ResponseEntity.ok(customerService.saveAccount(customerAuthRequestDto));
   }
 }

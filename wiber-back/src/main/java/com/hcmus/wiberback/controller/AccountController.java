@@ -1,7 +1,6 @@
 package com.hcmus.wiberback.controller;
 
 import com.hcmus.wiberback.entity.dto.AccountRequestDto;
-import com.hcmus.wiberback.entity.dto.AccountResponseDto;
 import com.hcmus.wiberback.service.AccountService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/auth")
 public class AccountController extends AbstractApplicationController {
 
   private final AccountService accountService;
@@ -26,11 +25,6 @@ public class AccountController extends AbstractApplicationController {
   @GetMapping("/user-details")
   public ResponseEntity<UserDetails> getUserDetails(@RequestParam String phone) {
     return ResponseEntity.ok(userDetailsService.loadUserByUsername(phone));
-  }
-
-  @GetMapping
-  public ResponseEntity<AccountResponseDto> getAccount(@RequestParam(required = false) String phone) {
-    return ResponseEntity.ok(mapper.accountToAccountResponseDto(accountService.findAccountByPhone(phone)));
   }
 
   @PostMapping("/register")
