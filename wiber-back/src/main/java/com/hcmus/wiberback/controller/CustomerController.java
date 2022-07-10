@@ -1,8 +1,11 @@
 package com.hcmus.wiberback.controller;
 
-import com.hcmus.wiberback.entity.dto.CustomerAuthRequestDto;
+import com.hcmus.wiberback.entity.dto.CustomerRequestDto;
 import com.hcmus.wiberback.entity.dto.CustomerResponseDto;
 import com.hcmus.wiberback.service.CustomerService;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class CustomerController extends AbstractApplicationController {
   private final CustomerService customerService;
 
-  @GetMapping("/customer-details")
-  public ResponseEntity<CustomerResponseDto> findAccountByPhone(String phone) {
-    return ResponseEntity.ok(mapper.customerToCustomerResponseDto(customerService.findAccountByPhone(phone)));
+  @GetMapping("/all")
+  public ResponseEntity<List<CustomerResponseDto>> getAllCustomers() {
+    return ResponseEntity.ok(customerService.getAllCustomers().stream()
+        .map(mapper::customerToCustomerResponseDto)
+        .collect(Collectors.toList()));
   }
 
-  @PostMapping("/auth/register")
-  public ResponseEntity<String> saveAccount(@RequestBody CustomerAuthRequestDto customerAuthRequestDto) {
-    return ResponseEntity.ok(customerService.saveAccount(customerAuthRequestDto));
+  @PostMapping
+  public ResponseEntity<String> saveAccount(@Valid @RequestBody CustomerRequestDto customerRequestDto) {
+    return ResponseEntity.ok(customerService.saveCustomer(customerRequestDto));
   }
 }

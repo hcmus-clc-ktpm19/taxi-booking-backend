@@ -2,13 +2,16 @@ package com.hcmus.wiberback.service.impl;
 
 import com.hcmus.wiberback.entity.dto.AccountRequestDto;
 import com.hcmus.wiberback.entity.entity.Account;
+import com.hcmus.wiberback.entity.enums.Role;
 import com.hcmus.wiberback.entity.exception.AccountNotFoundException;
-import com.hcmus.wiberback.entity.exception.ExistedAccountException;
+import com.hcmus.wiberback.entity.exception.AccountExistedException;
 import com.hcmus.wiberback.repository.AccountRepository;
 import com.hcmus.wiberback.service.AccountService;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,7 +33,10 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         .orElseThrow(
             () -> new UsernameNotFoundException("Account not found with username: " + username));
 
-    return new User(user.getPhone(), user.getPassword(), new HashSet<>());
+    Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+    authorities.add(new SimpleGrantedAuthority(Role.ADMIN.name()));
+
+    return new User(user.getPhone(), user.getPassword(), authorities);
   }
 
   @Override
@@ -42,7 +48,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
   @Override
   public String saveAccount(AccountRequestDto accountRequestDto) {
     if (accountRepository.existsByPhone(accountRequestDto.getPhone())) {
-      throw new ExistedAccountException("Account with phone already exists", accountRequestDto.getPhone());
+      throw new AccountExistedException("Account with phone already exists", accountRequestDto.getPhone());
     }
 
     Account account = new Account();

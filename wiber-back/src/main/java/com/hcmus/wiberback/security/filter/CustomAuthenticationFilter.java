@@ -41,7 +41,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     User user = (User) authentication.getPrincipal();
 
     // Access token expires in 8 hour
-    String accessToken = jwtUtil.generateToken(user.getUsername(), request.getRequestURL().toString());
+    String accessToken = jwtUtil.generateAccessToken(user, request.getRequestURL().toString());
     // Refresh token expires in 3 months
     String refreshToken = jwtUtil.generateRefreshToken(user.getUsername(), request.getRequestURL().toString());
 

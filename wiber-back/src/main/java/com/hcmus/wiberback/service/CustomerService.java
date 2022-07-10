@@ -1,12 +1,14 @@
 package com.hcmus.wiberback.service;
 
-import com.hcmus.wiberback.entity.dto.CustomerAuthRequestDto;
+import com.hcmus.wiberback.entity.dto.CustomerRequestDto;
 import com.hcmus.wiberback.entity.entity.Customer;
+import java.util.List;
 
 public interface CustomerService {
 
+  List<Customer> getAllCustomers();
 
-  Customer findAccountByPhone(String phone);
+  String saveCustomer(CustomerRequestDto customerRequestDto);
 
-  String saveAccount(CustomerAuthRequestDto customerAuthRequestDto);
+  String updateCustomer(CustomerRequestDto customerRequestDto);
 }

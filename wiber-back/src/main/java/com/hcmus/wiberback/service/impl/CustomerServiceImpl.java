@@ -1,38 +1,49 @@
 package com.hcmus.wiberback.service.impl;
 
-import com.hcmus.wiberback.entity.dto.CustomerAuthRequestDto;
+import com.hcmus.wiberback.entity.dto.CustomerRequestDto;
+import com.hcmus.wiberback.entity.entity.Account;
 import com.hcmus.wiberback.entity.entity.Customer;
+import com.hcmus.wiberback.entity.enums.Role;
 import com.hcmus.wiberback.entity.exception.AccountNotFoundException;
-import com.hcmus.wiberback.entity.exception.ExistedAccountException;
+import com.hcmus.wiberback.repository.AccountRepository;
 import com.hcmus.wiberback.repository.CustomerRepository;
 import com.hcmus.wiberback.service.CustomerService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import java.util.List;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
-  private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final CustomerRepository customerRepository;
+  private final AccountRepository accountRepository;
 
   @Override
-  public Customer findAccountByPhone(String phone) {
-    return customerRepository.findCustomerByPhone(phone)
-        .orElseThrow(() -> new AccountNotFoundException("Account not found", phone));
+  public List<Customer> getAllCustomers() {
+    return customerRepository.findAll();
   }
 
   @Override
-  public String saveAccount(CustomerAuthRequestDto customerAuthRequestDto) {
-    if (customerRepository.existsByPhone(customerAuthRequestDto.getPhone())) {
-      throw new ExistedAccountException("Account with phone already exists", customerAuthRequestDto.getPhone());
-    }
+  public String saveCustomer(CustomerRequestDto customerRequestDto) {
+    Account account =
+        accountRepository
+            .findAccountByPhone(customerRequestDto.getPhone())
+            .orElseThrow(() -> new AccountNotFoundException("Account not found",
+                customerRequestDto.getPhone()));
+    account.setRole(Role.CUSTOMER);
 
     Customer customer = new Customer();
-    customer.setPhone(customerAuthRequestDto.getPhone());
-    customer.setPassword(bCryptPasswordEncoder.encode(customerAuthRequestDto.getPassword()));
+    customer.setName(customerRequestDto.getName());
+    customer.setAccount(account);
 
+    accountRepository.save(account);
     return customerRepository.save(customer).getId();
+  }
+
+  @Override
+  public String updateCustomer(CustomerRequestDto customerRequestDto) {
+    return null;
   }
 }
