@@ -22,6 +22,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+  private static final String CUSTOMER_URL = "/api/v1/customer/**";
+
+  @Qualifier("AccountServiceImpl")
   private final UserDetailsService userDetailsService;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final JwtUtil jwtUtil;
@@ -56,9 +59,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .antMatchers("/api/v1/**/auth/register")
         .permitAll();
 
-    http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/customer").hasAnyAuthority(Role.CUSTOMER.toString());
-    http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/v1/customer").hasAnyAuthority(Role.CUSTOMER.toString());
-    http.authorizeRequests().antMatchers(HttpMethod.PATCH, "/api/v1/customer").hasAnyAuthority(Role.CUSTOMER.toString());
+    http.authorizeRequests().antMatchers(HttpMethod.GET, CUSTOMER_URL).hasAnyAuthority(Role.CUSTOMER.name());
+    http.authorizeRequests().antMatchers(HttpMethod.PUT, CUSTOMER_URL).hasAnyAuthority(Role.CUSTOMER.name());
+    http.authorizeRequests().antMatchers(HttpMethod.PATCH, CUSTOMER_URL).hasAnyAuthority(Role.CUSTOMER.name());
 
     http.authorizeRequests().anyRequest().authenticated();
     http.addFilter(authenticationFilter)

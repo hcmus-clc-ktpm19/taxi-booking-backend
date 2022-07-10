@@ -34,7 +34,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             () -> new UsernameNotFoundException("Account not found with username: " + username));
 
     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-    authorities.add(new SimpleGrantedAuthority(Role.ADMIN.name()));
+    authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
 
     return new User(user.getPhone(), user.getPassword(), authorities);
   }
