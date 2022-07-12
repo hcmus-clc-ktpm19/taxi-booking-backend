@@ -46,16 +46,16 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
   }
 
   @Override
-  public String saveAccount(AccountRequestDto accountRequestDto, Role role) {
-    if (accountRepository.existsByPhoneAndRole(accountRequestDto.getPhone(), role)) {
+  public String saveAccount(AccountRequestDto accountRequestDto) {
+    if (accountRepository.existsByPhoneAndRole(accountRequestDto.getPhone(), accountRequestDto.getRole())) {
       throw new AccountExistedException("Account with phone and role already exists",
-          accountRequestDto.getPhone(), role);
+          accountRequestDto.getPhone(), accountRequestDto.getRole());
     }
 
     Account account = new Account();
     account.setPhone(accountRequestDto.getPhone());
     account.setPassword(bCryptPasswordEncoder.encode(accountRequestDto.getPassword()));
-    account.setRole(role);
+    account.setRole(accountRequestDto.getRole());
 
     return accountRepository.save(account).getId();
   }

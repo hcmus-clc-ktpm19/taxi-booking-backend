@@ -10,6 +10,29 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
+
+  rabbitmq:
+    hostname: localhost
+    container_name: rabbitmq
+    image: rabbitmq:management-alpine
+    restart: always
+    ports:
+      - "5672:5672"
+      - "5673:5673"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+
+  redis:
+    container_name: redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_USER=admin
+      - REDIS_PASSWORD=admin
+
 volumes:
   data: {}
 

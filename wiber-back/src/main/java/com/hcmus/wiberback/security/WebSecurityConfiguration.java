@@ -54,7 +54,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     http.authorizeRequests()
-        .antMatchers("/api/v1/auth/login, /api/v1/auth/refresh-token", "/api/v1/auth/**/register")
+        .antMatchers("/api/v1/auth/login, /api/v1/auth/refresh-token", "/api/v1/auth/register")
         .permitAll();
 
     http.authorizeRequests().antMatchers(HttpMethod.GET, CUSTOMER_URL)
