@@ -15,14 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/auth")
-public class AuthController extends AbstractApplicationController {
+public class AccountController extends AbstractApplicationController {
 
   private final AccountService accountService;
-  @PostMapping("/{role}/register")
+  @PostMapping("/register")
   public ResponseEntity<String> createAccount(
-      @Valid @RequestBody AccountRequestDto accountRequestDto,
-      @PathVariable Role role) {
+      @Valid @RequestBody AccountRequestDto accountRequestDto) {
 
-    return ResponseEntity.ok(accountService.saveAccount(accountRequestDto, role));
+    return ResponseEntity.ok(accountService.saveAccount(accountRequestDto));
   }
 }
