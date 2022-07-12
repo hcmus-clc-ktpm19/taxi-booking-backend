@@ -43,7 +43,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(authenticationManager(),
+    CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(
+        authenticationManager(),
         jwtUtil);
     authenticationFilter.setFilterProcessesUrl("/api/v1/auth/login");
 
@@ -52,16 +53,18 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-    http.authorizeRequests().antMatchers("/api/v1/auth/login, /api/v1/auth/refresh-token")
-        .permitAll()
-        .and()
-        .authorizeRequests()
-        .antMatchers("/api/v1/**/auth/register")
+    http.authorizeRequests()
+        .antMatchers("/api/v1/auth/login, /api/v1/auth/refresh-token", "/api/v1/auth/**/register")
         .permitAll();
 
-    http.authorizeRequests().antMatchers(HttpMethod.GET, CUSTOMER_URL).hasAnyAuthority(Role.CUSTOMER.name());
-    http.authorizeRequests().antMatchers(HttpMethod.PUT, CUSTOMER_URL).hasAnyAuthority(Role.CUSTOMER.name());
-    http.authorizeRequests().antMatchers(HttpMethod.PATCH, CUSTOMER_URL).hasAnyAuthority(Role.CUSTOMER.name());
+    http.authorizeRequests().antMatchers(HttpMethod.GET, CUSTOMER_URL)
+        .hasAnyAuthority(Role.CUSTOMER.name());
+    http.authorizeRequests().antMatchers(HttpMethod.POST, CUSTOMER_URL)
+        .hasAnyAuthority(Role.CUSTOMER.name());
+    http.authorizeRequests().antMatchers(HttpMethod.PUT, CUSTOMER_URL)
+        .hasAnyAuthority(Role.CUSTOMER.name());
+    http.authorizeRequests().antMatchers(HttpMethod.PATCH, CUSTOMER_URL)
+        .hasAnyAuthority(Role.CUSTOMER.name());
 
     http.authorizeRequests().anyRequest().authenticated();
     http.addFilter(authenticationFilter)
