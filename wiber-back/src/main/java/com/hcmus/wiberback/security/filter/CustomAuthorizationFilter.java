@@ -3,6 +3,7 @@ package com.hcmus.wiberback.security.filter;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hcmus.wiberback.entity.enums.Role;
@@ -25,6 +26,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @RequiredArgsConstructor
@@ -56,6 +58,13 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
               new UsernamePasswordAuthenticationToken(username, null, authorities);
 
           SecurityContextHolder.getContext().setAuthentication(authentication);
+          filterChain.doFilter(request, response);
+        } catch (TokenExpiredException exception) {
+          LOGGER.error("Token expired: {}", exception.getMessage());
+
+          /* TODO: Get refresh token from database and generate new access token
+              Handle this later */
+
           filterChain.doFilter(request, response);
         } catch (Exception exception) {
           LOGGER.error("Could not parse authentication token", exception);
