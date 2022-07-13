@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionController {
 
-  private final Logger logger = LoggerFactory.getLogger(ExceptionController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionController.class);
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public Map<String, String> handleValidationExceptions(
       MethodArgumentNotValidException ex) {
+
     Map<String, String> errors = new HashMap<>();
     ex.getBindingResult().getAllErrors().forEach(error -> {
       String fieldName = ((FieldError) error).getField();
@@ -33,7 +34,7 @@ public class ExceptionController {
   @ExceptionHandler(Throwable.class)
   public ResponseEntity<Map<String, String>> handleTokenExpiredException(Throwable e) {
     String message = e.getMessage();
-    logger.error(message);
+    LOGGER.error(message);
 
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
