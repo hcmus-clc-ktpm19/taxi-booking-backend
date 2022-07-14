@@ -1,6 +1,7 @@
 package com.hcmus.wiberback.entity.entity;
 
 import com.hcmus.wiberback.entity.enums.Role;
+import java.io.Serializable;
 import java.util.Objects;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
@@ -17,7 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 @ToString(exclude = {"password"})
 @NoArgsConstructor
-public class Account extends BaseEntity {
+public class Account extends BaseEntity implements Serializable {
 
   @NotEmpty
   @NotBlank
