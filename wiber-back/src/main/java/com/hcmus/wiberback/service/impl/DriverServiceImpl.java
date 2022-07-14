@@ -19,6 +19,25 @@ public class DriverServiceImpl implements DriverService {
     private final AccountRepository accountRepository;
 
     @Override
+    public Driver getDriverById(String id) {
+        return driverRepository
+                .findById(id)
+                .orElseThrow(() -> new AccountNotFoundException("Driver not found", id));
+    }
+
+    @Override
+    public Driver getDriverByPhone(String phone) {
+//        Account account = accountRepository
+//                .findAccountByPhone(phone)
+//                .orElseThrow(() -> new AccountNotFoundException("Account not found", phone));
+        return driverRepository
+                .findAll().stream()
+                .filter(driver -> driver.getAccount().getPhone().equals(phone)).findFirst()
+                .orElseThrow(() -> new AccountNotFoundException("Account not found", phone));
+    }
+
+
+    @Override
     public List<Driver> getAllDrivers() {
         return driverRepository.findAll();
     }
@@ -37,6 +56,11 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public String updateDriver(DriverRequestDto driverRequestDto) {
+        return null;
+    }
+
+    @Override
+    public String deleteDriver(String id) {
         return null;
     }
 }
