@@ -2,12 +2,12 @@ package com.hcmus.wiberback.entity.entity;
 
 import java.util.Objects;
 import javax.validation.constraints.NotNull;
-import lombok.Getter;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
+@Data
 @Document
 @RequiredArgsConstructor
 public abstract class BaseEntity {

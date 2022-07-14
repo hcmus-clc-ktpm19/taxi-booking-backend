@@ -48,7 +48,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
   @Override
   public String saveAccount(AccountRequestDto accountRequestDto) {
     if (accountRepository.existsByPhoneAndRole(accountRequestDto.getPhone(), accountRequestDto.getRole())) {
-      throw new AccountExistedException("Account with phone and role already exists",
+      throw new AccountExistedException("Account with phone and role already existed",
           accountRequestDto.getPhone(), accountRequestDto.getRole());
     }
 
