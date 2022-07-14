@@ -6,7 +6,10 @@ import com.hcmus.wiberback.entity.entity.Driver;
 import java.util.List;
 
 public interface DriverService {
+    Driver getDriverById(String id);
+    Driver getDriverByPhone(String phone);
     List<Driver> getAllDrivers();
     String saveDriver(DriverRequestDto driverRequestDto);
     String updateDriver(DriverRequestDto driverRequestDto);
+    String deleteDriver(String id);
 }

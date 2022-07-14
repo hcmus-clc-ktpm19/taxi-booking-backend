@@ -17,6 +17,14 @@ import java.util.stream.Collectors;
 public class DriverController extends AbstractApplicationController {
     private final DriverService driverService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<DriverResponseDto> getDriverById(@PathVariable String id) {
+        return ResponseEntity.ok(mapper.driverToDriverResponseDto(driverService.getDriverById(id)));
+    }
+    @GetMapping("/phone/{phone}")
+    public ResponseEntity<DriverResponseDto> getDriverByPhone(@PathVariable String phone) {
+        return ResponseEntity.ok(mapper.driverToDriverResponseDto(driverService.getDriverByPhone(phone)));
+    }
     @GetMapping("/all")
     public ResponseEntity<List<DriverResponseDto>> getAllDrivers() {
         return ResponseEntity.ok(driverService.getAllDrivers().stream()
