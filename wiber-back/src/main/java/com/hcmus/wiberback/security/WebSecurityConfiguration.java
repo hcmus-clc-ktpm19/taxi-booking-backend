@@ -24,6 +24,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   private static final String CUSTOMER_URL = "/api/v1/customer/**";
   private static final String DRIVER_URL = "/api/v1/driver/**";
+  private static final String CALLCENTER_URL = "/api/v1/callcenter/**";
+
 
   @Qualifier("AccountServiceImpl")
   private final UserDetailsService userDetailsService;
@@ -77,6 +79,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .hasAnyAuthority(Role.DRIVER.name());
     http.authorizeRequests().antMatchers(HttpMethod.PATCH, DRIVER_URL)
             .hasAnyAuthority(Role.DRIVER.name());
+
+    // callcenter url config
+    http.authorizeRequests().antMatchers(HttpMethod.GET, CALLCENTER_URL)
+        .hasAnyAuthority(Role.STAFF.name());
+    http.authorizeRequests().antMatchers(HttpMethod.POST, CALLCENTER_URL)
+        .hasAnyAuthority(Role.STAFF.name());
+    http.authorizeRequests().antMatchers(HttpMethod.PUT, CALLCENTER_URL)
+        .hasAnyAuthority(Role.STAFF.name());
+    http.authorizeRequests().antMatchers(HttpMethod.PATCH, CALLCENTER_URL)
+        .hasAnyAuthority(Role.STAFF.name());
 
     http.authorizeRequests().anyRequest().authenticated();
     http.addFilter(authenticationFilter)
