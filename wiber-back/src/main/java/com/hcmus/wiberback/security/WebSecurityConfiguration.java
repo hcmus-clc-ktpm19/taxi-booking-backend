@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   private static final String CUSTOMER_URL = "/api/v1/customer/**";
+  private static final String DRIVER_URL = "/api/v1/driver/**";
 
   @Qualifier("AccountServiceImpl")
   private final UserDetailsService userDetailsService;
@@ -57,6 +58,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .antMatchers("/api/v1/auth/login, /api/v1/auth/refresh-token", "/api/v1/auth/register")
         .permitAll();
 
+    // customer url config
     http.authorizeRequests().antMatchers(HttpMethod.GET, CUSTOMER_URL)
         .hasAnyAuthority(Role.CUSTOMER.name());
     http.authorizeRequests().antMatchers(HttpMethod.POST, CUSTOMER_URL)
@@ -65,6 +67,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .hasAnyAuthority(Role.CUSTOMER.name());
     http.authorizeRequests().antMatchers(HttpMethod.PATCH, CUSTOMER_URL)
         .hasAnyAuthority(Role.CUSTOMER.name());
+
+    // driver url config
+    http.authorizeRequests().antMatchers(HttpMethod.GET, DRIVER_URL)
+        .hasAnyAuthority(Role.DRIVER.name());
+    http.authorizeRequests().antMatchers(HttpMethod.POST, DRIVER_URL)
+        .hasAnyAuthority(Role.DRIVER.name());
+    http.authorizeRequests().antMatchers(HttpMethod.PUT, DRIVER_URL)
+            .hasAnyAuthority(Role.DRIVER.name());
+    http.authorizeRequests().antMatchers(HttpMethod.PATCH, DRIVER_URL)
+            .hasAnyAuthority(Role.DRIVER.name());
 
     http.authorizeRequests().anyRequest().authenticated();
     http.addFilter(authenticationFilter)
