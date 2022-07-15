@@ -1,6 +1,7 @@
 package com.hcmus.wiberback.service;
 
 import com.hcmus.wiberback.entity.dto.DriverRequestDto;
+import com.hcmus.wiberback.entity.dto.DriverResponseDto;
 import com.hcmus.wiberback.entity.entity.Driver;
 
 import java.util.List;
@@ -10,6 +11,5 @@ public interface DriverService {
     Driver getDriverByPhone(String phone);
     List<Driver> getAllDrivers();
     String saveDriver(DriverRequestDto driverRequestDto);
-    String updateDriver(DriverRequestDto driverRequestDto);
-    String deleteDriver(String id);
+    Driver updateDriverName(String id, DriverRequestDto driverRequestDto);
 }

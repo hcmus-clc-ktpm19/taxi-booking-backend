@@ -8,13 +8,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,5 +37,9 @@ public class DriverController extends AbstractApplicationController {
   @PostMapping
   public ResponseEntity<String> saveAccount(@Valid @RequestBody DriverRequestDto driverRequestDto) {
     return ResponseEntity.ok(driverService.saveDriver(driverRequestDto));
+  }
+  @PutMapping("/{id}")
+  public ResponseEntity<DriverResponseDto> updateDriverName(@PathVariable String id, @RequestBody DriverRequestDto driverRequestDto) {
+    return ResponseEntity.ok(mapper.toDriverResponseDto(driverService.updateDriverName(id, driverRequestDto)));
   }
 }
