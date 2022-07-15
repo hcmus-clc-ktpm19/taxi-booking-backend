@@ -9,4 +9,5 @@ public interface AccountService {
   Account findAccountByPhone(String phone);
 
   String saveAccount(AccountDto accountDto);
+  String updatePasswordById(String id, AccountDto accountDto);
 }

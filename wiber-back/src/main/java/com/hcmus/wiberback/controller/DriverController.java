@@ -39,8 +39,8 @@ public class DriverController extends AbstractApplicationController {
     return ResponseEntity.ok(driverService.saveDriver(driverRequestDto));
   }
   @PutMapping("/{id}")
-  public ResponseEntity<DriverResponseDto> updateDriverNameById(@PathVariable String id,
+  public ResponseEntity<String> updateDriverNameById(@PathVariable String id,
                                                             @Valid @RequestBody DriverRequestDto driverRequestDto) {
-    return ResponseEntity.ok(mapper.toDriverResponseDto(driverService.updateDriverNameById(id, driverRequestDto)));
+    return ResponseEntity.ok(driverService.updateDriverNameById(id, driverRequestDto));
   }
 }
