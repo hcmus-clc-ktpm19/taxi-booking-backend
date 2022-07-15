@@ -11,5 +11,5 @@ public interface DriverService {
     Driver getDriverByPhone(String phone);
     List<Driver> getAllDrivers();
     String saveDriver(DriverRequestDto driverRequestDto);
-    Driver updateDriverName(String id, DriverRequestDto driverRequestDto);
+    Driver updateDriverNameById(String id, DriverRequestDto driverRequestDto);
 }

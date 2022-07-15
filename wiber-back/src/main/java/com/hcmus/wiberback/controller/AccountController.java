@@ -5,12 +5,7 @@ import com.hcmus.wiberback.service.AccountService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -30,4 +25,8 @@ public class AccountController extends AbstractApplicationController {
 
     return ResponseEntity.ok(accountService.saveAccount(accountDto));
   }
+//  @PutMapping("/{id}")
+//    public ResponseEntity<AccountDto> updatePassword(@PathVariable String id, @RequestBody AccountDto accountDto) {
+//        return ResponseEntity.ok(mapper.toAccountDto(accountService.updatePassword(id, accountDto)));
+//    }
 }

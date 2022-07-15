@@ -58,7 +58,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Driver updateDriverName(String id, DriverRequestDto driverRequestDto) {
+    public Driver updateDriverNameById(String id, DriverRequestDto driverRequestDto) {
         Driver updateDriver = driverRepository
                 .findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("Driver not found", id));
