@@ -18,17 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/customer")
 public class CustomerController extends AbstractApplicationController {
+
   private final CustomerService customerService;
 
   @GetMapping("/all")
   public ResponseEntity<List<CustomerResponseDto>> getAllCustomers() {
     return ResponseEntity.ok(customerService.getAllCustomers().stream()
-        .map(mapper::customerToCustomerResponseDto)
+        .map(mapper::toCustomerResponseDto)
         .collect(Collectors.toList()));
   }
 
   @PostMapping
-  public ResponseEntity<String> saveAccount(@Valid @RequestBody CustomerRequestDto customerRequestDto) {
+  public ResponseEntity<String> saveAccount(
+      @Valid @RequestBody CustomerRequestDto customerRequestDto) {
     return ResponseEntity.ok(customerService.saveCustomer(customerRequestDto));
   }
 }

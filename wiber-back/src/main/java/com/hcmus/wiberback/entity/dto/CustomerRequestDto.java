@@ -6,7 +6,9 @@ import javax.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
+
 public class CustomerRequestDto {
+
   @NotEmpty(message = "Phone number is required")
   @NotBlank(message = "Phone number is required")
   @Digits(integer = 10, fraction = 0)

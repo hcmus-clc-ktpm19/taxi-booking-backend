@@ -1,5 +1,6 @@
 package com.hcmus.wiberback.controller;
 
+import com.hcmus.wiberback.entity.exception.AccountExistedException;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -15,6 +16,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionController.class);
+
+  @ExceptionHandler(AccountExistedException.class)
+  public ResponseEntity<Map<String, String>> handleAccountExistedException(
+      AccountExistedException e) {
+    LOGGER.error(e.getMessage(), e);
+    Map<String, String> response = new HashMap<>();
+    response.put("Error-Message", e.getMessage() + ": " + e.getPhone());
+
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+  }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public Map<String, String> handleValidationExceptions(

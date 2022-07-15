@@ -6,10 +6,13 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class AccountRequestDto {
+@Builder
+public class AccountDto {
+
   @NotEmpty(message = "Phone number is required")
   @NotBlank(message = "Phone number must not be blank")
   @Size(min = 10, max = 10, message = "Phone number must be 10 digits")
