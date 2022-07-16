@@ -12,8 +12,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 @Document
 @EqualsAndHashCode(callSuper = true)
-public class Driver extends BaseEntity{
-    private String name;
-    @DBRef
-    private Account account;
+public class Driver extends BaseEntity {
+
+  private String name;
+  @DBRef
+  private Account account;
 }

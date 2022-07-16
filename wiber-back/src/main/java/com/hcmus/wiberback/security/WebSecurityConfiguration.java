@@ -1,6 +1,7 @@
 package com.hcmus.wiberback.security;
 
 import com.hcmus.wiberback.entity.enums.Role;
+import com.hcmus.wiberback.entity.enums.WiberUrl;
 import com.hcmus.wiberback.security.filter.CustomAuthenticationFilter;
 import com.hcmus.wiberback.security.filter.CustomAuthorizationFilter;
 import com.hcmus.wiberback.util.JwtUtil;
@@ -22,10 +23,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  private static final String CUSTOMER_URL = "/api/v1/customer/**";
-  private static final String DRIVER_URL = "/api/v1/driver/**";
-  private static final String CALLCENTER_URL = "/api/v1/callcenter/**";
-
+  private static final String CUSTOMER_URL = WiberUrl.CUSTOMER_URL.url;
+  private static final String DRIVER_URL = WiberUrl.DRIVER_URL.url;
+  private static final String LOGIN_URL = WiberUrl.LOGIN_URL.url;
+  private static final String REGISTER_URL = WiberUrl.REGISTER_URL.url;
 
   @Qualifier("AccountServiceImpl")
   private final UserDetailsService userDetailsService;
@@ -57,7 +58,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     http.authorizeRequests()
-        .antMatchers("/api/v1/auth/login, /api/v1/auth/refresh-token", "/api/v1/auth/register")
+        .antMatchers(LOGIN_URL, REGISTER_URL)
         .permitAll();
 
     // customer url config
@@ -76,19 +77,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     http.authorizeRequests().antMatchers(HttpMethod.POST, DRIVER_URL)
         .hasAnyAuthority(Role.DRIVER.name());
     http.authorizeRequests().antMatchers(HttpMethod.PUT, DRIVER_URL)
-            .hasAnyAuthority(Role.DRIVER.name());
+        .hasAnyAuthority(Role.DRIVER.name());
     http.authorizeRequests().antMatchers(HttpMethod.PATCH, DRIVER_URL)
-            .hasAnyAuthority(Role.DRIVER.name());
-
-    // callcenter url config
-    http.authorizeRequests().antMatchers(HttpMethod.GET, CALLCENTER_URL)
-        .hasAnyAuthority(Role.STAFF.name());
-    http.authorizeRequests().antMatchers(HttpMethod.POST, CALLCENTER_URL)
-        .hasAnyAuthority(Role.STAFF.name());
-    http.authorizeRequests().antMatchers(HttpMethod.PUT, CALLCENTER_URL)
-        .hasAnyAuthority(Role.STAFF.name());
-    http.authorizeRequests().antMatchers(HttpMethod.PATCH, CALLCENTER_URL)
-        .hasAnyAuthority(Role.STAFF.name());
+        .hasAnyAuthority(Role.DRIVER.name());
 
     http.authorizeRequests().anyRequest().authenticated();
     http.addFilter(authenticationFilter)
