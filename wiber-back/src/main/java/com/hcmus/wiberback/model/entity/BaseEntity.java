@@ -1,4 +1,4 @@
-package com.hcmus.wiberback.entity.entity;
+package com.hcmus.wiberback.model.entity;
 
 import java.util.Objects;
 import javax.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.hcmus.wiberback.entity.enums;
+package com.hcmus.wiberback.model.enums;
 
 public enum Role {
   ADMIN,

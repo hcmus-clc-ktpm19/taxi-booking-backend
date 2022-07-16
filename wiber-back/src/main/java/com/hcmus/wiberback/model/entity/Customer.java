@@ -1,20 +1,16 @@
-package com.hcmus.wiberback.entity.entity;
+package com.hcmus.wiberback.model.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
+@Data
 @ToString
 @Document
-@EqualsAndHashCode(callSuper = true)
-public class Driver extends BaseEntity {
-
+public class Customer extends BaseEntity {
   private String name;
+
   @DBRef
   private Account account;
 }

@@ -1,9 +1,9 @@
 package com.hcmus.wiberback.service.impl;
 
-import com.hcmus.wiberback.entity.dto.DriverRequestDto;
-import com.hcmus.wiberback.entity.entity.Account;
-import com.hcmus.wiberback.entity.entity.Driver;
-import com.hcmus.wiberback.entity.exception.AccountNotFoundException;
+import com.hcmus.wiberback.model.dto.DriverRequestDto;
+import com.hcmus.wiberback.model.entity.Account;
+import com.hcmus.wiberback.model.entity.Driver;
+import com.hcmus.wiberback.model.exception.AccountNotFoundException;
 import com.hcmus.wiberback.repository.AccountRepository;
 import com.hcmus.wiberback.repository.DriverRepository;
 import com.hcmus.wiberback.service.DriverService;

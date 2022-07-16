@@ -1,6 +1,6 @@
-package com.hcmus.wiberback.entity.dto;
+package com.hcmus.wiberback.model.dto;
 
-import com.hcmus.wiberback.entity.enums.Role;
+import com.hcmus.wiberback.model.enums.Role;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -10,14 +10,12 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CustomerResponseDto {
+public class CustomerDto {
 
-  @NotEmpty
-  @NotBlank
   private String id;
 
-  @NotEmpty
-  @NotBlank
+  @NotEmpty(message = "Name number is required")
+  @NotBlank(message = "Name number is required")
   private String name;
 
   @NotEmpty(message = "Phone number is required")
