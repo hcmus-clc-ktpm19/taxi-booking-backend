@@ -60,4 +60,13 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     return accountRepository.save(account).getId();
   }
+
+  @Override
+  public String updatePasswordById(String id, AccountDto accountDto) {
+    Account account = accountRepository
+        .findById(id)
+        .orElseThrow(() -> new AccountNotFoundException("Account not found", id));
+    account.setPassword(bCryptPasswordEncoder.encode(accountDto.getPassword()));
+    return accountRepository.save(account).getId();
+  }
 }
