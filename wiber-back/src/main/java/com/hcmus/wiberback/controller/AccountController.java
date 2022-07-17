@@ -25,8 +25,8 @@ public class AccountController extends AbstractApplicationController {
 
     return ResponseEntity.ok(accountService.saveAccount(accountDto));
   }
-//  @PutMapping("/{id}")
-//    public ResponseEntity<AccountDto> updatePassword(@PathVariable String id, @RequestBody AccountDto accountDto) {
-//        return ResponseEntity.ok(mapper.toAccountDto(accountService.updatePassword(id, accountDto)));
-//    }
+  @PutMapping("/{id}")
+    public ResponseEntity<String> updatePasswordById(@PathVariable String id, @Valid @RequestBody AccountDto accountDto) {
+        return ResponseEntity.ok(accountService.updatePasswordById(id, accountDto));
+    }
 }
