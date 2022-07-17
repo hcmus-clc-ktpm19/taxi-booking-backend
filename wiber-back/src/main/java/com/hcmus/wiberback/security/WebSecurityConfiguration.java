@@ -27,6 +27,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   private static final String DRIVER_URL = WiberUrl.DRIVER_URL.url;
   private static final String LOGIN_URL = WiberUrl.LOGIN_URL.url;
   private static final String REGISTER_URL = WiberUrl.REGISTER_URL.url;
+  private static final String CALLCENTER_URL = WiberUrl.CALLCENTER_URL.url;
 
   @Qualifier("AccountServiceImpl")
   private final UserDetailsService userDetailsService;
@@ -80,6 +81,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .hasAnyAuthority(Role.DRIVER.name());
     http.authorizeRequests().antMatchers(HttpMethod.PATCH, DRIVER_URL)
         .hasAnyAuthority(Role.DRIVER.name());
+
+    // callcenter url config
+    http.authorizeRequests().antMatchers(HttpMethod.GET, CALLCENTER_URL)
+        .hasAnyAuthority(Role.CALLCENTER.name());
+    http.authorizeRequests().antMatchers(HttpMethod.POST, CALLCENTER_URL)
+        .hasAnyAuthority(Role.CALLCENTER.name());
+    http.authorizeRequests().antMatchers(HttpMethod.PUT, CALLCENTER_URL)
+        .hasAnyAuthority(Role.CALLCENTER.name());
+    http.authorizeRequests().antMatchers(HttpMethod.PATCH, CALLCENTER_URL)
+        .hasAnyAuthority(Role.CALLCENTER.name());
 
     http.authorizeRequests().anyRequest().authenticated();
     http.addFilter(authenticationFilter)

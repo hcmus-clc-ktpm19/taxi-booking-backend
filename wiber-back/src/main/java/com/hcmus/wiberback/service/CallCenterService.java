@@ -5,9 +5,9 @@ import com.hcmus.wiberback.entity.entity.CallCenter;
 import java.util.List;
 
 public interface CallCenterService {
-  List<CallCenter> getAllStaff();
+  List<CallCenter> getAllCallCenter();
 
-  String saveStaff(CallCenterRequestDto callCenterRequestDto);
+  String saveCallCenter(CallCenterRequestDto callCenterRequestDto);
 
-  String updateStaff(CallCenterRequestDto callCenterRequestDto);
+  String updateCallCenter(CallCenterRequestDto callCenterRequestDto);
 }

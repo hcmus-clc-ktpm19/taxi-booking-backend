@@ -18,12 +18,12 @@ public class CallCenterServiceImpl implements CallCenterService {
   private final AccountRepository accountRepository;
 
   @Override
-  public List<CallCenter> getAllStaff() {
+  public List<CallCenter> getAllCallCenter() {
     return callCenterRepository.findAll();
   }
 
   @Override
-  public String saveStaff(CallCenterRequestDto callCenterRequestDto) {
+  public String saveCallCenter(CallCenterRequestDto callCenterRequestDto) {
     Account account =
         accountRepository
             .findAccountByPhone(callCenterRequestDto.getPhone())
@@ -38,7 +38,7 @@ public class CallCenterServiceImpl implements CallCenterService {
   }
 
   @Override
-  public String updateStaff(CallCenterRequestDto callCenterRequestDto) {
+  public String updateCallCenter(CallCenterRequestDto callCenterRequestDto) {
     return null;
   }
 }
