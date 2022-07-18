@@ -40,7 +40,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
   }
 
   @Override
-  @Cacheable(value = "account", key = "#phone")
+  @Cacheable(value = "account", key = "#phone", cacheManager = "cacheManager")
   public Account findAccountByPhone(String phone) {
     return accountRepository.findAccountByPhone(phone)
         .orElseThrow(() -> new AccountNotFoundException("Account not found", phone));

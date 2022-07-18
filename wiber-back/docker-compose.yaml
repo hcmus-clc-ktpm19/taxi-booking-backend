@@ -25,16 +25,13 @@ services:
       RABBITMQ_DEFAULT_PASS: admin
 
   redis:
-    container_name: redis
-    image: redis:alpine
+    container_name: redis-stack
+    image: redis/redis-stack:7.0.0-RC6
     ports:
       - "6379:6379"
-    environment:
-      - REDIS_USER=admin
-      - REDIS_PASSWORD=admin
 
 volumes:
-  data: {}
+  data: { }
 
 networks:
   default:
