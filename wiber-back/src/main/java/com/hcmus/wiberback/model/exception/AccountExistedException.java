@@ -1,6 +1,6 @@
-package com.hcmus.wiberback.entity.exception;
+package com.hcmus.wiberback.model.exception;
 
-import com.hcmus.wiberback.entity.enums.Role;
+import com.hcmus.wiberback.model.enums.Role;
 import lombok.Getter;
 
 @Getter

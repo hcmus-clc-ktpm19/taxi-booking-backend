@@ -1,4 +1,4 @@
-package com.hcmus.wiberback.entity.exception;
+package com.hcmus.wiberback.model.exception;
 
 import lombok.Getter;
 

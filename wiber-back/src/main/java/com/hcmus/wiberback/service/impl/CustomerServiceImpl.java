@@ -1,14 +1,16 @@
 package com.hcmus.wiberback.service.impl;
 
-import com.hcmus.wiberback.entity.dto.CustomerRequestDto;
-import com.hcmus.wiberback.entity.entity.Account;
-import com.hcmus.wiberback.entity.entity.Customer;
-import com.hcmus.wiberback.entity.exception.AccountNotFoundException;
+import com.hcmus.wiberback.model.dto.CustomerDto;
+import com.hcmus.wiberback.model.entity.Account;
+import com.hcmus.wiberback.model.entity.Customer;
+import com.hcmus.wiberback.model.exception.AccountNotFoundException;
+import com.hcmus.wiberback.model.exception.UserNotFoundException;
 import com.hcmus.wiberback.repository.AccountRepository;
 import com.hcmus.wiberback.repository.CustomerRepository;
 import com.hcmus.wiberback.service.CustomerService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +26,15 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public String saveCustomer(CustomerRequestDto customerRequestDto) {
+  @Cacheable(value = "customer", key = "#id", unless = "#result == null")
+  public Customer getCustomerById(String id) {
+    return customerRepository
+        .findById(id)
+        .orElseThrow(() -> new UserNotFoundException("Customer not found", id));
+  }
+
+  @Override
+  public String saveCustomer(CustomerDto customerRequestDto) {
     Account account =
         accountRepository
             .findAccountByPhone(customerRequestDto.getPhone())
@@ -39,7 +49,9 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public String updateCustomer(CustomerRequestDto customerRequestDto) {
-    return null;
+  public String updateCustomer(CustomerDto customerDto) {
+    Customer customer = getCustomerById(customerDto.getId());
+    customer.setName(customerDto.getName());
+    return customerRepository.save(customer).getId();
   }
 }

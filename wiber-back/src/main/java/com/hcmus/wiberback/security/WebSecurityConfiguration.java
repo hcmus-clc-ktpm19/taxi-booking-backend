@@ -1,7 +1,7 @@
 package com.hcmus.wiberback.security;
 
-import com.hcmus.wiberback.entity.enums.Role;
-import com.hcmus.wiberback.entity.enums.WiberUrl;
+import com.hcmus.wiberback.model.enums.Role;
+import com.hcmus.wiberback.model.enums.WiberUrl;
 import com.hcmus.wiberback.security.filter.CustomAuthenticationFilter;
 import com.hcmus.wiberback.security.filter.CustomAuthorizationFilter;
 import com.hcmus.wiberback.util.JwtUtil;
@@ -16,7 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -30,19 +30,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Qualifier("AccountServiceImpl")
   private final UserDetailsService userDetailsService;
-  private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final PasswordEncoder passwordEncoder;
   private final JwtUtil jwtUtil;
 
   public WebSecurityConfiguration(UserDetailsService userDetailsService,
-      BCryptPasswordEncoder bCryptPasswordEncoder, JwtUtil jwtUtil) {
+      PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
     this.userDetailsService = userDetailsService;
-    this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    this.passwordEncoder = passwordEncoder;
     this.jwtUtil = jwtUtil;
   }
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
   }
 
   @Override

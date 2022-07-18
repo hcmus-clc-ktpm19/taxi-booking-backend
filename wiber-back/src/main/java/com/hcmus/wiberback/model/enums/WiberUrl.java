@@ -1,4 +1,4 @@
-package com.hcmus.wiberback.entity.enums;
+package com.hcmus.wiberback.model.enums;
 
 public enum WiberUrl {
   LOGIN_URL("/api/v1/auth/login"),

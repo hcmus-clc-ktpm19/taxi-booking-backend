@@ -1,6 +1,6 @@
-package com.hcmus.wiberback.entity.dto;
+package com.hcmus.wiberback.model.dto;
 
-import com.hcmus.wiberback.entity.enums.Role;
+import com.hcmus.wiberback.model.enums.Role;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
