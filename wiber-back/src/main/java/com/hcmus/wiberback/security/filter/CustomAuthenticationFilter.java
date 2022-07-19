@@ -55,6 +55,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
       HttpServletResponse response, AuthenticationException failed) throws IOException {
     log.error("Authentication failed: {}", failed.getMessage());
 
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     new ObjectMapper().writeValue(response.getOutputStream(),
         Map.of("Timestamp", LocalDateTime.now().toString(),

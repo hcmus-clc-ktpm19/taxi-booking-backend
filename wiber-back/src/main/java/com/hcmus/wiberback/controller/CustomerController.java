@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +34,12 @@ public class CustomerController extends AbstractApplicationController {
   public ResponseEntity<CustomerDto> getCustomerById(@RequestParam String id) {
     return ResponseEntity.ok(mapper.toCustomerDto(customerService.getCustomerById(id)));
   }
-
+  
+  @GetMapping("/{phone}")
+  public ResponseEntity<CustomerDto> findCustomerByPhone(@PathVariable String phone) {
+    return ResponseEntity.ok(mapper.toCustomerDto(customerService.findCustomerByPhone(phone)));
+  }
+  
   @PostMapping
   public ResponseEntity<String> saveAccount(
       @Valid @RequestBody CustomerDto customerRequestDto) {

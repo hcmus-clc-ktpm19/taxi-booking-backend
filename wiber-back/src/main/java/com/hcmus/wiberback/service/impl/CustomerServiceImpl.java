@@ -9,9 +9,12 @@ import com.hcmus.wiberback.repository.AccountRepository;
 import com.hcmus.wiberback.repository.CustomerRepository;
 import com.hcmus.wiberback.service.CustomerService;
 import java.util.List;
+
+import io.netty.util.internal.StringUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 @AllArgsConstructor
@@ -24,13 +27,22 @@ public class CustomerServiceImpl implements CustomerService {
   public List<Customer> getAllCustomers() {
     return customerRepository.findAll();
   }
-
+    
+    @Override
+    public Customer findCustomerByPhone(String phone) {
+      Account account = accountRepository.findAccountByPhone(phone).orElseThrow(
+              () -> new AccountNotFoundException("Account with phone number not found", phone));
+  
+      return customerRepository.findCustomerByAccount(account).orElseThrow(
+              () -> new UserNotFoundException("Customer with phone number not found", phone));
+    }
+  
   @Override
   @Cacheable(value = "customer", key = "#id", unless = "#result == null")
   public Customer getCustomerById(String id) {
     return customerRepository
         .findById(id)
-        .orElseThrow(() -> new UserNotFoundException("Customer not found", id));
+        .orElseThrow(() -> new UserNotFoundException("Customer with id not found", id));
   }
 
   @Override
