@@ -4,7 +4,9 @@ import com.hcmus.wiberback.entity.enums.Role;
 import com.hcmus.wiberback.entity.enums.WiberUrl;
 import com.hcmus.wiberback.security.filter.CustomAuthenticationFilter;
 import com.hcmus.wiberback.security.filter.CustomAuthorizationFilter;
+import com.hcmus.wiberback.util.AuthEntryPointJwt;
 import com.hcmus.wiberback.util.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +28,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   private static final String CUSTOMER_URL = WiberUrl.CUSTOMER_URL.url;
   private static final String DRIVER_URL = WiberUrl.DRIVER_URL.url;
   private static final String LOGIN_URL = WiberUrl.LOGIN_URL.url;
+  private static final String LOGIN_URL_V2 = WiberUrl.LOGIN_URL_V2.url;
   private static final String REGISTER_URL = WiberUrl.REGISTER_URL.url;
   private static final String CALLCENTER_URL = WiberUrl.CALLCENTER_URL.url;
 
@@ -33,17 +36,24 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   private final UserDetailsService userDetailsService;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final JwtUtil jwtUtil;
-
+  private AuthEntryPointJwt unauthorizedHandler;
   public WebSecurityConfiguration(UserDetailsService userDetailsService,
-      BCryptPasswordEncoder bCryptPasswordEncoder, JwtUtil jwtUtil) {
+      BCryptPasswordEncoder bCryptPasswordEncoder, JwtUtil jwtUtil, AuthEntryPointJwt unauthorizedHandler) {
     this.userDetailsService = userDetailsService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.jwtUtil = jwtUtil;
+    this.unauthorizedHandler = unauthorizedHandler;
   }
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+  }
+
+  @Bean
+  @Override
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
   }
 
   @Override
@@ -53,13 +63,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         jwtUtil);
     authenticationFilter.setFilterProcessesUrl("/api/v1/auth/login");
 
-    http.csrf()
+    http.cors().and().csrf()
         .disable()
+        .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     http.authorizeRequests()
-        .antMatchers(LOGIN_URL, REGISTER_URL)
+        .antMatchers(LOGIN_URL, LOGIN_URL_V2, REGISTER_URL)
         .permitAll();
 
     // customer url config
@@ -98,9 +109,4 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             UsernamePasswordAuthenticationFilter.class);
   }
 
-  @Bean
-  @Override
-  public AuthenticationManager authenticationManagerBean() throws Exception {
-    return super.authenticationManagerBean();
-  }
 }

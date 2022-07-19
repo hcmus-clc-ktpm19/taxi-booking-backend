@@ -2,6 +2,8 @@ package com.hcmus.wiberback.entity.enums;
 
 public enum WiberUrl {
   LOGIN_URL("/api/v1/auth/login"),
+  LOGIN_URL_V2("/api/v1/auth/signin"),
+
   REGISTER_URL("/api/v1/auth/register"),
   CUSTOMER_URL("/api/v1/customer/**"),
   DRIVER_URL("/api/v1/driver/**"),
