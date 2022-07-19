@@ -1,7 +1,7 @@
 package com.hcmus.wiberback.service;
 
-import com.hcmus.wiberback.entity.dto.CallCenterRequestDto;
-import com.hcmus.wiberback.entity.entity.CallCenter;
+import com.hcmus.wiberback.model.dto.CallCenterRequestDto;
+import com.hcmus.wiberback.model.entity.CallCenter;
 import java.util.List;
 
 public interface CallCenterService {

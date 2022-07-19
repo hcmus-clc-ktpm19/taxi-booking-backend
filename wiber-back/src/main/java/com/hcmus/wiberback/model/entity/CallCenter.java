@@ -1,4 +1,4 @@
-package com.hcmus.wiberback.entity.entity;
+package com.hcmus.wiberback.model.entity;
 
 import lombok.Data;
 import lombok.ToString;
