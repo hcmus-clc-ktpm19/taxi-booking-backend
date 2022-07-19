@@ -3,11 +3,13 @@ package com.hcmus.wiberback.security.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hcmus.wiberback.util.JwtUtil;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +19,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
+@Slf4j
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
   private final AuthenticationManager authenticationManager;
@@ -42,11 +45,20 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     // Access token expires in 8 hour
     String accessToken = jwtUtil.generateAccessToken(user, request.getRequestURL().toString());
-    // Refresh token expires in 3 months
-    String refreshToken = jwtUtil.generateRefreshToken(user.getUsername(), request.getRequestURL().toString());
 
-    Map<String, String> tokens = Map.of("Access-Token", accessToken, "Refresh-Token", refreshToken);
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+    new ObjectMapper().writeValue(response.getOutputStream(), Map.of("Access-Token", accessToken));
+  }
+
+  @Override
+  protected void unsuccessfulAuthentication(HttpServletRequest request,
+      HttpServletResponse response, AuthenticationException failed) throws IOException {
+    log.error("Authentication failed: {}", failed.getMessage());
+
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    new ObjectMapper().writeValue(response.getOutputStream(),
+        Map.of("Timestamp", LocalDateTime.now().toString(),
+            "Error-Message", failed.getMessage()));
   }
 }

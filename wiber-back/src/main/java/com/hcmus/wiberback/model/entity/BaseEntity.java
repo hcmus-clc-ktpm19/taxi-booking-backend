@@ -1,5 +1,6 @@
-package com.hcmus.wiberback.entity.entity;
+package com.hcmus.wiberback.model.entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
@@ -10,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document
 @RequiredArgsConstructor
-public abstract class BaseEntity {
+public abstract class BaseEntity implements Serializable {
   @Id
   @NotNull
   protected String id;

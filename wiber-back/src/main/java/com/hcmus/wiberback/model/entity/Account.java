@@ -1,6 +1,6 @@
-package com.hcmus.wiberback.entity.entity;
+package com.hcmus.wiberback.model.entity;
 
-import com.hcmus.wiberback.entity.enums.Role;
+import com.hcmus.wiberback.model.enums.Role;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.validation.constraints.Digits;

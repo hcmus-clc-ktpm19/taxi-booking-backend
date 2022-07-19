@@ -1,10 +1,11 @@
 package com.hcmus.wiberback.controller;
 
-import com.hcmus.wiberback.entity.exception.AccountExistedException;
+import com.hcmus.wiberback.model.exception.AccountExistedException;
 import java.util.HashMap;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.hcmus.wiberback.model.exception.UserNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -12,21 +13,30 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class ExceptionController {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionController.class);
 
   @ExceptionHandler(AccountExistedException.class)
   public ResponseEntity<Map<String, String>> handleAccountExistedException(
       AccountExistedException e) {
-    LOGGER.error(e.getMessage(), e);
+    log.error(e.getMessage(), e);
     Map<String, String> response = new HashMap<>();
     response.put("Error-Message", e.getMessage() + ": " + e.getPhone());
 
     return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
   }
-
+  
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<Map<String, String>> handleUserNotFoundException(
+          UserNotFoundException e) {
+    log.error(e.getMessage(), e);
+    Map<String, String> response = new HashMap<>();
+    response.put("Error-Message", e.getMessage() + ": " + e.getId());
+  
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+  }
+  
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public Map<String, String> handleValidationExceptions(
       MethodArgumentNotValidException ex) {
@@ -45,7 +55,7 @@ public class ExceptionController {
   @ExceptionHandler(Throwable.class)
   public ResponseEntity<Map<String, String>> handleTokenExpiredException(Throwable e) {
     String message = e.getMessage();
-    LOGGER.error(message);
+    log.error(message);
 
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -1,6 +1,6 @@
 package com.hcmus.wiberback.controller;
 
-import com.hcmus.wiberback.entity.dto.AccountDto;
+import com.hcmus.wiberback.model.dto.AccountDto;
 import com.hcmus.wiberback.service.AccountService;
 import com.hcmus.wiberback.util.JwtUtil;
 import java.util.Map;

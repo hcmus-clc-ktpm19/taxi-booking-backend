@@ -1,9 +1,9 @@
 package com.hcmus.wiberback.service.impl;
 
-import com.hcmus.wiberback.entity.dto.AccountDto;
-import com.hcmus.wiberback.entity.entity.Account;
-import com.hcmus.wiberback.entity.exception.AccountExistedException;
-import com.hcmus.wiberback.entity.exception.AccountNotFoundException;
+import com.hcmus.wiberback.model.dto.AccountDto;
+import com.hcmus.wiberback.model.entity.Account;
+import com.hcmus.wiberback.model.exception.AccountExistedException;
+import com.hcmus.wiberback.model.exception.AccountNotFoundException;
 import com.hcmus.wiberback.repository.AccountRepository;
 import com.hcmus.wiberback.service.AccountService;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
   }
 
   @Override
-  @Cacheable(value = "account", key = "#phone")
+  @Cacheable(value = "account", key = "#phone", cacheManager = "cacheManager")
   public Account findAccountByPhone(String phone) {
     return accountRepository.findAccountByPhone(phone)
         .orElseThrow(() -> new AccountNotFoundException("Account not found", phone));

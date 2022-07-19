@@ -1,4 +1,4 @@
-package com.hcmus.wiberback.entity.dto;
+package com.hcmus.wiberback.model.dto;
 
 import lombok.Data;
 

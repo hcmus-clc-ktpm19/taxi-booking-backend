@@ -1,8 +1,7 @@
 package com.hcmus.wiberback.service;
 
-import com.hcmus.wiberback.entity.dto.DriverRequestDto;
-import com.hcmus.wiberback.entity.dto.DriverResponseDto;
-import com.hcmus.wiberback.entity.entity.Driver;
+import com.hcmus.wiberback.model.dto.DriverRequestDto;
+import com.hcmus.wiberback.model.entity.Driver;
 
 import java.util.List;
 

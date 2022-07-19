@@ -1,13 +1,11 @@
 package com.hcmus.wiberback.util;
 
-import com.hcmus.wiberback.entity.dto.AccountDto;
-import com.hcmus.wiberback.entity.dto.CallCenterResponseDto;
-import com.hcmus.wiberback.entity.dto.CustomerResponseDto;
-import com.hcmus.wiberback.entity.dto.DriverResponseDto;
-import com.hcmus.wiberback.entity.entity.Account;
-import com.hcmus.wiberback.entity.entity.CallCenter;
-import com.hcmus.wiberback.entity.entity.Customer;
-import com.hcmus.wiberback.entity.entity.Driver;
+import com.hcmus.wiberback.model.dto.AccountDto;
+import com.hcmus.wiberback.model.dto.CustomerDto;
+import com.hcmus.wiberback.model.dto.DriverResponseDto;
+import com.hcmus.wiberback.model.entity.Account;
+import com.hcmus.wiberback.model.entity.Customer;
+import com.hcmus.wiberback.model.entity.Driver;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +20,8 @@ public class ApplicationMapper {
         .build();
   }
 
-  public CustomerResponseDto toCustomerResponseDto(Customer entity) {
-    return CustomerResponseDto.builder()
+  public CustomerDto toCustomerDto(Customer entity) {
+    return CustomerDto.builder()
         .id(entity.getId())
         .name(entity.getName())
         .phone(entity.getAccount().getPhone())
