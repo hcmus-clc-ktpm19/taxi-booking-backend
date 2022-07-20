@@ -6,6 +6,8 @@ server:
   port: 8080
 
 logging:
+  file:
+    name: '/home/kygor/IdeaProjects/taxi-booking-backend/wiber-back/src/main/resources/logs/wiber-back.log'
   level:
     org:
       springframework:
