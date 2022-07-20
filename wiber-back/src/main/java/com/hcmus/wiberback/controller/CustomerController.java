@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,21 +33,15 @@ public class CustomerController extends AbstractApplicationController {
   public ResponseEntity<CustomerDto> getCustomerById(@RequestParam String id) {
     return ResponseEntity.ok(mapper.toCustomerDto(customerService.getCustomerById(id)));
   }
-  
+
   @GetMapping("/{phone}")
   public ResponseEntity<CustomerDto> findCustomerByPhone(@PathVariable String phone) {
     return ResponseEntity.ok(mapper.toCustomerDto(customerService.findCustomerByPhone(phone)));
   }
-  
-  @PostMapping
-  public ResponseEntity<String> saveAccount(
-      @Valid @RequestBody CustomerDto customerRequestDto) {
-    return ResponseEntity.ok(customerService.saveCustomer(customerRequestDto));
-  }
 
-  @PutMapping
-  public ResponseEntity<String> updateAccount(
-      @Valid @RequestBody CustomerDto customerDto) {
-    return ResponseEntity.ok(customerService.updateCustomer(customerDto));
+  @PostMapping("/create-or-update")
+  public ResponseEntity<String> saveOrUpdateAccount(
+      @Valid @RequestBody CustomerDto customerRequestDto) {
+    return ResponseEntity.ok(customerService.saveOrUpdateCustomer(customerRequestDto));
   }
 }

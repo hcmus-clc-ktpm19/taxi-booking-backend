@@ -9,12 +9,9 @@ import com.hcmus.wiberback.repository.AccountRepository;
 import com.hcmus.wiberback.repository.CustomerRepository;
 import com.hcmus.wiberback.service.CustomerService;
 import java.util.List;
-
-import io.netty.util.internal.StringUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 @Service
 @AllArgsConstructor
@@ -27,16 +24,16 @@ public class CustomerServiceImpl implements CustomerService {
   public List<Customer> getAllCustomers() {
     return customerRepository.findAll();
   }
-    
-    @Override
-    public Customer findCustomerByPhone(String phone) {
-      Account account = accountRepository.findAccountByPhone(phone).orElseThrow(
-              () -> new AccountNotFoundException("Account with phone number not found", phone));
-  
-      return customerRepository.findCustomerByAccount(account).orElseThrow(
-              () -> new UserNotFoundException("Customer with phone number not found", phone));
-    }
-  
+
+  @Override
+  public Customer findCustomerByPhone(String phone) {
+    Account account = accountRepository.findAccountByPhone(phone).orElseThrow(
+        () -> new AccountNotFoundException("Account with phone number not found", phone));
+
+    return customerRepository.findCustomerByAccount(account).orElseThrow(
+        () -> new UserNotFoundException("Customer with phone number not found", phone));
+  }
+
   @Override
   @Cacheable(value = "customer", key = "#id", unless = "#result == null")
   public Customer getCustomerById(String id) {
@@ -46,24 +43,34 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public String saveCustomer(CustomerDto customerRequestDto) {
-    Account account =
-        accountRepository
-            .findAccountByPhone(customerRequestDto.getPhone())
-            .orElseThrow(() -> new AccountNotFoundException("Account not found",
-                customerRequestDto.getPhone()));
-
-    Customer customer = new Customer();
-    customer.setName(customerRequestDto.getName());
-    customer.setAccount(account);
-
-    return customerRepository.save(customer).getId();
+  public Customer getCustomerByPhone(String phone) {
+    return customerRepository
+        .findCustomerByAccount(
+            accountRepository.findAccountByPhone(phone).orElseThrow(
+                () -> new AccountNotFoundException("Account with phone number not found", phone)
+            ))
+        .orElseThrow(
+            () -> new UserNotFoundException("Customer with phone number not found", phone)
+        );
   }
 
   @Override
-  public String updateCustomer(CustomerDto customerDto) {
-    Customer customer = getCustomerById(customerDto.getId());
-    customer.setName(customerDto.getName());
+  public String saveOrUpdateCustomer(CustomerDto customerDto) {
+    Account account = accountRepository
+        .findAccountByPhone(customerDto.getPhone())
+        .orElseThrow(() -> new AccountNotFoundException("Account not found",
+            customerDto.getPhone()));
+
+    Customer customer;
+    if (customerRepository.existsByAccount(account)) {
+      customer = getCustomerByPhone(customerDto.getPhone());
+      customer.setName(customerDto.getName());
+    } else {
+      customer = new Customer();
+      customer.setName(customerDto.getName());
+      customer.setAccount(account);
+    }
+
     return customerRepository.save(customer).getId();
   }
 }

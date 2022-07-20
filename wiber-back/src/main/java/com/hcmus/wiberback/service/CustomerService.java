@@ -7,12 +7,12 @@ import java.util.List;
 public interface CustomerService {
 
   List<Customer> getAllCustomers();
-  
+
   Customer findCustomerByPhone(String phone);
 
   Customer getCustomerById(String id);
 
-  String saveCustomer(CustomerDto customerRequestDto);
+  Customer getCustomerByPhone(String phone);
 
-  String updateCustomer(CustomerDto customerDto);
+  String saveOrUpdateCustomer(CustomerDto customerRequestDto);
 }

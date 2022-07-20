@@ -1,10 +1,9 @@
 package com.hcmus.wiberback.controller;
 
+import com.hcmus.wiberback.model.exception.AbstractNotFoundException;
 import com.hcmus.wiberback.model.exception.AccountExistedException;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.hcmus.wiberback.model.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,17 +25,17 @@ public class ExceptionController {
 
     return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
   }
-  
-  @ExceptionHandler(UserNotFoundException.class)
+
+  @ExceptionHandler(value = AbstractNotFoundException.class)
   public ResponseEntity<Map<String, String>> handleUserNotFoundException(
-          UserNotFoundException e) {
+      AbstractNotFoundException e) {
     log.error(e.getMessage(), e);
     Map<String, String> response = new HashMap<>();
-    response.put("Error-Message", e.getMessage() + ": " + e.getId());
-  
+    response.put("Error-Message", e.getMessage() + ": " + e.getIdentify());
+
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }
-  
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public Map<String, String> handleValidationExceptions(
       MethodArgumentNotValidException ex) {
