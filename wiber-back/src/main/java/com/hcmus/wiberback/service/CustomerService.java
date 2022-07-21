@@ -10,9 +10,7 @@ public interface CustomerService {
 
   Customer findCustomerByPhone(String phone);
 
-  Customer getCustomerById(String id);
-
-  Customer getCustomerByPhone(String phone);
+  Customer findCustomerById(String id);
 
   String saveOrUpdateCustomer(CustomerDto customerRequestDto);
 }

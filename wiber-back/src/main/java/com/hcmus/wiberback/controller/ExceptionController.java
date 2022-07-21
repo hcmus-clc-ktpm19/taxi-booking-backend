@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionController {
 
+  private static final String ERROR_MESSAGE = "Error-Message";
+
   @ExceptionHandler(AccountExistedException.class)
   public ResponseEntity<Map<String, String>> handleAccountExistedException(
       AccountExistedException e) {
     log.error(e.getMessage(), e);
     Map<String, String> response = new HashMap<>();
-    response.put("Error-Message", e.getMessage() + ": " + e.getPhone());
+    response.put(ERROR_MESSAGE, e.getMessage() + ": " + e.getPhone());
 
     return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
   }
@@ -31,13 +33,13 @@ public class ExceptionController {
       AbstractNotFoundException e) {
     log.error(e.getMessage(), e);
     Map<String, String> response = new HashMap<>();
-    response.put("Error-Message", e.getMessage() + ": " + e.getIdentify());
+    response.put(ERROR_MESSAGE, e.getMessage() + ": " + e.getIdentify());
 
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public Map<String, String> handleValidationExceptions(
+  public ResponseEntity<Map<String, String>> handleValidationExceptions(
       MethodArgumentNotValidException ex) {
 
     Map<String, String> errors = new HashMap<>();
@@ -47,7 +49,7 @@ public class ExceptionController {
       errors.put(fieldName, errorMessage);
     });
 
-    return errors;
+    return ResponseEntity.badRequest().body(errors);
   }
 
 
@@ -58,6 +60,6 @@ public class ExceptionController {
 
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(Map.of("Error-Message", message));
+        .body(Map.of(ERROR_MESSAGE, message));
   }
 }

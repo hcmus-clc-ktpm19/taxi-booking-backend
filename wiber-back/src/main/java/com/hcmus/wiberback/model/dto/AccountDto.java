@@ -13,6 +13,8 @@ import lombok.Data;
 @Builder
 public class AccountDto {
 
+  private String id;
+
   @NotEmpty(message = "Phone number is required")
   @NotBlank(message = "Phone number must not be blank")
   @Size(min = 10, max = 10, message = "Phone number must be 10 digits")

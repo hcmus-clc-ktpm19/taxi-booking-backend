@@ -6,8 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -28,16 +29,17 @@ public class WiberConfiguration {
 
   @Bean
   public CacheManager cacheManager() {
-    RedisSerializationContext.SerializationPair<Object> jsonSerializer =
-        RedisSerializationContext.SerializationPair.fromSerializer(
-            new Jackson2JsonRedisSerializer<>(Object.class));
 
     return RedisCacheManager.RedisCacheManagerBuilder
         .fromConnectionFactory(redisConnectionFactory)
         .cacheDefaults(
             RedisCacheConfiguration
                 .defaultCacheConfig()
-                .serializeValuesWith(jsonSerializer))
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                    new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                    new GenericJackson2JsonRedisSerializer()))
+        )
         .build();
   }
 }

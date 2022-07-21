@@ -17,6 +17,7 @@ public class ApplicationMapper {
 
   public AccountDto toAccountDto(Account entity) {
     return AccountDto.builder()
+        .id(entity.getId())
         .phone(entity.getPhone())
         .role(entity.getRole())
         .build();
@@ -39,6 +40,7 @@ public class ApplicationMapper {
         .role(entity.getAccount().getRole())
         .build();
   }
+
   public CallCenterResponseDto toCallCenterResponseDto(CallCenter entity) {
     return CallCenterResponseDto.builder()
         .id(entity.getId())
