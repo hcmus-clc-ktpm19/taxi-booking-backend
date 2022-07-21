@@ -23,15 +23,15 @@ public class CustomerController extends AbstractApplicationController {
   private final CustomerService customerService;
 
   @GetMapping("/all")
-  public ResponseEntity<List<CustomerDto>> getAllCustomers() {
+  public ResponseEntity<List<CustomerDto>> findAllCustomers() {
     return ResponseEntity.ok(customerService.getAllCustomers().stream()
         .map(mapper::toCustomerDto)
         .collect(Collectors.toList()));
   }
 
   @GetMapping
-  public ResponseEntity<CustomerDto> getCustomerById(@RequestParam String id) {
-    return ResponseEntity.ok(mapper.toCustomerDto(customerService.getCustomerById(id)));
+  public ResponseEntity<CustomerDto> findCustomerById(@RequestParam String id) {
+    return ResponseEntity.ok(mapper.toCustomerDto(customerService.findCustomerById(id)));
   }
 
   @GetMapping("/{phone}")
