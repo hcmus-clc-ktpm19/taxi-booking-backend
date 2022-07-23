@@ -1,9 +1,12 @@
 package com.hcmus.wiberback.service.impl;
 
+import com.hcmus.wiberback.model.dto.CustomerDto;
 import com.hcmus.wiberback.model.dto.DriverRequestDto;
 import com.hcmus.wiberback.model.entity.Account;
+import com.hcmus.wiberback.model.entity.Customer;
 import com.hcmus.wiberback.model.entity.Driver;
 import com.hcmus.wiberback.model.exception.AccountNotFoundException;
+import com.hcmus.wiberback.model.exception.UserNotFoundException;
 import com.hcmus.wiberback.repository.AccountRepository;
 import com.hcmus.wiberback.repository.DriverRepository;
 import com.hcmus.wiberback.service.DriverService;
@@ -19,23 +22,21 @@ public class DriverServiceImpl implements DriverService {
   private final DriverRepository driverRepository;
   private final AccountRepository accountRepository;
 
-  @Override
-  @Cacheable(value = "driver", key = "#id", unless = "#result == null")
-  public Driver findDriverById(String id) {
-    return driverRepository
-        .findById(id)
-        .orElseThrow(() -> new AccountNotFoundException("Driver not found", id));
-  }
+//  @Override
+//  @Cacheable(value = "driver", key = "#id", unless = "#result == null")
+//  public Driver findDriverById(String id) {
+//    return driverRepository
+//        .findById(id)
+//        .orElseThrow(() -> new AccountNotFoundException("Driver not found", id));
+//  }
 
   @Override
+  @Cacheable(value = "driver", key = "#phone", unless = "#result == null")
   public Driver findDriverByPhone(String phone) {
-//        Account account = accountRepository
-//                .findAccountByPhone(phone)
-//                .orElseThrow(() -> new AccountNotFoundException("Account not found", phone));
-    return driverRepository
-        .findAll().stream()
-        .filter(driver -> driver.getAccount().getPhone().equals(phone)).findFirst()
-        .orElseThrow(() -> new AccountNotFoundException("Driver not found", phone));
+    Account account = accountRepository.findAccountByPhone(phone).orElseThrow(
+            () -> new AccountNotFoundException("Account with phone number not found", phone));
+    return driverRepository.findDriverByAccount(account).orElseThrow(
+            () -> new UserNotFoundException("Driver with phone number not found", phone));
   }
 
 
@@ -66,6 +67,26 @@ public class DriverServiceImpl implements DriverService {
       updateDriver.setName(driverRequestDto.getName());
     }
     return driverRepository.save(updateDriver).getId();
+  }
+
+  @Override
+  public String saveOrUpdateDriver(DriverRequestDto driverRequestDto) {
+    Account account = accountRepository
+            .findAccountByPhone(driverRequestDto.getPhone())
+            .orElseThrow(() -> new AccountNotFoundException("Account not found",
+                    driverRequestDto.getPhone()));
+
+    Driver driver;
+    if (driverRepository.existsByAccount(account)) {
+      driver = findDriverByPhone(driverRequestDto.getPhone());
+      driver.setName(driverRequestDto.getName());
+    } else {
+      driver = new Driver();
+      driver.setName(driverRequestDto.getName());
+      driver.setAccount(account);
+    }
+
+    return driverRepository.save(driver).getId();
   }
 
 }
