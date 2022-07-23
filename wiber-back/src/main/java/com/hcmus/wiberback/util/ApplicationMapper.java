@@ -4,6 +4,7 @@ import com.hcmus.wiberback.model.dto.AccountDto;
 import com.hcmus.wiberback.model.dto.CallCenterResponseDto;
 import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.model.dto.CustomerDto;
+import com.hcmus.wiberback.model.dto.DriverRequestDto;
 import com.hcmus.wiberback.model.dto.DriverResponseDto;
 import com.hcmus.wiberback.model.entity.Account;
 import com.hcmus.wiberback.model.entity.CallCenter;
