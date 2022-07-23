@@ -15,3 +15,6 @@ logging:
           mongodb:
             core:
               MongoTemplate: DEBUG
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG

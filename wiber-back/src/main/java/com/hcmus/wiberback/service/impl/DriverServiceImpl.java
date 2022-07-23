@@ -67,5 +67,4 @@ public class DriverServiceImpl implements DriverService {
     }
     return driverRepository.save(updateDriver).getId();
   }
-
 }

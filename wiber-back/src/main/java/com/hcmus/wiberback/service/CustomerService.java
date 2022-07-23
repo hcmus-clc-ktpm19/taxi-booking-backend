@@ -12,5 +12,5 @@ public interface CustomerService {
 
   Customer findCustomerById(String id);
 
-  String saveOrUpdateCustomer(CustomerDto customerRequestDto);
+  Customer saveOrUpdateCustomer(CustomerDto customerRequestDto);
 }
