@@ -1,5 +1,6 @@
 package com.hcmus.wiberback.controller;
 
+import com.hcmus.wiberback.model.dto.CustomerDto;
 import com.hcmus.wiberback.model.dto.DriverRequestDto;
 import com.hcmus.wiberback.model.dto.DriverResponseDto;
 import com.hcmus.wiberback.service.DriverService;
@@ -24,9 +25,14 @@ public class DriverController extends AbstractApplicationController {
 
   private final DriverService driverService;
 
-  @GetMapping("/{id}")
-  public ResponseEntity<DriverResponseDto> findDriverById(@PathVariable String id) {
-    return ResponseEntity.ok(mapper.toDriverResponseDto(driverService.findDriverById(id)));
+//  @GetMapping("/{id}")
+//  public ResponseEntity<DriverResponseDto> findDriverById(@PathVariable String id) {
+//    return ResponseEntity.ok(mapper.toDriverResponseDto(driverService.findDriverById(id)));
+//  }
+
+  @GetMapping("/{phone}")
+  public ResponseEntity<DriverRequestDto> findCustomerByPhone(@PathVariable String phone) {
+    return ResponseEntity.ok(mapper.toDriverRequestDto(driverService.findDriverByPhone(phone)));
   }
 
   @GetMapping
@@ -39,6 +45,13 @@ public class DriverController extends AbstractApplicationController {
     return ResponseEntity.ok(driverService.findAllDrivers().stream()
         .map(mapper::toDriverResponseDto)
         .collect(Collectors.toList()));
+  }
+
+  //create and update (include edit, create driver info)
+  @PostMapping("/create-or-update")
+  public ResponseEntity<String> saveOrUpdateAccount(
+          @Valid @RequestBody DriverRequestDto driverRequestDto) {
+    return ResponseEntity.ok(driverService.saveOrUpdateDriver(driverRequestDto));
   }
 
   @PostMapping
