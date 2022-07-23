@@ -26,6 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
+  @Cacheable(value = "customer", key = "#phone", unless = "#result == null")
   public Customer findCustomerByPhone(String phone) {
     Account account = accountRepository.findAccountByPhone(phone).orElseThrow(
         () -> new AccountNotFoundException("Account with phone number not found", phone));
@@ -36,22 +37,10 @@ public class CustomerServiceImpl implements CustomerService {
 
   @Override
   @Cacheable(value = "customer", key = "#id", unless = "#result == null")
-  public Customer getCustomerById(String id) {
+  public Customer findCustomerById(String id) {
     return customerRepository
         .findById(id)
         .orElseThrow(() -> new UserNotFoundException("Customer with id not found", id));
-  }
-
-  @Override
-  public Customer getCustomerByPhone(String phone) {
-    return customerRepository
-        .findCustomerByAccount(
-            accountRepository.findAccountByPhone(phone).orElseThrow(
-                () -> new AccountNotFoundException("Account with phone number not found", phone)
-            ))
-        .orElseThrow(
-            () -> new UserNotFoundException("Customer with phone number not found", phone)
-        );
   }
 
   @Override
@@ -63,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     Customer customer;
     if (customerRepository.existsByAccount(account)) {
-      customer = getCustomerByPhone(customerDto.getPhone());
+      customer = findCustomerByPhone(customerDto.getPhone());
       customer.setName(customerDto.getName());
     } else {
       customer = new Customer();

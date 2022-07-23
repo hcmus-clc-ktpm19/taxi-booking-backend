@@ -1,5 +1,6 @@
 package com.hcmus.wiberback.controller;
 
+import com.hcmus.wiberback.model.dto.CustomerDto;
 import com.hcmus.wiberback.model.dto.DriverRequestDto;
 import com.hcmus.wiberback.model.dto.DriverResponseDto;
 import com.hcmus.wiberback.service.DriverService;
@@ -8,7 +9,14 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,30 +25,43 @@ public class DriverController extends AbstractApplicationController {
 
   private final DriverService driverService;
 
-  @GetMapping("/{id}")
-  public ResponseEntity<DriverResponseDto> getDriverById(@PathVariable String id) {
-    return ResponseEntity.ok(mapper.toDriverResponseDto(driverService.getDriverById(id)));
+//  @GetMapping("/{id}")
+//  public ResponseEntity<DriverResponseDto> findDriverById(@PathVariable String id) {
+//    return ResponseEntity.ok(mapper.toDriverResponseDto(driverService.findDriverById(id)));
+//  }
+
+  @GetMapping("/{phone}")
+  public ResponseEntity<DriverRequestDto> findCustomerByPhone(@PathVariable String phone) {
+    return ResponseEntity.ok(mapper.toDriverRequestDto(driverService.findDriverByPhone(phone)));
   }
 
   @GetMapping
-  public ResponseEntity<DriverResponseDto> getDriverByPhone(@RequestParam String q) {
-    return ResponseEntity.ok(mapper.toDriverResponseDto(driverService.getDriverByPhone(q)));
+  public ResponseEntity<DriverResponseDto> findDriverByPhone(@RequestParam String q) {
+    return ResponseEntity.ok(mapper.toDriverResponseDto(driverService.findDriverByPhone(q)));
   }
 
   @GetMapping("/all")
-  public ResponseEntity<List<DriverResponseDto>> getAllDrivers() {
-    return ResponseEntity.ok(driverService.getAllDrivers().stream()
+  public ResponseEntity<List<DriverResponseDto>> findAllDrivers() {
+    return ResponseEntity.ok(driverService.findAllDrivers().stream()
         .map(mapper::toDriverResponseDto)
         .collect(Collectors.toList()));
+  }
+
+  //create and update (include edit, create driver info)
+  @PostMapping("/create-or-update")
+  public ResponseEntity<String> saveOrUpdateAccount(
+          @Valid @RequestBody DriverRequestDto driverRequestDto) {
+    return ResponseEntity.ok(driverService.saveOrUpdateDriver(driverRequestDto));
   }
 
   @PostMapping
   public ResponseEntity<String> saveAccount(@Valid @RequestBody DriverRequestDto driverRequestDto) {
     return ResponseEntity.ok(driverService.saveDriver(driverRequestDto));
   }
+
   @PutMapping("/{id}")
   public ResponseEntity<String> updateDriverNameById(@PathVariable String id,
-                                                            @Valid @RequestBody DriverRequestDto driverRequestDto) {
+      @Valid @RequestBody DriverRequestDto driverRequestDto) {
     return ResponseEntity.ok(driverService.updateDriverNameById(id, driverRequestDto));
   }
 }
