@@ -34,6 +34,15 @@ public class ApplicationMapper {
         .build();
   }
 
+  public DriverRequestDto toDriverRequestDto(Driver entity) {
+    return DriverRequestDto.builder()
+            .id(entity.getId())
+            .name(entity.getName())
+            .phone(entity.getAccount().getPhone())
+            .role(entity.getAccount().getRole())
+            .build();
+  }
+
   public DriverResponseDto toDriverResponseDto(Driver entity) {
     return DriverResponseDto.builder()
         .id(entity.getId())
