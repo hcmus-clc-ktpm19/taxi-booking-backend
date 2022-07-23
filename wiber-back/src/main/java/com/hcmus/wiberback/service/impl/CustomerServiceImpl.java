@@ -27,7 +27,6 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  @Cacheable(value = "customer", key = "#phone", unless = "#result == null")
   public Customer findCustomerByPhone(String phone) {
     Account account = accountRepository.findAccountByPhone(phone).orElseThrow(
         () -> new AccountNotFoundException("Account with phone number not found", phone));
@@ -45,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  @CachePut(value = "customer", key = "#customerDto.phone")
+  @CachePut(value = "customer", condition = "#customerDto.id != null", key = "#customerDto.id")
   public Customer saveOrUpdateCustomer(CustomerDto customerDto) {
     Account account = accountRepository
         .findAccountByPhone(customerDto.getPhone())
