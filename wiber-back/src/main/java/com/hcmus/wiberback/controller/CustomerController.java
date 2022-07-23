@@ -42,6 +42,6 @@ public class CustomerController extends AbstractApplicationController {
   @PostMapping("/create-or-update")
   public ResponseEntity<String> saveOrUpdateAccount(
       @Valid @RequestBody CustomerDto customerRequestDto) {
-    return ResponseEntity.ok(customerService.saveOrUpdateCustomer(customerRequestDto));
+    return ResponseEntity.ok(customerService.saveOrUpdateCustomer(customerRequestDto).getId());
   }
 }

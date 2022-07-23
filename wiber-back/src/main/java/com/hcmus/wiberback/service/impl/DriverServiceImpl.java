@@ -68,7 +68,7 @@ public class DriverServiceImpl implements DriverService {
     }
     return driverRepository.save(updateDriver).getId();
   }
-
+  
   @Override
   public String saveOrUpdateDriver(DriverRequestDto driverRequestDto) {
     Account account = accountRepository
@@ -88,5 +88,4 @@ public class DriverServiceImpl implements DriverService {
 
     return driverRepository.save(driver).getId();
   }
-
 }
