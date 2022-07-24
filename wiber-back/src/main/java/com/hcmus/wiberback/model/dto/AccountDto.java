@@ -12,7 +12,6 @@ import lombok.Data;
 @Data
 @Builder
 public class AccountDto {
-
   private String id;
 
   @NotEmpty(message = "Phone number is required")
@@ -20,10 +19,7 @@ public class AccountDto {
   @Size(min = 10, max = 10, message = "Phone number must be 10 digits")
   private String phone;
 
-  @NotEmpty(message = "Password is required")
-  @NotBlank(message = "Password must not be blank")
-  @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",
-      message = "Password must be at least 8 characters and contain at least one letter, one number and must not contain spaces")
+  @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Password must be at least 8 characters and contain at least one letter, one number and must not contain spaces")
   private String password;
 
   @NotNull(message = "Role is required")

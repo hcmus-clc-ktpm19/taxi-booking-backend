@@ -2,8 +2,11 @@ package com.hcmus.wiberback.controller;
 
 import com.hcmus.wiberback.model.exception.AbstractNotFoundException;
 import com.hcmus.wiberback.model.exception.AccountExistedException;
+import com.hcmus.wiberback.model.exception.AccountNotFoundException;
+import com.hcmus.wiberback.model.exception.UserNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +31,7 @@ public class ExceptionController {
     return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
   }
 
-  @ExceptionHandler(value = AbstractNotFoundException.class)
+  @ExceptionHandler(value = {UserNotFoundException.class, AccountNotFoundException.class})
   public ResponseEntity<Map<String, String>> handleUserNotFoundException(
       AbstractNotFoundException e) {
     log.error(e.getMessage(), e);
@@ -52,6 +55,19 @@ public class ExceptionController {
     return ResponseEntity.badRequest().body(errors);
   }
 
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<Map<String, String>> handleValidationExceptions(
+      ConstraintViolationException ex) {
+
+    Map<String, String> errors = new HashMap<>();
+    ex.getConstraintViolations().forEach(error -> {
+      String fieldName = error.getPropertyPath().toString();
+      String errorMessage = error.getMessage();
+      errors.put(fieldName, errorMessage);
+    });
+
+    return ResponseEntity.badRequest().body(errors);
+  }
 
   @ExceptionHandler(Throwable.class)
   public ResponseEntity<Map<String, String>> handleTokenExpiredException(Throwable e) {
@@ -59,7 +75,7 @@ public class ExceptionController {
     log.error(message);
 
     return ResponseEntity
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .internalServerError()
         .body(Map.of(ERROR_MESSAGE, message));
   }
 }
