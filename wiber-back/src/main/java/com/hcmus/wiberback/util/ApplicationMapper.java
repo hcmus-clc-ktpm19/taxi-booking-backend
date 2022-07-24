@@ -4,8 +4,7 @@ import com.hcmus.wiberback.model.dto.AccountDto;
 import com.hcmus.wiberback.model.dto.CallCenterResponseDto;
 import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.model.dto.CustomerDto;
-import com.hcmus.wiberback.model.dto.DriverRequestDto;
-import com.hcmus.wiberback.model.dto.DriverResponseDto;
+import com.hcmus.wiberback.model.dto.DriverDto;
 import com.hcmus.wiberback.model.entity.Account;
 import com.hcmus.wiberback.model.entity.CallCenter;
 import com.hcmus.wiberback.model.entity.CarRequest;
@@ -35,22 +34,13 @@ public class ApplicationMapper {
         .build();
   }
 
-  public DriverRequestDto toDriverRequestDto(Driver entity) {
-    return DriverRequestDto.builder()
+  public DriverDto toDriverDto(Driver entity) {
+    return DriverDto.builder()
             .id(entity.getId())
             .name(entity.getName())
             .phone(entity.getAccount().getPhone())
             .role(entity.getAccount().getRole())
             .build();
-  }
-
-  public DriverResponseDto toDriverResponseDto(Driver entity) {
-    return DriverResponseDto.builder()
-        .id(entity.getId())
-        .name(entity.getName())
-        .phone(entity.getAccount().getPhone())
-        .role(entity.getAccount().getRole())
-        .build();
   }
 
   public CallCenterResponseDto toCallCenterResponseDto(CallCenter entity) {

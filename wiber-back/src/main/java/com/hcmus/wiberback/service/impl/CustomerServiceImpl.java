@@ -27,20 +27,20 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
+  @Cacheable(value = "customer", key = "#id", unless = "#result == null")
+  public Customer findCustomerById(String id) {
+    return customerRepository
+        .findById(id)
+        .orElseThrow(() -> new UserNotFoundException("Customer with id not found", id));
+  }
+
+  @Override
   public Customer findCustomerByPhone(String phone) {
     Account account = accountRepository.findAccountByPhone(phone).orElseThrow(
         () -> new AccountNotFoundException("Account with phone number not found", phone));
 
     return customerRepository.findCustomerByAccount(account).orElseThrow(
         () -> new UserNotFoundException("Customer with phone number not found", phone));
-  }
-
-  @Override
-  @Cacheable(value = "customer", key = "#id", unless = "#result == null")
-  public Customer findCustomerById(String id) {
-    return customerRepository
-        .findById(id)
-        .orElseThrow(() -> new UserNotFoundException("Customer with id not found", id));
   }
 
   @Override
