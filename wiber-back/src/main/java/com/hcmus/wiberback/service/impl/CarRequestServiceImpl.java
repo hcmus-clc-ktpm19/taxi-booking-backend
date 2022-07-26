@@ -8,19 +8,15 @@ import com.hcmus.wiberback.repository.CarRequestRepository;
 import com.hcmus.wiberback.repository.CustomerRepository;
 import com.hcmus.wiberback.service.CarRequestService;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CarRequestServiceImpl implements CarRequestService {
 
   private final CarRequestRepository carRequestRepository;
   private final CustomerRepository customerRepository;
-
-  public CarRequestServiceImpl(CarRequestRepository carRequestRepository,
-      CustomerRepository customerRepository) {
-    this.carRequestRepository = carRequestRepository;
-    this.customerRepository = customerRepository;
-  }
 
   @Override
   public List<CarRequest> findAllCarRequests() {

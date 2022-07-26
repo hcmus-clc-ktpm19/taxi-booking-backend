@@ -1,6 +1,7 @@
 package com.hcmus.wiberback;
 
 import java.util.List;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -12,6 +13,7 @@ import org.springframework.web.filter.CorsFilter;
 
 @SpringBootApplication
 @EnableCaching
+@EnableRabbit
 @PropertySource({"classpath:application.yaml", "classpath:secret.yaml"})
 public class WiberBackApplication {
 
