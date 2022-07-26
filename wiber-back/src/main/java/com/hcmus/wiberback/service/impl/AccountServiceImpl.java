@@ -9,7 +9,6 @@ import com.hcmus.wiberback.service.AccountService;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -40,7 +39,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
   }
 
   @Override
-  @Cacheable(value = "account", key = "#phone")
   public Account findAccountByPhone(String phone) {
     return accountRepository.findAccountByPhone(phone)
         .orElseThrow(() -> new AccountNotFoundException("Account not found", phone));

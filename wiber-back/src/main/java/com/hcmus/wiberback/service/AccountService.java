@@ -5,7 +5,6 @@ import com.hcmus.wiberback.model.entity.Account;
 
 public interface AccountService {
 
-
   Account findAccountByPhone(String phone);
 
   String saveAccount(AccountDto accountDto);

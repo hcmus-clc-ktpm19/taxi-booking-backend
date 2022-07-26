@@ -1,8 +1,6 @@
 package com.hcmus.wiberback.controller;
 
-import com.hcmus.wiberback.model.dto.CustomerDto;
-import com.hcmus.wiberback.model.dto.DriverRequestDto;
-import com.hcmus.wiberback.model.dto.DriverResponseDto;
+import com.hcmus.wiberback.model.dto.DriverDto;
 import com.hcmus.wiberback.service.DriverService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,43 +23,36 @@ public class DriverController extends AbstractApplicationController {
 
   private final DriverService driverService;
 
-//  @GetMapping("/{id}")
-//  public ResponseEntity<DriverResponseDto> findDriverById(@PathVariable String id) {
-//    return ResponseEntity.ok(mapper.toDriverResponseDto(driverService.findDriverById(id)));
-//  }
-
-  @GetMapping("/{phone}")
-  public ResponseEntity<DriverRequestDto> findCustomerByPhone(@PathVariable String phone) {
-    return ResponseEntity.ok(mapper.toDriverRequestDto(driverService.findDriverByPhone(phone)));
-  }
-
-  @GetMapping
-  public ResponseEntity<DriverResponseDto> findDriverByPhone(@RequestParam String q) {
-    return ResponseEntity.ok(mapper.toDriverResponseDto(driverService.findDriverByPhone(q)));
-  }
-
   @GetMapping("/all")
-  public ResponseEntity<List<DriverResponseDto>> findAllDrivers() {
+  public ResponseEntity<List<DriverDto>> findAllDrivers() {
     return ResponseEntity.ok(driverService.findAllDrivers().stream()
-        .map(mapper::toDriverResponseDto)
+        .map(mapper::toDriverDto)
         .collect(Collectors.toList()));
   }
 
-  //create and update (include edit, create driver info)
+  @GetMapping
+  public ResponseEntity<DriverDto> findDriverById(@RequestParam String q) {
+    return ResponseEntity.ok(mapper.toDriverDto(driverService.findDriverByPhone(q)));
+  }
+
+  @GetMapping("/{phone}")
+  public ResponseEntity<DriverDto> findCustomerByPhone(@PathVariable String phone) {
+    return ResponseEntity.ok(mapper.toDriverDto(driverService.findDriverByPhone(phone)));
+  }
+
   @PostMapping("/create-or-update")
   public ResponseEntity<String> saveOrUpdateAccount(
-          @Valid @RequestBody DriverRequestDto driverRequestDto) {
-    return ResponseEntity.ok(driverService.saveOrUpdateDriver(driverRequestDto));
+          @Valid @RequestBody DriverDto driverDto) {
+    return ResponseEntity.ok(driverService.saveOrUpdateDriver(driverDto).getId());
   }
 
   @PostMapping
-  public ResponseEntity<String> saveAccount(@Valid @RequestBody DriverRequestDto driverRequestDto) {
-    return ResponseEntity.ok(driverService.saveDriver(driverRequestDto));
+  public ResponseEntity<String> saveAccount(@RequestBody DriverDto driverDto) {
+    return ResponseEntity.ok(driverService.saveDriver(driverDto));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<String> updateDriverNameById(@PathVariable String id,
-      @Valid @RequestBody DriverRequestDto driverRequestDto) {
-    return ResponseEntity.ok(driverService.updateDriverNameById(id, driverRequestDto));
+  public ResponseEntity<String> updateDriverNameById(@PathVariable String id, @RequestBody DriverDto driverDto) {
+    return ResponseEntity.ok(driverService.updateDriverNameById(id, driverDto));
   }
 }

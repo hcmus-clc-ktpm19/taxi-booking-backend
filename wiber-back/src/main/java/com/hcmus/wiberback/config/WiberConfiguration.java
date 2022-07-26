@@ -1,8 +1,14 @@
 package com.hcmus.wiberback.config;
 
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -11,11 +17,15 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 @Component
 @Configuration
 public class WiberConfiguration {
 
+  @Value("${queue.name}")
+  private String queueName;
   private final RedisConnectionFactory redisConnectionFactory;
 
   public WiberConfiguration(RedisConnectionFactory redisConnectionFactory) {
@@ -41,5 +51,43 @@ public class WiberConfiguration {
                     new GenericJackson2JsonRedisSerializer()))
         )
         .build();
+  }
+
+  @Bean
+  public CommonsRequestLoggingFilter logFilter() {
+    CommonsRequestLoggingFilter filter
+        = new CommonsRequestLoggingFilter();
+    filter.setIncludeQueryString(true);
+    filter.setIncludePayload(true);
+    filter.setMaxPayloadLength(10000);
+    filter.setIncludeHeaders(false);
+    filter.setAfterMessagePrefix("Request data: ");
+    return filter;
+  }
+
+  @Bean
+  public ValidatingMongoEventListener validatingMongoEventListener() {
+    return new ValidatingMongoEventListener(validator());
+  }
+
+  @Bean
+  public LocalValidatorFactoryBean validator() {
+    return new LocalValidatorFactoryBean();
+
+  @Bean
+  public Queue queue() {
+    return new Queue(queueName, true);
+  }
+
+  @Bean
+  public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
+    final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+    rabbitTemplate.setMessageConverter(producerJackson2MessageConverter());
+    return rabbitTemplate;
+  }
+
+  @Bean
+  public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
+    return new Jackson2JsonMessageConverter();
   }
 }
