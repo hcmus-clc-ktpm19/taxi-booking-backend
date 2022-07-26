@@ -18,3 +18,6 @@ logging:
         web:
           filter:
             CommonsRequestLoggingFilter: DEBUG
+
+queue:
+  name: 'wiber-queue'
