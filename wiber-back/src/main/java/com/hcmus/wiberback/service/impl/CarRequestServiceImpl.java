@@ -3,6 +3,7 @@ package com.hcmus.wiberback.service.impl;
 import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.model.entity.CarRequest;
 import com.hcmus.wiberback.model.entity.Customer;
+import com.hcmus.wiberback.model.exception.CarRequestNotFoundException;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
 import com.hcmus.wiberback.repository.CarRequestRepository;
 import com.hcmus.wiberback.repository.CustomerRepository;
@@ -25,13 +26,12 @@ public class CarRequestServiceImpl implements CarRequestService {
 
   @Override
   public CarRequest findCarRequestById(String id) {
-    // TODO: Implement specific exception for car request not found later
-    return carRequestRepository.findById(id).orElseThrow(() -> new IllegalStateException());
+    return carRequestRepository.findById(id)
+        .orElseThrow(() -> new CarRequestNotFoundException("Car request not found", id));
   }
 
   @Override
   public List<CarRequest> findCarRequestsByCustomerId(String customerId) {
-    // TODO: Implement specific exception for car request not found later
     return carRequestRepository.findCarRequestsByCustomer(
         customerRepository
             .findById(customerId)
@@ -55,9 +55,9 @@ public class CarRequestServiceImpl implements CarRequestService {
           .lngArrivingAddress(carRequestDto.getLngArrivingAddress())
           .latArrivingAddress(carRequestDto.getLatArrivingAddress()).build();
     } else {
-      // TODO: Implement specific exception for car request not found later
       carRequest = carRequestRepository.findById(carRequestDto.getId())
-          .orElseThrow(() -> new IllegalStateException());
+          .orElseThrow(() -> new CarRequestNotFoundException("Car request not found",
+              carRequestDto.getId()));
       carRequest.setPickingAddress(carRequestDto.getPickingAddress());
       carRequest.setArrivingAddress(carRequestDto.getArrivingAddress());
       carRequest.setLngPickingAddress(carRequestDto.getLngPickingAddress());

@@ -2,11 +2,10 @@ package com.hcmus.wiberback.model.entity;
 
 import com.hcmus.wiberback.model.enums.Role;
 import java.util.Objects;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -20,12 +19,10 @@ public class Account extends BaseEntity {
 
   @NotEmpty
   @NotBlank
-  @Digits(integer = 10, fraction = 0)
+  @Size(min = 10, max = 10, message = "Phone number must be 10 digits")
   private String phone;
 
-  @NotEmpty
-  @NotBlank
-  @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")
+  @NotNull
   private String password;
 
   @NotNull

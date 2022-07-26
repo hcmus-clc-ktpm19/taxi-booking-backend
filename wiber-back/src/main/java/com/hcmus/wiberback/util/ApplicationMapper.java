@@ -56,6 +56,7 @@ public class ApplicationMapper {
     return CarRequestDto.builder()
         .id(entity.getId())
         .customerId(entity.getCustomer().getId())
+        .customerPhone(entity.getCustomer().getAccount().getPhone())
         .pickingAddress(entity.getPickingAddress())
         .arrivingAddress(entity.getArrivingAddress())
         .lngPickingAddress(entity.getLngPickingAddress())
