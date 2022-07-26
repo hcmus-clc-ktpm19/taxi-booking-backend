@@ -1,10 +1,9 @@
-package com.hcmus.wiberback.model.dto;
+package com.hcmus.smsservice.model.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

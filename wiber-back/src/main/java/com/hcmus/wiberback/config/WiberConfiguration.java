@@ -73,6 +73,7 @@ public class WiberConfiguration {
   @Bean
   public LocalValidatorFactoryBean validator() {
     return new LocalValidatorFactoryBean();
+  }
 
   @Bean
   public Queue queue() {
