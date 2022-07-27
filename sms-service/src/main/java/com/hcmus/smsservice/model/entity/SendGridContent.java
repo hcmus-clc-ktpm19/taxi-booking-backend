@@ -4,21 +4,19 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import java.io.IOException;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-public class SendGridContent implements AbstractContent {
-  private String from;
-  private String subject;
-  private String to;
-  private String content;
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+public class SendGridContent extends AbstractContent {
 
   @Override
   public String build() throws IOException {
     Mail mail = new Mail(new Email(from), subject, new Email(to),
-        new Content("text/plain", content));
+        new Content("text/plain", body));
     return mail.build();
   }
 }

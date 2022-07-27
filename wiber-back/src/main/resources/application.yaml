@@ -7,7 +7,7 @@ server:
 
 logging:
   file:
-    name: 'wiber-back/src/main/resources/log/wiber-back.log'
+    name: './wiber-back/src/main/resources/log/wiber-back.log'
   level:
     org:
       springframework:

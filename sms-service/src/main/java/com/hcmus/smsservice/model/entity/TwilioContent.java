@@ -1,9 +1,9 @@
 package com.hcmus.smsservice.model.entity;
 
-public class TwilioContent implements AbstractContent {
+public class TwilioContent extends AbstractContent {
 
   @Override
   public String build() {
-    return null;
+    return body;
   }
 }
