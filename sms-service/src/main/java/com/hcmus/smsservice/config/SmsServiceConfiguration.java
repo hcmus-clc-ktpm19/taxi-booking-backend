@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class SmsServiceConfiguration {
 
   @Value("${sendgrid.api.key}")
-  private String apiKey;
+  private String sendGridApiKey;
 
   @Bean
   public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
@@ -29,7 +29,7 @@ public class SmsServiceConfiguration {
 
   @Bean
   public SendGrid sendGrid() {
-    return new SendGrid(apiKey);
+    return new SendGrid(sendGridApiKey);
   }
 
   @Bean

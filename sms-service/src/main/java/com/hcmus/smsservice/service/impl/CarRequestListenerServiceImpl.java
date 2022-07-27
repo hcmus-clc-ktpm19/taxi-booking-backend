@@ -21,6 +21,6 @@ public class CarRequestListenerServiceImpl implements CarRequestListenerService 
   @Override
   @RabbitListener(queues = {"${queue.name}"})
   public void receive(@Payload CarRequestDto carRequestDto) throws IOException {
-    senderFacade.send(carRequestDto, SenderServiceType.SENDGRID);
+    senderFacade.send(carRequestDto, SenderServiceType.TWILIO);
   }
 }
