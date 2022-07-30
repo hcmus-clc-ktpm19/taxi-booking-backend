@@ -14,7 +14,7 @@ import org.springframework.web.filter.CorsFilter;
 @SpringBootApplication
 @EnableCaching
 @EnableRabbit
-@PropertySource({"classpath:application.yaml", "classpath:secret.yaml"})
+@PropertySource({"classpath:application.yaml"})
 public class WiberBackApplication {
 
 	public static void main(String[] args) {
