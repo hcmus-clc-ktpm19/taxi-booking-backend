@@ -1,5 +1,6 @@
 package com.hcmus.socketservice.web;
 
+import com.hcmus.socketservice.message.CarRequest;
 import com.hcmus.socketservice.message.ChatMessage;
 import com.hcmus.socketservice.message.Message;
 import com.hcmus.socketservice.message.Response;
@@ -42,12 +43,12 @@ public class WebSocketController {
     //
     @MessageMapping("/broadcast")
     @SendTo("/b")
-    public Response broadcast(Message message, @Header(value = "authorization") String authorizationToken) {
+    public Response broadcast(CarRequest carRequestInfo, @Header(value = "authorization") String authorizationToken) {
         val response = new Response("Token check failed!");
         if (authorizationToken.equals(token)) {
             log.info("Token check success!!!");
-            log.info("Received message: {}", message.getName());
-            response.setResponse("Welcome, " + message.getName() + "! hihi 1324");
+            log.info("Received message: {}", carRequestInfo.getCustomerId());
+            response.setResponse("Get customer from " + carRequestInfo.getPickingAddress() + " to "  + carRequestInfo.getArrivingAddress());
         } else {
             log.info(response.getResponse());
         }
