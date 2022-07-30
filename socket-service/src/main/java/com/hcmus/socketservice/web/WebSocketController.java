@@ -1,14 +1,16 @@
 package com.hcmus.socketservice.web;
 
-import com.hcmus.socketservice.message.CarRequest;
-import com.hcmus.socketservice.message.ChatMessage;
-import com.hcmus.socketservice.message.Message;
-import com.hcmus.socketservice.message.Response;
+import com.hcmus.socketservice.entity.dto.CarRequestDto;
+import com.hcmus.socketservice.entity.dto.ChatMessage;
+import com.hcmus.socketservice.entity.dto.Message;
+import com.hcmus.socketservice.entity.dto.Response;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -36,19 +38,19 @@ public class WebSocketController {
      * <code>@SendTo</code> 定义方法返回值发送的端点，订阅该端点的客户端可以收到服务器端的回复。
      * 此端点默认将收到的消息发送到所有订阅了 <code>@SendTo</code> 端点的客户端，相当于广播。
      *
-     * @param message            client message
+     * @param //message            client message
      * @param authorizationToken customize header, for token validate
      * @return return client message to all clients that subscribe to <code>/b</code>
      */
     //
     @MessageMapping("/broadcast")
     @SendTo("/b")
-    public Response broadcast(CarRequest carRequestInfo, @Header(value = "authorization") String authorizationToken) {
-        val response = new Response("Token check failed!");
+    public Response broadcast(CarRequestDto carRequestDtoInfo, @Header(value = "authorization") String authorizationToken) {
+        val response = new Response("Token check failed!", carRequestDtoInfo.getLatPickingAddress(), carRequestDtoInfo.getLngPickingAddress());
         if (authorizationToken.equals(token)) {
             log.info("Token check success!!!");
-            log.info("Received message: {}", carRequestInfo.getCustomerId());
-            response.setResponse("Get customer from " + carRequestInfo.getPickingAddress() + " to "  + carRequestInfo.getArrivingAddress());
+            log.info("Received message: {}", carRequestDtoInfo.getCustomerId());
+            response.setResponse("Get customer from " + carRequestDtoInfo.getPickingAddress() + " to "  + carRequestDtoInfo.getArrivingAddress());
         } else {
             log.info(response.getResponse());
         }
@@ -69,8 +71,8 @@ public class WebSocketController {
     @MessageMapping("/group/{groupID}")
     public void group(@DestinationVariable int groupID, Message message) {
         log.info("Receive group message: [" + groupID + " -> " + message.getName() + "]");
-        Response response = new Response("Welcome to group " + groupID + ", " + message.getName() + "!");
-        simpMessagingTemplate.convertAndSend("/g/" + groupID, response);
+        //Response response = new Response("Welcome to group " + groupID + ", " + message.getName() + "!");
+        //simpMessagingTemplate.convertAndSend("/g/" + groupID, response);
     }
 
     /**
@@ -85,7 +87,7 @@ public class WebSocketController {
     @MessageMapping("/chat")
     public void chat(ChatMessage chatMessage) {
         log.info("Receive point-to-point chat message: [" + chatMessage.getFromUserID() + " -> " + chatMessage.getUserID() + ", " + chatMessage.getMessage() + "]");
-        Response response = new Response("Receive message from user " + chatMessage.getFromUserID() + ": " + chatMessage.getMessage());
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatMessage.getUserID()), "/msg", response);
+        //Response response = new Response("Receive message from user " + chatMessage.getFromUserID() + ": " + chatMessage.getMessage());
+        //simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatMessage.getUserID()), "/msg", response);
     }
 }

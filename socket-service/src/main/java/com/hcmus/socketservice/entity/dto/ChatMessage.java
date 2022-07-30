@@ -1,4 +1,4 @@
-package com.hcmus.socketservice.message;
+package com.hcmus.socketservice.entity.dto;
 
 import lombok.*;
 
