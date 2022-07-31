@@ -37,7 +37,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
 
-    if (request.getServletPath().equals(WiberUrl.LOGIN_URL.url)) {
+    if (request.getServletPath().equals(WiberUrl.LOGIN_URL.url) || request.getServletPath().equals(WiberUrl.LOGIN_URL_V2.url)) {
       filterChain.doFilter(request, response);
     } else {
       String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
