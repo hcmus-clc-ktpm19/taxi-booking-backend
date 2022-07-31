@@ -9,5 +9,7 @@ public interface CallCenterService {
 
   String saveCallCenter(CallCenterRequestDto callCenterRequestDto);
 
-  String updateCallCenter(CallCenterRequestDto callCenterRequestDto);
+  CallCenter findCallCenterByPhone(String phone);
+
+  CallCenter findCallCenterById(String id);
 }

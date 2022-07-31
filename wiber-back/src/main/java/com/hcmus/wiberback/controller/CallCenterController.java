@@ -21,7 +21,7 @@ public class CallCenterController extends AbstractApplicationController {
   private final CallCenterService callCenterService;
 
   @GetMapping("/all")
-  public ResponseEntity<List<CallCenterResponseDto>> getAllCustomers() {
+  public ResponseEntity<List<CallCenterResponseDto>> getAllCallCenter() {
     return ResponseEntity.ok(callCenterService.getAllCallCenter().stream()
         .map(mapper::toCallCenterResponseDto)
         .collect(Collectors.toList()));
