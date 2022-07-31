@@ -7,9 +7,12 @@ import com.hcmus.wiberback.model.exception.CarRequestNotFoundException;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
 import com.hcmus.wiberback.repository.CarRequestRepository;
 import com.hcmus.wiberback.repository.CustomerRepository;
+import com.hcmus.wiberback.service.CarRequestMessageSender;
 import com.hcmus.wiberback.service.CarRequestService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.core.Queue;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +21,9 @@ public class CarRequestServiceImpl implements CarRequestService {
 
   private final CarRequestRepository carRequestRepository;
   private final CustomerRepository customerRepository;
+  private final CarRequestMessageSender queueProducer;
+  @Qualifier("carRequestQueue")
+  private final Queue carRequestQueue;
 
   @Override
   public List<CarRequest> findAllCarRequests() {
@@ -53,7 +59,8 @@ public class CarRequestServiceImpl implements CarRequestService {
           .lngPickingAddress(carRequestDto.getLngPickingAddress())
           .latPickingAddress(carRequestDto.getLatPickingAddress())
           .lngArrivingAddress(carRequestDto.getLngArrivingAddress())
-          .latArrivingAddress(carRequestDto.getLatArrivingAddress()).build();
+          .latArrivingAddress(carRequestDto.getLatArrivingAddress())
+          .status(carRequestDto.getStatus()).build();
     } else {
       carRequest = carRequestRepository.findById(carRequestDto.getId())
           .orElseThrow(() -> new CarRequestNotFoundException("Car request not found",
@@ -64,8 +71,10 @@ public class CarRequestServiceImpl implements CarRequestService {
       carRequest.setLatPickingAddress(carRequestDto.getLatPickingAddress());
       carRequest.setLngArrivingAddress(carRequestDto.getLngArrivingAddress());
       carRequest.setLatArrivingAddress(carRequestDto.getLatArrivingAddress());
+      carRequest.setStatus(carRequestDto.getStatus());
     }
-
+    // create a new car request to car-request-queue
+    queueProducer.send(carRequest, carRequestQueue);
     return carRequestRepository.save(carRequest).getId();
   }
 }

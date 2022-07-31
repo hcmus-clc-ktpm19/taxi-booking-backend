@@ -25,7 +25,11 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 public class WiberConfiguration {
 
   @Value("${queue.name}")
-  private String queueName;
+  private String smsQueueName;
+
+  @Value("${queue.car-request.name}")
+  private String carRequestQueueName;
+
   private final RedisConnectionFactory redisConnectionFactory;
 
   public WiberConfiguration(RedisConnectionFactory redisConnectionFactory) {
@@ -76,8 +80,12 @@ public class WiberConfiguration {
   }
 
   @Bean
-  public Queue queue() {
-    return new Queue(queueName, true);
+  public Queue smsQueue() {
+    return new Queue(smsQueueName, true);
+  }
+  @Bean
+  public Queue carRequestQueue() {
+    return new Queue(carRequestQueueName, true);
   }
 
   @Bean

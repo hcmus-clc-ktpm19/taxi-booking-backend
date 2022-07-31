@@ -20,4 +20,7 @@ logging:
             CommonsRequestLoggingFilter: DEBUG
 
 queue:
-  name: 'wiber-queue'
+  sms:
+    name: 'wiber-queue'
+  car-request:
+    name: 'car-request-queue'

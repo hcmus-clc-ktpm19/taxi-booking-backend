@@ -13,8 +13,6 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
     /**
      * Before websocket handshake
      * You can put some data into {@code attributes} here, and get it in WebSocketHandler's session
-     * <p>
-     * WebSocket 握手前 —— 可以设置数据到 attributes 中，并在 WebSocketHandler 的 session 中获取
      */
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
