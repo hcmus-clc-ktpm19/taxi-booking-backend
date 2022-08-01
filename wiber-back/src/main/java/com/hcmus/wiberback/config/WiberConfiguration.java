@@ -55,10 +55,10 @@ public class WiberConfiguration {
 
   @Bean
   public CommonsRequestLoggingFilter logFilter() {
-    CommonsRequestLoggingFilter filter
-        = new CommonsRequestLoggingFilter();
+    CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();
     filter.setIncludeQueryString(true);
     filter.setIncludePayload(true);
+    filter.setIncludeClientInfo(true);
     filter.setMaxPayloadLength(10000);
     filter.setIncludeHeaders(false);
     filter.setAfterMessagePrefix("Request data: ");
