@@ -24,7 +24,7 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 @Configuration
 public class WiberConfiguration {
 
-  @Value("${queue.name}")
+  @Value("${queue.sms.name}")
   private String smsQueueName;
 
   @Value("${queue.car-request.name}")

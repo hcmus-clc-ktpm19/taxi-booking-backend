@@ -1,4 +1,4 @@
-package com.hcmus.socketservice.entity.dto;
+package com.hcmus.socketservice.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

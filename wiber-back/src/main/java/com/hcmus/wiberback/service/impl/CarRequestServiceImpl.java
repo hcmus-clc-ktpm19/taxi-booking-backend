@@ -73,8 +73,9 @@ public class CarRequestServiceImpl implements CarRequestService {
       carRequest.setLatArrivingAddress(carRequestDto.getLatArrivingAddress());
       carRequest.setStatus(carRequestDto.getStatus());
     }
+    String carRequestId = carRequestRepository.save(carRequest).getId();
     // create a new car request to car-request-queue
     queueProducer.send(carRequest, carRequestQueue);
-    return carRequestRepository.save(carRequest).getId();
+    return carRequestId;
   }
 }

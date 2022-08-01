@@ -1,4 +1,4 @@
-package com.hcmus.socketservice.entity.dto;
+package com.hcmus.socketservice.model.dto;
 
 
 import lombok.AllArgsConstructor;
@@ -9,13 +9,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CarRequestDto {
-
   private String id;
   private String customerId;
+  private String customerPhone;
   private String pickingAddress;
   private String arrivingAddress;
-  private Double lngPickingAddress;
-  private Double latPickingAddress;
   private Double lngArrivingAddress;
   private Double latArrivingAddress;
+  private Double lngPickingAddress;
+  private Double latPickingAddress;
+  private String status;
 }
