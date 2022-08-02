@@ -25,10 +25,10 @@ public class CarRequest extends BaseEntity {
 
   private String arrivingAddress;
 
-  @NotNull
+//  @NotNull
   private Double lngPickingAddress;
 
-  @NotNull
+//  @NotNull
   private Double latPickingAddress;
 
   private Double lngArrivingAddress;

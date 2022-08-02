@@ -1,6 +1,6 @@
 package com.hcmus.wiberback.service.impl;
 
-import com.hcmus.wiberback.model.dto.CallCenterRequestDto;
+import com.hcmus.wiberback.model.dto.CallCenterDto;
 import com.hcmus.wiberback.model.entity.Account;
 import com.hcmus.wiberback.model.entity.CallCenter;
 import com.hcmus.wiberback.model.exception.AccountNotFoundException;
@@ -25,15 +25,15 @@ public class CallCenterServiceImpl implements CallCenterService {
   }
 
   @Override
-  public String saveCallCenter(CallCenterRequestDto callCenterRequestDto) {
+  public String saveCallCenter(CallCenterDto callCenterDto) {
     Account account =
         accountRepository
-            .findAccountByPhone(callCenterRequestDto.getPhone())
+            .findAccountByPhone(callCenterDto.getPhone())
             .orElseThrow(() -> new AccountNotFoundException("Account not found",
-                callCenterRequestDto.getPhone()));
+                callCenterDto.getPhone()));
 
     CallCenter staff = new CallCenter();
-    staff.setName(callCenterRequestDto.getName());
+    staff.setName(callCenterDto.getName());
     staff.setAccount(account);
 
     return callCenterRepository.save(staff).getId();
@@ -54,5 +54,10 @@ public class CallCenterServiceImpl implements CallCenterService {
 
     return callCenterRepository.findCallCenterByAccount(account).orElseThrow(
         () -> new UserNotFoundException("CallCenter with phone number not found", phone));
+  }
+
+  @Override
+  public void deleteCallCenter(String id) {
+    callCenterRepository.deleteById(id);
   }
 }

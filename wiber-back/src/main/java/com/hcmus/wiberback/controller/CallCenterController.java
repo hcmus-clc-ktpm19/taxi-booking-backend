@@ -1,6 +1,6 @@
 package com.hcmus.wiberback.controller;
 
-import com.hcmus.wiberback.model.dto.CallCenterRequestDto;
+import com.hcmus.wiberback.model.dto.CallCenterDto;
 import com.hcmus.wiberback.model.dto.CallCenterResponseDto;
 import com.hcmus.wiberback.service.CallCenterService;
 import java.util.List;
@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,15 +23,31 @@ public class CallCenterController extends AbstractApplicationController {
   private final CallCenterService callCenterService;
 
   @GetMapping("/all")
-  public ResponseEntity<List<CallCenterResponseDto>> getAllCallCenter() {
+  public ResponseEntity<List<CallCenterDto>> getAllCallCenter() {
     return ResponseEntity.ok(callCenterService.getAllCallCenter().stream()
-        .map(mapper::toCallCenterResponseDto)
+        .map(mapper::toCallCenterDto)
         .collect(Collectors.toList()));
+  }
+
+  @GetMapping("/user/{id}")
+  public ResponseEntity<CallCenterDto> getCallCenterById(@PathVariable String id) {
+    return ResponseEntity.ok(mapper.toCallCenterDto(callCenterService.findCallCenterById(id)));
+  }
+
+  @GetMapping("/user/phone/{phone}")
+  public ResponseEntity<CallCenterDto> getCallCenterByPhone(@PathVariable String phone) {
+    return ResponseEntity.ok(mapper.toCallCenterDto(callCenterService.findCallCenterByPhone(phone)));
   }
 
   @PostMapping
   public ResponseEntity<String> saveAccount(
-      @Valid @RequestBody CallCenterRequestDto callCenterRequestDto) {
-    return ResponseEntity.ok(callCenterService.saveCallCenter(callCenterRequestDto));
+      @Valid @RequestBody CallCenterDto callCenterDto) {
+    return ResponseEntity.ok(callCenterService.saveCallCenter(callCenterDto));
+  }
+
+  @DeleteMapping("/user/{id}")
+  public ResponseEntity<String> deleteCallCenter(@PathVariable String id) {
+    callCenterService.deleteCallCenter(id);
+    return ResponseEntity.ok("Delete call center success");
   }
 }
