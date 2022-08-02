@@ -3,6 +3,7 @@ package com.hcmus.wiberback.service.impl;
 import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.model.entity.CarRequest;
 import com.hcmus.wiberback.model.entity.Customer;
+import com.hcmus.wiberback.model.enums.CarRequestStatus;
 import com.hcmus.wiberback.model.exception.CarRequestNotFoundException;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
 import com.hcmus.wiberback.repository.CarRequestRepository;
@@ -24,6 +25,8 @@ public class CarRequestServiceImpl implements CarRequestService {
   private final CarRequestMessageSender queueProducer;
   @Qualifier("carRequestQueue")
   private final Queue carRequestQueue;
+  @Qualifier("carRequestStatusQueue")
+  private final Queue carRequestStatusQueue;
 
   @Override
   public List<CarRequest> findAllCarRequests() {
@@ -43,6 +46,7 @@ public class CarRequestServiceImpl implements CarRequestService {
             .findById(customerId)
             .orElseThrow(() -> new UserNotFoundException("Customer not found", customerId)));
   }
+
 
   @Override
   public String saveOrUpdateCarRequest(CarRequestDto carRequestDto) {
@@ -76,6 +80,17 @@ public class CarRequestServiceImpl implements CarRequestService {
     String carRequestId = carRequestRepository.save(carRequest).getId();
     // create a new car request to car-request-queue
     queueProducer.send(carRequest, carRequestQueue);
+    return carRequestId;
+  }
+  @Override
+  public String acceptCarRequest(CarRequestDto carRequestDto) {
+    CarRequest carRequest = carRequestRepository.findById(carRequestDto.getId())
+        .orElseThrow(() -> new CarRequestNotFoundException("Car request not found", carRequestDto.getId()));
+    carRequest.setStatus(carRequestDto.getStatus());
+    // update in database
+    String carRequestId = carRequestRepository.save(carRequest).getId();
+    // create a message in queue to notify customer
+    queueProducer.send(carRequest, carRequestStatusQueue);
     return carRequestId;
   }
 }

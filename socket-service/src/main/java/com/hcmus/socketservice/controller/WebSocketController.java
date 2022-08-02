@@ -3,6 +3,7 @@ package com.hcmus.socketservice.controller;
 import com.hcmus.socketservice.model.dto.CarRequestDto;
 import com.hcmus.socketservice.model.entity.ChatMessage;
 import com.hcmus.socketservice.model.entity.Message;
+import com.hcmus.socketservice.model.entity.PrivateResponse;
 import com.hcmus.socketservice.model.entity.Response;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -41,20 +42,25 @@ public class WebSocketController {
    *                  validate
    * @return return client message to all clients that subscribe to <code>/b</code>
    */
-  // problem: when socket receive message, it need to trigger the broadcast method to all drivers
-//    @MessageMapping("/broadcast")
-//  @SendTo("/b")
   @RabbitListener(queues = {"${queue.car-request.name}"})
-  public void broadcast(CarRequestDto carRequestDtoInfo) {
-    val response = new Response("Token check failed!", carRequestDtoInfo.getLatPickingAddress(),
-        carRequestDtoInfo.getLngPickingAddress());
-    log.info("Received full message: {}", carRequestDtoInfo);
-    response.setResponse("Get customer from " + carRequestDtoInfo.getPickingAddress() + " to "
-        + carRequestDtoInfo.getArrivingAddress());
+  public void broadcast(CarRequestDto carRequestDto) {
+    val response = new Response("Token check failed!", carRequestDto.getLatPickingAddress(),
+        carRequestDto.getLngPickingAddress());
+    log.info("Received full message: {}", carRequestDto);
+    response.setResponse("Get customer from " + carRequestDto.getPickingAddress() + " to "
+        + carRequestDto.getArrivingAddress());
     log.info("Broadcast message: {}", response.getResponse());
     simpMessagingTemplate.convertAndSend("/b", response);
   }
 
+//  @RabbitListener(queues = {"${queue.car-request-status.name}"})
+//  public void sendToCustomer(CarRequestDto carRequestDto) {
+//    PrivateResponse privateResponse = new PrivateResponse();
+//    log.info("Receive point-to-point chat message: [" + chatMessage.getFromUserID() + " -> "
+//        + chatMessage.getUserID() + ", " + chatMessage.getMessage() + "]");
+//    //Response response = new Response("Receive message from user " + chatMessage.getFromUserID() + ": " + chatMessage.getMessage());
+//    //simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatMessage.getUserID()), "/msg", response);
+//  }
   /**
    * Add a placeholder in <code>@MessageMapping</code> to get the dynamic param in websocket url,
    * for dynamic resending. Message sent to this endpoint will be resent to any clients that

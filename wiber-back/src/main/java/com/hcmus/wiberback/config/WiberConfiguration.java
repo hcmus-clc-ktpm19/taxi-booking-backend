@@ -30,6 +30,8 @@ public class WiberConfiguration {
   @Value("${queue.car-request.name}")
   private String carRequestQueueName;
 
+  @Value("${queue.car-request-status.name}")
+  private String carRequestStatusQueueName;
   private final RedisConnectionFactory redisConnectionFactory;
 
   public WiberConfiguration(RedisConnectionFactory redisConnectionFactory) {
@@ -87,7 +89,10 @@ public class WiberConfiguration {
   public Queue carRequestQueue() {
     return new Queue(carRequestQueueName, true);
   }
-
+  @Bean
+  public Queue carRequestStatusQueue() {
+    return new Queue(carRequestStatusQueueName, true);
+  }
   @Bean
   public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
     final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
