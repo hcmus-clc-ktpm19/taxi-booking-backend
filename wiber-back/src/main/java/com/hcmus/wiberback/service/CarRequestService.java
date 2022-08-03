@@ -9,6 +9,4 @@ public interface CarRequestService {
   CarRequest findCarRequestById(String id);
   List<CarRequest> findCarRequestsByCustomerId(String customerId);
   String saveOrUpdateCarRequest(CarRequestDto carRequestDto);
-
-  String acceptCarRequest(CarRequestDto carRequestDto);
 }

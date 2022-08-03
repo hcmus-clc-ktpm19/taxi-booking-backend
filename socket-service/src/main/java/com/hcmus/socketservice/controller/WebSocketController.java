@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
@@ -30,12 +27,10 @@ public class WebSocketController {
 
   /**
    * <code>@MessageMapping</code> defines the endpoint for receiving messages, client will send
-   * websocket message
-   * to endpoints defined in this annotation.
+   * websocket message to endpoints defined in this annotation.
    * <code>@SendTo</code> defines the return value's target endpoint of this method, clients which
-   * subscribe to
-   * this endpoint will receive the return value of this method. This method will simply send
-   * messages received to all clients that subscribe to endpoint specified in
+   * subscribe to this endpoint will receive the return value of this method. This method will
+   * simply send messages received to all clients that subscribe to endpoint specified in
    * <code>@SendTo</code>, just like a broadcast
    *
    * @param //message client message //     * @param authorizationToken customize header, for token
@@ -44,8 +39,7 @@ public class WebSocketController {
    */
   @RabbitListener(queues = {"${queue.car-request.name}"})
   public void broadcast(CarRequestDto carRequestDto) {
-    val response = new Response("Token check failed!", carRequestDto.getLatPickingAddress(),
-        carRequestDto.getLngPickingAddress());
+    val response = new Response("Token check failed!", carRequestDto);
     log.info("Received full message: {}", carRequestDto);
     response.setResponse("Get customer from " + carRequestDto.getPickingAddress() + " to "
         + carRequestDto.getArrivingAddress());
@@ -53,14 +47,12 @@ public class WebSocketController {
     simpMessagingTemplate.convertAndSend("/b", response);
   }
 
-//  @RabbitListener(queues = {"${queue.car-request-status.name}"})
-//  public void sendToCustomer(CarRequestDto carRequestDto) {
-//    PrivateResponse privateResponse = new PrivateResponse();
-//    log.info("Receive point-to-point chat message: [" + chatMessage.getFromUserID() + " -> "
-//        + chatMessage.getUserID() + ", " + chatMessage.getMessage() + "]");
-//    //Response response = new Response("Receive message from user " + chatMessage.getFromUserID() + ": " + chatMessage.getMessage());
-//    //simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatMessage.getUserID()), "/msg", response);
-//  }
+  @RabbitListener(queues = {"${queue.car-request-status.name}"})
+  public void sendToCustomer(CarRequestDto carRequestDto) {
+    Message message = new Message("Driver ABC has accepted your request!");
+    simpMessagingTemplate.convertAndSendToUser(String.valueOf(carRequestDto.getId()), "/msg", message);
+  }
+
   /**
    * Add a placeholder in <code>@MessageMapping</code> to get the dynamic param in websocket url,
    * for dynamic resending. Message sent to this endpoint will be resent to any clients that
@@ -71,7 +63,7 @@ public class WebSocketController {
    */
   @MessageMapping("/group/{groupID}")
   public void group(@DestinationVariable int groupID, Message message) {
-    log.info("Receive group message: [" + groupID + " -> " + message.getName() + "]");
+    log.info("Receive group message: [" + groupID + " -> " + message.getMessage() + "]");
     //Response response = new Response("Welcome to group " + groupID + ", " + message.getName() + "!");
     //simpMessagingTemplate.convertAndSend("/g/" + groupID, response);
   }

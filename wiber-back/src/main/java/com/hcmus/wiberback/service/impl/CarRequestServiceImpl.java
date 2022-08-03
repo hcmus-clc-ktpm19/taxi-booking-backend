@@ -11,6 +11,7 @@ import com.hcmus.wiberback.repository.CustomerRepository;
 import com.hcmus.wiberback.service.CarRequestMessageSender;
 import com.hcmus.wiberback.service.CarRequestService;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -78,19 +79,13 @@ public class CarRequestServiceImpl implements CarRequestService {
       carRequest.setStatus(carRequestDto.getStatus());
     }
     String carRequestId = carRequestRepository.save(carRequest).getId();
+    carRequestDto.setId(carRequestId);
     // create a new car request to car-request-queue
-    queueProducer.send(carRequest, carRequestQueue);
-    return carRequestId;
-  }
-  @Override
-  public String acceptCarRequest(CarRequestDto carRequestDto) {
-    CarRequest carRequest = carRequestRepository.findById(carRequestDto.getId())
-        .orElseThrow(() -> new CarRequestNotFoundException("Car request not found", carRequestDto.getId()));
-    carRequest.setStatus(carRequestDto.getStatus());
-    // update in database
-    String carRequestId = carRequestRepository.save(carRequest).getId();
-    // create a message in queue to notify customer
-    queueProducer.send(carRequest, carRequestStatusQueue);
+    if(Objects.equals(carRequestDto.getStatus(), CarRequestStatus.WAITING.name())) {
+      queueProducer.send(carRequestDto, carRequestQueue);
+    }else if(Objects.equals(carRequestDto.getStatus(), CarRequestStatus.ACCEPTED.name())) {
+      queueProducer.send(carRequestDto, carRequestStatusQueue);
+    }
     return carRequestId;
   }
 }

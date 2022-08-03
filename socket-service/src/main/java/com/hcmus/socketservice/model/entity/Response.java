@@ -1,5 +1,6 @@
 package com.hcmus.socketservice.model.entity;
 
+import com.hcmus.socketservice.model.dto.CarRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Response {
     private String response;
-    private Double latPickingAddress;
-    private Double lngPickingAddress;
+    private CarRequestDto carRequestDto;
 }

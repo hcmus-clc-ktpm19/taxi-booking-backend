@@ -50,14 +50,6 @@ public class CarRequestController extends AbstractApplicationController {
   @PostMapping("/create-or-update")
   public ResponseEntity<String> saveOrUpdateCarRequest(@RequestBody CarRequestDto carRequestDto) {
     String id = carRequestService.saveOrUpdateCarRequest(carRequestDto);
-//    queueProducer.send(carRequestDto, smsQueue);
-
-    return ResponseEntity.ok(id);
-  }
-
-  @PutMapping("/accept-car-request")
-  public ResponseEntity<String> acceptCarRequest(@RequestBody CarRequestDto carRequestDto) {
-    String id = carRequestService.acceptCarRequest(carRequestDto);
     return ResponseEntity.ok(id);
   }
 }
