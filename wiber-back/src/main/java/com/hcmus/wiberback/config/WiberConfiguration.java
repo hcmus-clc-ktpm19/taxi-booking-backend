@@ -24,8 +24,14 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 @Configuration
 public class WiberConfiguration {
 
-  @Value("${queue.name}")
-  private String queueName;
+  @Value("${queue.sms.name}")
+  private String smsQueueName;
+
+  @Value("${queue.car-request.name}")
+  private String carRequestQueueName;
+
+  @Value("${queue.car-request-status.name}")
+  private String carRequestStatusQueueName;
   private final RedisConnectionFactory redisConnectionFactory;
 
   public WiberConfiguration(RedisConnectionFactory redisConnectionFactory) {
@@ -76,10 +82,17 @@ public class WiberConfiguration {
   }
 
   @Bean
-  public Queue queue() {
-    return new Queue(queueName, true);
+  public Queue smsQueue() {
+    return new Queue(smsQueueName, true);
   }
-
+  @Bean
+  public Queue carRequestQueue() {
+    return new Queue(carRequestQueueName, true);
+  }
+  @Bean
+  public Queue carRequestStatusQueue() {
+    return new Queue(carRequestStatusQueueName, true);
+  }
   @Bean
   public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
     final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);

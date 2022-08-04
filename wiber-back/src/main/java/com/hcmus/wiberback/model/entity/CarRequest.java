@@ -33,7 +33,7 @@ public class CarRequest extends BaseEntity {
 
   private Double lngArrivingAddress;
   private Double latArrivingAddress;
-
+  private String status;
   @NotEmpty
   @NotBlank
   private String carType;

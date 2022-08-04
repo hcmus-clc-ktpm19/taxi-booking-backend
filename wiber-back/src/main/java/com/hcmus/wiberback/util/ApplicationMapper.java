@@ -63,6 +63,7 @@ public class ApplicationMapper {
         .latPickingAddress(entity.getLatPickingAddress())
         .lngArrivingAddress(entity.getLngArrivingAddress())
         .latArrivingAddress(entity.getLatArrivingAddress())
+        .status(entity.getStatus())
         .build();
   }
 }

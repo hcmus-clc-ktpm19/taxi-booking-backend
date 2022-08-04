@@ -4,16 +4,16 @@ import com.hcmus.wiberback.service.CarRequestMessageSender;
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class CarRequestMessageSenderImpl implements CarRequestMessageSender {
   private final RabbitTemplate rabbitTemplate;
-  private final Queue queue;
 
   @Override
-  public void send(Object message) {
+  public void send(Object message, Queue queue) {
     rabbitTemplate.convertAndSend(queue.getName(), message);
   }
 }
