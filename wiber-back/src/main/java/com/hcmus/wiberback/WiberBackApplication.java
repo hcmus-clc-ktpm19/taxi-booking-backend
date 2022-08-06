@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -15,6 +16,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableCaching
 @EnableRabbit
 @PropertySource({"classpath:application.yaml"})
+@EnableMongoAuditing
 public class WiberBackApplication {
 
 	public static void main(String[] args) {

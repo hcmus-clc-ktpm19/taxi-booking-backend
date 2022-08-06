@@ -2,6 +2,7 @@ package com.hcmus.wiberback.controller;
 
 import com.hcmus.wiberback.model.dto.CallCenterDto;
 import com.hcmus.wiberback.model.dto.CallCenterResponseDto;
+import com.hcmus.wiberback.model.entity.CallCenter;
 import com.hcmus.wiberback.service.CallCenterService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,9 +41,9 @@ public class CallCenterController extends AbstractApplicationController {
   }
 
   @PostMapping
-  public ResponseEntity<String> saveAccount(
+  public ResponseEntity<CallCenter> saveAccount(
       @Valid @RequestBody CallCenterDto callCenterDto) {
-    return ResponseEntity.ok(callCenterService.saveCallCenter(callCenterDto));
+    return ResponseEntity.ok(callCenterService.saveOrUpdateCallCenter(callCenterDto));
   }
 
   @DeleteMapping("/user/{id}")

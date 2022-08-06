@@ -54,6 +54,7 @@ public class ApplicationMapper {
   }
 
   public CarRequestDto toCarRequestDto(CarRequest entity) {
+    // TODO : get phone with customer has not account
     return CarRequestDto.builder()
         .id(entity.getId())
         .customerId(entity.getCustomer().getId())

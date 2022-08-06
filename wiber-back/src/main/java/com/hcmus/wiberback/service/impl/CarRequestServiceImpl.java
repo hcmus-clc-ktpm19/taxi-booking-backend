@@ -4,17 +4,19 @@ import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.model.entity.CallCenter;
 import com.hcmus.wiberback.model.entity.CarRequest;
 import com.hcmus.wiberback.model.entity.Customer;
+import com.hcmus.wiberback.model.enums.CarRequestStatus;
 import com.hcmus.wiberback.model.exception.CarRequestNotFoundException;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
 import com.hcmus.wiberback.repository.CallCenterRepository;
 import com.hcmus.wiberback.repository.CarRequestRepository;
 import com.hcmus.wiberback.repository.CustomerRepository;
+import com.hcmus.wiberback.service.CarRequestMessageSender;
 import com.hcmus.wiberback.service.CarRequestService;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.core.Queue;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,6 +26,11 @@ public class CarRequestServiceImpl implements CarRequestService {
   private final CarRequestRepository carRequestRepository;
   private final CustomerRepository customerRepository;
   private final CallCenterRepository callCenterRepository;
+  private final CarRequestMessageSender queueProducer;
+  @Qualifier("carRequestQueue")
+  private final Queue carRequestQueue;
+  @Qualifier("carRequestStatusQueue")
+  private final Queue carRequestStatusQueue;
 
   @Override
   public List<CarRequest> findAllCarRequests() {
@@ -46,45 +53,47 @@ public class CarRequestServiceImpl implements CarRequestService {
 
   @Override
   public String saveOrUpdateCarRequest(CarRequestDto carRequestDto) {
-    Customer customer = new Customer();
+    Customer customer;
     CallCenter callCenter = new CallCenter();
-    //TODO edit if else
     if(carRequestDto.getCustomerId() != null){
       customer = customerRepository
           .findById(carRequestDto.getCustomerId())
-//          .orElse()
           .orElseThrow(
               () -> new UserNotFoundException("Customer not found", carRequestDto.getCustomerId()));
     } else {
-      //TODO
       callCenter = callCenterRepository
           .findById(carRequestDto.getCallCenterId())
           .orElseThrow(
               () -> new UserNotFoundException("Callcenter not found", carRequestDto.getCallCenterId()));
+//      customer = customerRepository
+//          .findCustomerByPhone(carRequestDto.getCustomerPhone())
+//          .orElse(() -> {
+//            Customer newCustomer = new Customer();
+//            newCustomer.setName(carRequestDto.getCustomerName());
+//            newCustomer.setPhone(carRequestDto.getCustomerPhone());
+//            customerRepository.save(newCustomer);
+//          });
+      customer = customerRepository.findCustomerByPhone(carRequestDto.getCustomerPhone());
+      if(customer == null){
+        customer = new Customer();
+        customer.setName(carRequestDto.getCustomerName());
+        customer.setPhone(carRequestDto.getCustomerPhone());
+        customer = customerRepository.save(customer);
+      }
     }
 
     CarRequest carRequest;
     if (carRequestDto.getId() == null) {
-      if(carRequestDto.getCustomerId() != null){
-        carRequest = CarRequest.builder().customer(customer)
-            .pickingAddress(carRequestDto.getPickingAddress())
-            .arrivingAddress(carRequestDto.getArrivingAddress())
-            .lngPickingAddress(carRequestDto.getLngPickingAddress())
-            .latPickingAddress(carRequestDto.getLatPickingAddress())
-            .lngArrivingAddress(carRequestDto.getLngArrivingAddress())
-            .latArrivingAddress(carRequestDto.getLatArrivingAddress()).build();
-      } else {
-        carRequest = CarRequest.builder().callCenter(callCenter)
-            .pickingAddress(carRequestDto.getPickingAddress())
-//            .arrivingAddress(carRequestDto.getArrivingAddress())
-//            .lngPickingAddress(carRequestDto.getLngPickingAddress())
-//            .latPickingAddress(carRequestDto.getLatPickingAddress())
-//            .lngArrivingAddress(carRequestDto.getLngArrivingAddress())
-//            .latArrivingAddress(carRequestDto.getLatArrivingAddress())
-            .carType(carRequestDto.getCarType())
-            .build();
-
-      }
+      carRequest = CarRequest.builder().customer(customer)
+          .callCenter(callCenter)
+          .pickingAddress(carRequestDto.getPickingAddress())
+          .arrivingAddress(carRequestDto.getArrivingAddress())
+          .lngPickingAddress(carRequestDto.getLngPickingAddress())
+          .latPickingAddress(carRequestDto.getLatPickingAddress())
+          .lngArrivingAddress(carRequestDto.getLngArrivingAddress())
+          .latArrivingAddress(carRequestDto.getLatArrivingAddress())
+          .status(carRequestDto.getStatus())
+          .carType(carRequestDto.getCarType()).build();
     } else {
       carRequest = carRequestRepository.findById(carRequestDto.getId())
           .orElseThrow(() -> new CarRequestNotFoundException("Car request not found",
@@ -95,8 +104,17 @@ public class CarRequestServiceImpl implements CarRequestService {
       carRequest.setLatPickingAddress(carRequestDto.getLatPickingAddress());
       carRequest.setLngArrivingAddress(carRequestDto.getLngArrivingAddress());
       carRequest.setLatArrivingAddress(carRequestDto.getLatArrivingAddress());
+      carRequest.setStatus(carRequestDto.getStatus());
+      carRequest.setCarType(carRequestDto.getCarType());
     }
-
-    return carRequestRepository.save(carRequest).getId();
+    String carRequestId = carRequestRepository.save(carRequest).getId();
+    carRequestDto.setId(carRequestId);
+    // create a new car request to car-request-queue
+    if(Objects.equals(carRequestDto.getStatus(), CarRequestStatus.WAITING.name())) {
+      queueProducer.send(carRequestDto, carRequestQueue);
+    }else if(Objects.equals(carRequestDto.getStatus(), CarRequestStatus.ACCEPTED.name())) {
+      queueProducer.send(carRequestDto, carRequestStatusQueue);
+    }
+    return carRequestId;
   }
 }

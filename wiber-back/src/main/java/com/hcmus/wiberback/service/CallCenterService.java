@@ -7,7 +7,7 @@ import java.util.List;
 public interface CallCenterService {
   List<CallCenter> getAllCallCenter();
 
-  String saveCallCenter(CallCenterDto callCenterDto);
+  CallCenter saveOrUpdateCallCenter(CallCenterDto callCenterDto);
 
   CallCenter findCallCenterByPhone(String phone);
 

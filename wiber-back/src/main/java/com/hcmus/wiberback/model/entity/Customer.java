@@ -16,8 +16,8 @@ public class Customer extends BaseEntity {
   @NotBlank
   private String name;
 
-  // TODO delete notnull
-  @NotNull
+  private String phone;
+
   @DBRef
   private Account account;
 }

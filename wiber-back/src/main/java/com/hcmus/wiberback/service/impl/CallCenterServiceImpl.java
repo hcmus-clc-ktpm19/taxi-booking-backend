@@ -10,6 +10,7 @@ import com.hcmus.wiberback.repository.CallCenterRepository;
 import com.hcmus.wiberback.service.CallCenterService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -25,18 +26,25 @@ public class CallCenterServiceImpl implements CallCenterService {
   }
 
   @Override
-  public String saveCallCenter(CallCenterDto callCenterDto) {
+  @CachePut(value = "callcenter", condition = "#callCenterDto.id != null", key = "#callCenterDto.id")
+  public CallCenter saveOrUpdateCallCenter(CallCenterDto callCenterDto) {
     Account account =
         accountRepository
             .findAccountByPhone(callCenterDto.getPhone())
             .orElseThrow(() -> new AccountNotFoundException("Account not found",
                 callCenterDto.getPhone()));
 
-    CallCenter staff = new CallCenter();
-    staff.setName(callCenterDto.getName());
-    staff.setAccount(account);
+    CallCenter callCenter;
+    if(callCenterRepository.existsByAccount(account)) {
+      callCenter = findCallCenterByPhone(callCenterDto.getPhone());
+      callCenter.setName(callCenterDto.getName());
+    } else {
+      callCenter = new CallCenter();
+      callCenter.setName(callCenterDto.getName());
+      callCenter.setAccount(account);
+    }
 
-    return callCenterRepository.save(staff).getId();
+    return callCenterRepository.save(callCenter);
   }
 
   @Override
