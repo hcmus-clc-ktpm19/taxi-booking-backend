@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface CustomerRepository extends MongoRepository<Customer, String> {
 
   Optional<Customer> findCustomerByAccount(Account account);
-
+  Customer findCustomerByPhone(String phone);
+//  Optional<Customer> findCustomerByPhone(String phone);
   boolean existsByAccount(Account account);
 }

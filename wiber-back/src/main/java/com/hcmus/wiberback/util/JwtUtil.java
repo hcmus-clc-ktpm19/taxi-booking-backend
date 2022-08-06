@@ -28,7 +28,8 @@ public class JwtUtil {
 
   public String generateAccessToken(User user, String issuer) {
     // Access token expires in 8 hour
-    Date expiredDate = new Date(System.currentTimeMillis() + EIGHT_HOURS);
+    //Date expiredDate = new Date(System.currentTimeMillis() + EIGHT_HOURS);
+    Date expiredDate = new Date(System.currentTimeMillis() + THREE_MONTHS);
 
     return JWT.create()
         .withSubject(user.getUsername())

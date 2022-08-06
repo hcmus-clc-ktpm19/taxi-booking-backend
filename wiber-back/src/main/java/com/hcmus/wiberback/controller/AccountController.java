@@ -40,8 +40,7 @@ public class AccountController extends AbstractApplicationController {
     SecurityContextHolder.getContext().setAuthentication(authentication);
     User user = (User) authentication.getPrincipal();
     String accessToken = jwtUtil.generateAccessToken(user,"http://localhost:8080/api/v1/auth/signin");
-    String refreshToken = jwtUtil.generateRefreshToken(user.getUsername(),"http://localhost:8080/api/v1/auth/signin");
-    Map<String, String> tokens = Map.of("accessToken", accessToken, "refreshToken", refreshToken);
+    Map<String, String> tokens = Map.of("accessToken", accessToken, "phone", user.getUsername());
     return ResponseEntity.ok(tokens);
   }
 

@@ -1,11 +1,13 @@
 package com.hcmus.wiberback.service.impl;
 
 import com.hcmus.wiberback.model.dto.CarRequestDto;
+import com.hcmus.wiberback.model.entity.CallCenter;
 import com.hcmus.wiberback.model.entity.CarRequest;
 import com.hcmus.wiberback.model.entity.Customer;
 import com.hcmus.wiberback.model.enums.CarRequestStatus;
 import com.hcmus.wiberback.model.exception.CarRequestNotFoundException;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
+import com.hcmus.wiberback.repository.CallCenterRepository;
 import com.hcmus.wiberback.repository.CarRequestRepository;
 import com.hcmus.wiberback.repository.CustomerRepository;
 import com.hcmus.wiberback.service.CarRequestMessageSender;
@@ -23,6 +25,7 @@ public class CarRequestServiceImpl implements CarRequestService {
 
   private final CarRequestRepository carRequestRepository;
   private final CustomerRepository customerRepository;
+  private final CallCenterRepository callCenterRepository;
   private final CarRequestMessageSender queueProducer;
   @Qualifier("carRequestQueue")
   private final Queue carRequestQueue;
@@ -48,24 +51,49 @@ public class CarRequestServiceImpl implements CarRequestService {
             .orElseThrow(() -> new UserNotFoundException("Customer not found", customerId)));
   }
 
-
   @Override
   public String saveOrUpdateCarRequest(CarRequestDto carRequestDto) {
-    Customer customer = customerRepository
-        .findById(carRequestDto.getCustomerId())
-        .orElseThrow(
-            () -> new UserNotFoundException("Customer not found", carRequestDto.getCustomerId()));
+    Customer customer;
+    CallCenter callCenter = new CallCenter();
+    if(carRequestDto.getCustomerId() != null){
+      customer = customerRepository
+          .findById(carRequestDto.getCustomerId())
+          .orElseThrow(
+              () -> new UserNotFoundException("Customer not found", carRequestDto.getCustomerId()));
+    } else {
+      callCenter = callCenterRepository
+          .findById(carRequestDto.getCallCenterId())
+          .orElseThrow(
+              () -> new UserNotFoundException("Callcenter not found", carRequestDto.getCallCenterId()));
+//      customer = customerRepository
+//          .findCustomerByPhone(carRequestDto.getCustomerPhone())
+//          .orElse(() -> {
+//            Customer newCustomer = new Customer();
+//            newCustomer.setName(carRequestDto.getCustomerName());
+//            newCustomer.setPhone(carRequestDto.getCustomerPhone());
+//            customerRepository.save(newCustomer);
+//          });
+      customer = customerRepository.findCustomerByPhone(carRequestDto.getCustomerPhone());
+      if(customer == null){
+        customer = new Customer();
+        customer.setName(carRequestDto.getCustomerName());
+        customer.setPhone(carRequestDto.getCustomerPhone());
+        customer = customerRepository.save(customer);
+      }
+    }
 
     CarRequest carRequest;
     if (carRequestDto.getId() == null) {
       carRequest = CarRequest.builder().customer(customer)
+          .callCenter(callCenter)
           .pickingAddress(carRequestDto.getPickingAddress())
           .arrivingAddress(carRequestDto.getArrivingAddress())
           .lngPickingAddress(carRequestDto.getLngPickingAddress())
           .latPickingAddress(carRequestDto.getLatPickingAddress())
           .lngArrivingAddress(carRequestDto.getLngArrivingAddress())
           .latArrivingAddress(carRequestDto.getLatArrivingAddress())
-          .status(carRequestDto.getStatus()).build();
+          .status(carRequestDto.getStatus())
+          .carType(carRequestDto.getCarType()).build();
     } else {
       carRequest = carRequestRepository.findById(carRequestDto.getId())
           .orElseThrow(() -> new CarRequestNotFoundException("Car request not found",
@@ -77,6 +105,7 @@ public class CarRequestServiceImpl implements CarRequestService {
       carRequest.setLngArrivingAddress(carRequestDto.getLngArrivingAddress());
       carRequest.setLatArrivingAddress(carRequestDto.getLatArrivingAddress());
       carRequest.setStatus(carRequestDto.getStatus());
+      carRequest.setCarType(carRequestDto.getCarType());
     }
     String carRequestId = carRequestRepository.save(carRequest).getId();
     carRequestDto.setId(carRequestId);

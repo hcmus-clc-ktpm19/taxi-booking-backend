@@ -1,13 +1,16 @@
 package com.hcmus.wiberback.model.entity;
 
 
-import java.util.Date;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
+import org.joda.time.DateTime;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -16,7 +19,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 public class CarRequest extends BaseEntity {
 
+  @NotNull
+  @DBRef
   private Customer customer;
+  @DBRef
   private CallCenter callCenter;
 
   @NotEmpty
@@ -25,10 +31,11 @@ public class CarRequest extends BaseEntity {
 
   private String arrivingAddress;
 
-  @NotNull
+  // TODO : should be not null
+//  @NotNull
   private Double lngPickingAddress;
 
-  @NotNull
+//  @NotNull
   private Double latPickingAddress;
 
   private Double lngArrivingAddress;
@@ -38,8 +45,9 @@ public class CarRequest extends BaseEntity {
   @NotBlank
   private String carType;
 
-  @NotNull
-  private Date createdAt;
-  @NotNull
-  private Date updatedAt;
+  @CreatedDate
+  private DateTime createdAt;
+
+  @LastModifiedDate
+  private DateTime updatedAt;
 }
