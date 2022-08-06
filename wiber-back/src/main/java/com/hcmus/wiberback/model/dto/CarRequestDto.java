@@ -41,4 +41,6 @@ public class CarRequestDto {
   @NotBlank
   private String carType;
 
+  @NotNull
+  private String status;
 }

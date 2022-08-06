@@ -1,6 +1,7 @@
 package com.hcmus.wiberback.model.entity;
 
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -8,6 +9,8 @@ import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -33,13 +36,16 @@ public class CarRequest extends BaseEntity {
 
   private Double lngArrivingAddress;
   private Double latArrivingAddress;
-
+  private String status;
   @NotEmpty
   @NotBlank
   private String carType;
 
   @NotNull
-  private Date createdAt;
+  @CreatedDate
+  private LocalDateTime createdAt;
+
   @NotNull
-  private Date updatedAt;
+  @LastModifiedDate
+  private LocalDateTime updatedAt;
 }

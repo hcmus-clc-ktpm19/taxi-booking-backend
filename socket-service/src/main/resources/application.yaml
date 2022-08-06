@@ -1,0 +1,14 @@
+spring:
+  config:
+    import: secret.yaml
+
+server:
+  port: 8082
+
+queue:
+  sms:
+    name: 'wiber-queue'
+  car-request:
+    name: 'car-request-queue'
+  car-request-status:
+    name: 'car-request-status-queue'

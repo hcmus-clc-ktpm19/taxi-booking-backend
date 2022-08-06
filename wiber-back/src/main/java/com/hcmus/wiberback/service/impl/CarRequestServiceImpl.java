@@ -48,12 +48,15 @@ public class CarRequestServiceImpl implements CarRequestService {
   public String saveOrUpdateCarRequest(CarRequestDto carRequestDto) {
     Customer customer = new Customer();
     CallCenter callCenter = new CallCenter();
+    //TODO edit if else
     if(carRequestDto.getCustomerId() != null){
       customer = customerRepository
           .findById(carRequestDto.getCustomerId())
+//          .orElse()
           .orElseThrow(
               () -> new UserNotFoundException("Customer not found", carRequestDto.getCustomerId()));
     } else {
+      //TODO
       callCenter = callCenterRepository
           .findById(carRequestDto.getCallCenterId())
           .orElseThrow(
@@ -79,8 +82,6 @@ public class CarRequestServiceImpl implements CarRequestService {
 //            .lngArrivingAddress(carRequestDto.getLngArrivingAddress())
 //            .latArrivingAddress(carRequestDto.getLatArrivingAddress())
             .carType(carRequestDto.getCarType())
-            .createdAt(new Date())
-            .updatedAt(new Date())
             .build();
 
       }
@@ -94,7 +95,6 @@ public class CarRequestServiceImpl implements CarRequestService {
       carRequest.setLatPickingAddress(carRequestDto.getLatPickingAddress());
       carRequest.setLngArrivingAddress(carRequestDto.getLngArrivingAddress());
       carRequest.setLatArrivingAddress(carRequestDto.getLatArrivingAddress());
-      carRequest.setUpdatedAt(new Date());
     }
 
     return carRequestRepository.save(carRequest).getId();

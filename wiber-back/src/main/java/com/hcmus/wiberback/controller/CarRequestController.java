@@ -6,10 +6,13 @@ import com.hcmus.wiberback.service.CarRequestService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.core.Queue;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +24,8 @@ public class CarRequestController extends AbstractApplicationController {
 
   private final CarRequestMessageSender queueProducer;
   private final CarRequestService carRequestService;
+  @Qualifier("smsQueue")
+  private final Queue smsQueue;
 
   @GetMapping("/all")
   public ResponseEntity<List<CarRequestDto>> findAllCarRequests() {
@@ -45,8 +50,6 @@ public class CarRequestController extends AbstractApplicationController {
   @PostMapping("/create-or-update")
   public ResponseEntity<String> saveOrUpdateCarRequest(@RequestBody CarRequestDto carRequestDto) {
     String id = carRequestService.saveOrUpdateCarRequest(carRequestDto);
-    queueProducer.send(carRequestDto);
-
     return ResponseEntity.ok(id);
   }
 }
