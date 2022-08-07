@@ -2,15 +2,14 @@ package com.hcmus.wiberback.util;
 
 import com.hcmus.wiberback.model.dto.AccountDto;
 import com.hcmus.wiberback.model.dto.CallCenterDto;
-import com.hcmus.wiberback.model.dto.CallCenterResponseDto;
 import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.model.dto.CustomerDto;
 import com.hcmus.wiberback.model.dto.DriverDto;
-import com.hcmus.wiberback.model.entity.Account;
-import com.hcmus.wiberback.model.entity.CallCenter;
-import com.hcmus.wiberback.model.entity.CarRequest;
-import com.hcmus.wiberback.model.entity.Customer;
-import com.hcmus.wiberback.model.entity.Driver;
+import com.hcmus.wiberback.model.entity.mongo.Account;
+import com.hcmus.wiberback.model.entity.mongo.CallCenter;
+import com.hcmus.wiberback.model.entity.mongo.CarRequest;
+import com.hcmus.wiberback.model.entity.mongo.Customer;
+import com.hcmus.wiberback.model.entity.mongo.Driver;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 

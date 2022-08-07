@@ -1,7 +1,7 @@
-package com.hcmus.wiberback.repository;
+package com.hcmus.wiberback.repository.mongo;
 
-import com.hcmus.wiberback.model.entity.Account;
-import com.hcmus.wiberback.model.entity.Customer;
+import com.hcmus.wiberback.model.entity.mongo.Account;
+import com.hcmus.wiberback.model.entity.mongo.Customer;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface CustomerRepository extends MongoRepository<Customer, String> {
 
   Optional<Customer> findCustomerByAccount(Account account);
-  Customer findCustomerByPhone(String phone);
-//  Optional<Customer> findCustomerByPhone(String phone);
+  Optional<Customer> findCustomerByPhone(String phone);
   boolean existsByAccount(Account account);
 }

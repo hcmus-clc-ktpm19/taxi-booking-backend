@@ -1,20 +1,22 @@
 package com.hcmus.wiberback.config;
 
+import com.hcmus.wiberback.model.entity.mongo.CarRequest;
+import com.hcmus.wiberback.model.entity.redis.CarRequestRedis;
+import com.hcmus.wiberback.repository.mongo.CarRequestRepository;
+import com.hcmus.wiberback.repository.redis.CarRequestRedisRepository;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -22,6 +24,11 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 @Component
 @Configuration
+@EnableCaching
+@EnableRabbit
+@EnableMongoAuditing
+@EnableMongoRepositories(basePackageClasses = {CarRequest.class, CarRequestRepository.class})
+@EnableRedisRepositories(basePackageClasses = {CarRequestRedis.class, CarRequestRedisRepository.class})
 public class WiberConfiguration {
 
   @Value("${queue.sms.name}")
@@ -32,31 +39,10 @@ public class WiberConfiguration {
 
   @Value("${queue.car-request-status.name}")
   private String carRequestStatusQueueName;
-  private final RedisConnectionFactory redisConnectionFactory;
-
-  public WiberConfiguration(RedisConnectionFactory redisConnectionFactory) {
-    this.redisConnectionFactory = redisConnectionFactory;
-  }
 
   @Bean
   public BCryptPasswordEncoder bCryptPasswordEncoder() {
     return new BCryptPasswordEncoder();
-  }
-
-  @Bean
-  public CacheManager cacheManager() {
-
-    return RedisCacheManager.RedisCacheManagerBuilder
-        .fromConnectionFactory(redisConnectionFactory)
-        .cacheDefaults(
-            RedisCacheConfiguration
-                .defaultCacheConfig()
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(
-                    new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
-                    new GenericJackson2JsonRedisSerializer()))
-        )
-        .build();
   }
 
   @Bean
@@ -85,14 +71,17 @@ public class WiberConfiguration {
   public Queue smsQueue() {
     return new Queue(smsQueueName, true);
   }
+
   @Bean
   public Queue carRequestQueue() {
     return new Queue(carRequestQueueName, true);
   }
+
   @Bean
   public Queue carRequestStatusQueue() {
     return new Queue(carRequestStatusQueueName, true);
   }
+
   @Bean
   public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
     final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);

@@ -1,5 +1,7 @@
 package com.hcmus.wiberback.model.dto;
 
+import com.hcmus.wiberback.model.enums.CarRequestStatus;
+import com.hcmus.wiberback.model.enums.CarType;
 import java.util.Date;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
@@ -39,8 +41,8 @@ public class CarRequestDto {
 
   @NotEmpty
   @NotBlank
-  private String carType;
+  private CarType carType;
 
   @NotNull
-  private String status;
+  private CarRequestStatus status;
 }

@@ -13,10 +13,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @SpringBootApplication
-@EnableCaching
-@EnableRabbit
 @PropertySource({"classpath:application.yaml"})
-@EnableMongoAuditing
 public class WiberBackApplication {
 
 	public static void main(String[] args) {
@@ -38,3 +35,4 @@ public class WiberBackApplication {
 		return new CorsFilter(urlBasedCorsConfigurationSource);
 	}
 }
+

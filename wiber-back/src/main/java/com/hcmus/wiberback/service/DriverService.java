@@ -1,7 +1,7 @@
 package com.hcmus.wiberback.service;
 
 import com.hcmus.wiberback.model.dto.DriverDto;
-import com.hcmus.wiberback.model.entity.Driver;
+import com.hcmus.wiberback.model.entity.mongo.Driver;
 import java.util.List;
 
 public interface DriverService {

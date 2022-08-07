@@ -94,13 +94,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     // callcenter url config
     http.authorizeRequests().antMatchers(HttpMethod.GET, CALLCENTER_URL)
-        .hasAnyAuthority(Role.CALLCENTER.name());
+        .hasAnyAuthority(Role.CALLCENTER.name(), Role.ADMIN.name());
     http.authorizeRequests().antMatchers(HttpMethod.POST, CALLCENTER_URL)
-        .hasAnyAuthority(Role.CALLCENTER.name());
+        .hasAnyAuthority(Role.CALLCENTER.name(), Role.ADMIN.name());
     http.authorizeRequests().antMatchers(HttpMethod.PUT, CALLCENTER_URL)
-        .hasAnyAuthority(Role.CALLCENTER.name());
+        .hasAnyAuthority(Role.CALLCENTER.name(), Role.ADMIN.name());
     http.authorizeRequests().antMatchers(HttpMethod.PATCH, CALLCENTER_URL)
-        .hasAnyAuthority(Role.CALLCENTER.name());
+        .hasAnyAuthority(Role.CALLCENTER.name(), Role.ADMIN.name());
 
     http.authorizeRequests().anyRequest().authenticated();
     http.addFilter(authenticationFilter)

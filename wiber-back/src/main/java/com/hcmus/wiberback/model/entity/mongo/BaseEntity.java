@@ -1,18 +1,23 @@
-package com.hcmus.wiberback.model.entity;
+package com.hcmus.wiberback.model.entity.mongo;
 
 import java.io.Serializable;
 import java.util.Objects;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document
 @RequiredArgsConstructor
 public abstract class BaseEntity implements Serializable {
+
   @Id
   protected String id;
+
+  @Version
+  protected Long version;
 
   @Override
   public boolean equals(Object o) {
