@@ -1,8 +1,7 @@
 package com.hcmus.wiberback.controller;
 
 import com.hcmus.wiberback.model.dto.CallCenterDto;
-import com.hcmus.wiberback.model.dto.CallCenterResponseDto;
-import com.hcmus.wiberback.model.entity.CallCenter;
+import com.hcmus.wiberback.model.entity.mongo.CallCenter;
 import com.hcmus.wiberback.service.CallCenterService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/callcenter")
 public class CallCenterController extends AbstractApplicationController {
+
   private final CallCenterService callCenterService;
 
   @GetMapping("/all")
@@ -37,7 +37,8 @@ public class CallCenterController extends AbstractApplicationController {
 
   @GetMapping("/user/phone/{phone}")
   public ResponseEntity<CallCenterDto> getCallCenterByPhone(@PathVariable String phone) {
-    return ResponseEntity.ok(mapper.toCallCenterDto(callCenterService.findCallCenterByPhone(phone)));
+    return ResponseEntity.ok(
+        mapper.toCallCenterDto(callCenterService.findCallCenterByPhone(phone)));
   }
 
   @PostMapping

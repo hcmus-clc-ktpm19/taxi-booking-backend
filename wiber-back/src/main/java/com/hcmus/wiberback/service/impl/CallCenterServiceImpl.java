@@ -1,12 +1,12 @@
 package com.hcmus.wiberback.service.impl;
 
 import com.hcmus.wiberback.model.dto.CallCenterDto;
-import com.hcmus.wiberback.model.entity.Account;
-import com.hcmus.wiberback.model.entity.CallCenter;
+import com.hcmus.wiberback.model.entity.mongo.Account;
+import com.hcmus.wiberback.model.entity.mongo.CallCenter;
 import com.hcmus.wiberback.model.exception.AccountNotFoundException;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
-import com.hcmus.wiberback.repository.AccountRepository;
-import com.hcmus.wiberback.repository.CallCenterRepository;
+import com.hcmus.wiberback.repository.mongo.AccountRepository;
+import com.hcmus.wiberback.repository.mongo.CallCenterRepository;
 import com.hcmus.wiberback.service.CallCenterService;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -26,7 +26,6 @@ public class CallCenterServiceImpl implements CallCenterService {
   }
 
   @Override
-  @CachePut(value = "callcenter", condition = "#callCenterDto.id != null", key = "#callCenterDto.id")
   public CallCenter saveOrUpdateCallCenter(CallCenterDto callCenterDto) {
     Account account =
         accountRepository
@@ -48,7 +47,6 @@ public class CallCenterServiceImpl implements CallCenterService {
   }
 
   @Override
-  @Cacheable(value = "callcenter", key = "#id", unless = "#result == null")
   public CallCenter findCallCenterById(String id) {
     return callCenterRepository
         .findById(id)

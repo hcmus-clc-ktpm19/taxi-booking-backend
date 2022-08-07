@@ -1,22 +1,22 @@
-package com.hcmus.wiberback.model.entity;
+package com.hcmus.wiberback.model.entity.mongo;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @ToString
 @Document
-public class Driver extends BaseEntity {
-
+public class Customer extends BaseEntity {
   @NotEmpty
   @NotBlank
   private String name;
 
-  @NotNull
+  private String phone;
+
   @DBRef
   private Account account;
 }

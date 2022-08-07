@@ -1,4 +1,4 @@
-package com.hcmus.wiberback.model.entity;
+package com.hcmus.wiberback.model.entity.mongo;
 
 import com.hcmus.wiberback.model.enums.Role;
 import java.util.Objects;

@@ -1,12 +1,12 @@
 package com.hcmus.wiberback.service.impl;
 
 import com.hcmus.wiberback.model.dto.DriverDto;
-import com.hcmus.wiberback.model.entity.Account;
-import com.hcmus.wiberback.model.entity.Driver;
+import com.hcmus.wiberback.model.entity.mongo.Account;
+import com.hcmus.wiberback.model.entity.mongo.Driver;
 import com.hcmus.wiberback.model.exception.AccountNotFoundException;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
-import com.hcmus.wiberback.repository.AccountRepository;
-import com.hcmus.wiberback.repository.DriverRepository;
+import com.hcmus.wiberback.repository.mongo.AccountRepository;
+import com.hcmus.wiberback.repository.mongo.DriverRepository;
 import com.hcmus.wiberback.service.DriverService;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,6 @@ public class DriverServiceImpl implements DriverService {
   }
 
   @Override
-  @Cacheable(value = "driver", key = "#id", unless = "#result == null")
   public Driver findDriverById(String id) {
     return driverRepository
         .findById(id)
@@ -67,7 +66,6 @@ public class DriverServiceImpl implements DriverService {
   }
   
   @Override
-  @CachePut(value = "driver", condition = "#driverDto.id != null", key = "#driverDto.id")
   public Driver saveOrUpdateDriver(DriverDto driverDto) {
     Account account = accountRepository
             .findAccountByPhone(driverDto.getPhone())
