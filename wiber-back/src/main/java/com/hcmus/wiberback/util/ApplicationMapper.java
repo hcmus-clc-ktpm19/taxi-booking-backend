@@ -39,6 +39,7 @@ public class ApplicationMapper {
             .id(entity.getId())
             .name(entity.getName())
             .phone(entity.getAccount().getPhone())
+            .carType(entity.getCarType())
             .role(entity.getAccount().getRole())
             .build();
   }

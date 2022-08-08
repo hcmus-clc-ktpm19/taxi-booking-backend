@@ -10,5 +10,6 @@ public class DriverDto {
     private String id;
     private String phone;
     private String name;
+    private String carType;
     private Role role;
 }
