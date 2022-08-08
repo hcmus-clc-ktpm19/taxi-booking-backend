@@ -26,3 +26,5 @@ queue:
     name: 'car-request-queue'
   car-request-status:
     name: 'car-request-status-queue'
+  locate-request:
+    name: 'locate-request-queue'
