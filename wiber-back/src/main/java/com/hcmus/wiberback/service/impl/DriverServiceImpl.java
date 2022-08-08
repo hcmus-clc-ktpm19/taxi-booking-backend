@@ -49,6 +49,7 @@ public class DriverServiceImpl implements DriverService {
             driverDto.getPhone()));
     Driver driver = new Driver();
     driver.setName(driverDto.getName());
+    driver.setCarType(driverDto.getCarType());
     driver.setAccount(account);
     return driverRepository.save(driver).getId();
   }
@@ -76,10 +77,12 @@ public class DriverServiceImpl implements DriverService {
     if (driverRepository.existsByAccount(account)) {
       driver = findDriverByPhone(driverDto.getPhone());
       driver.setName(driverDto.getName());
+      driver.setCarType(driverDto.getCarType());
     } else {
       driver = new Driver();
       driver.setName(driverDto.getName());
       driver.setAccount(account);
+      driver.setCarType(driverDto.getCarType());
     }
 
     return driverRepository.save(driver);

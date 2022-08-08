@@ -17,6 +17,10 @@ public class Driver extends BaseEntity {
   @NotBlank
   private String name;
 
+  @NotEmpty
+  @NotBlank
+  private String carType;
+
   @NotNull
   @DBRef
   private Account account;

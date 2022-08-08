@@ -20,5 +20,6 @@ public class CarRequestDto {
   private Double latArrivingAddress;
   private Double lngPickingAddress;
   private Double latPickingAddress;
+  private String carType;
   private String status;
 }
