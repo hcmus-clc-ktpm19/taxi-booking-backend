@@ -5,6 +5,7 @@ import com.hcmus.wiberback.model.entity.mongo.CallCenter;
 import com.hcmus.wiberback.model.entity.mongo.CarRequest;
 import com.hcmus.wiberback.model.entity.mongo.Customer;
 import com.hcmus.wiberback.model.enums.CarRequestStatus;
+import com.hcmus.wiberback.model.enums.CarType;
 import com.hcmus.wiberback.model.exception.CarRequestNotFoundException;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
 import com.hcmus.wiberback.repository.mongo.CallCenterRepository;
@@ -32,6 +33,10 @@ public class CarRequestServiceImpl implements CarRequestService {
   private final Queue carRequestQueue;
   @Qualifier("carRequestStatusQueue")
   private final Queue carRequestStatusQueue;
+
+  @Qualifier("locateRequestQueue")
+  private final Queue locateRequestQueue;
+
 
   @Override
   public List<CarRequest> findAllCarRequests() {
@@ -91,7 +96,7 @@ public class CarRequestServiceImpl implements CarRequestService {
           .lngArrivingAddress(carRequestDto.getLngArrivingAddress())
           .latArrivingAddress(carRequestDto.getLatArrivingAddress())
           .status(carRequestDto.getStatus())
-          .carType(carRequestDto.getCarType()).build();
+          .carType(CarType.valueOf(carRequestDto.getCarType())).build();
     } else {
       carRequest = carRequestRepository.findById(carRequestDto.getId())
           .orElseThrow(() -> new CarRequestNotFoundException("Car request not found",
@@ -103,7 +108,7 @@ public class CarRequestServiceImpl implements CarRequestService {
       carRequest.setLngArrivingAddress(carRequestDto.getLngArrivingAddress());
       carRequest.setLatArrivingAddress(carRequestDto.getLatArrivingAddress());
       carRequest.setStatus(carRequestDto.getStatus());
-      carRequest.setCarType(carRequestDto.getCarType());
+      carRequest.setCarType(CarType.valueOf(carRequestDto.getCarType()));
     }
     String carRequestId = carRequestRepository.save(carRequest).getId();
 
@@ -122,65 +127,53 @@ public class CarRequestServiceImpl implements CarRequestService {
   }
 
   @Override
-  public String saveOrUpdateCarRequest(CarRequestDto carRequestDto, String callcenterId) {
-    Customer customer;
+  public String saveCarRequestCallCenter(CarRequestDto carRequestDto) {
     CallCenter callCenter = callCenterRepository
         .findById(carRequestDto.getCallCenterId())
         .orElseThrow(
             () -> new UserNotFoundException("Call-center not found",
                 carRequestDto.getCallCenterId()));
 
-    if (carRequestDto.getCustomerId() != null) {
-      customer = customerRepository
-          .findById(carRequestDto.getCustomerId())
-          .orElseThrow(
-              () -> new UserNotFoundException("Customer not found", carRequestDto.getCustomerId()));
-    } else {
-      customer = customerRepository.findCustomerByPhone(carRequestDto.getCustomerPhone())
-          .orElseGet(() -> {
-            Customer newCustomer = new Customer();
-            newCustomer.setName(carRequestDto.getCustomerName());
-            newCustomer.setPhone(carRequestDto.getCustomerPhone());
-            return customerRepository.save(newCustomer);
-          });
-    }
+    Customer customer = customerRepository.findCustomerByPhone(carRequestDto.getCustomerPhone())
+        .orElseGet(() -> {
+          Customer newCustomer = new Customer();
+          newCustomer.setName(carRequestDto.getCustomerName());
+          newCustomer.setPhone(carRequestDto.getCustomerPhone());
+          return customerRepository.save(newCustomer);
+        });
 
+    List<CarRequest> oldCarRequests = carRequestRepository.findCarRequestByPickingAddress(carRequestDto.getPickingAddress());
+    for (CarRequest carRequest : oldCarRequests) {
+      if (carRequest.getLngPickingAddress() != null && carRequest.getLatPickingAddress() != null) {
+        carRequestDto.setLngPickingAddress(carRequest.getLngPickingAddress());
+        carRequestDto.setLatPickingAddress(carRequest.getLatPickingAddress());
+        break;
+      }
+    }
     CarRequest carRequest;
-    if (carRequestDto.getId() == null) {
+    if(carRequestDto.getLngPickingAddress() != null && carRequestDto.getLatPickingAddress() != null) {
       carRequest = CarRequest.builder().customer(customer)
           .callCenter(callCenter)
           .pickingAddress(carRequestDto.getPickingAddress())
-          .arrivingAddress(carRequestDto.getArrivingAddress())
           .lngPickingAddress(carRequestDto.getLngPickingAddress())
           .latPickingAddress(carRequestDto.getLatPickingAddress())
-          .lngArrivingAddress(carRequestDto.getLngArrivingAddress())
-          .latArrivingAddress(carRequestDto.getLatArrivingAddress())
           .status(carRequestDto.getStatus())
-          .carType(carRequestDto.getCarType()).build();
-    } else {
-      carRequest = carRequestRepository.findById(carRequestDto.getId())
-          .orElseThrow(() -> new CarRequestNotFoundException("Car request not found",
-              carRequestDto.getId()));
-      carRequest.setPickingAddress(carRequestDto.getPickingAddress());
-      carRequest.setArrivingAddress(carRequestDto.getArrivingAddress());
-      carRequest.setLngPickingAddress(carRequestDto.getLngPickingAddress());
-      carRequest.setLatPickingAddress(carRequestDto.getLatPickingAddress());
-      carRequest.setLngArrivingAddress(carRequestDto.getLngArrivingAddress());
-      carRequest.setLatArrivingAddress(carRequestDto.getLatArrivingAddress());
-      carRequest.setStatus(carRequestDto.getStatus());
-      carRequest.setCarType(carRequestDto.getCarType());
-    }
+          .carType(CarType.valueOf(carRequestDto.getCarType())).build();
 
-    carRequestRepository.save(carRequest);
-
-    carRequestDto.setId(carRequest.getId());
-    // create a new car request to car-request-queue
-    if (carRequestDto.getStatus() == CarRequestStatus.WAITING) {
+      carRequestRepository.save(carRequest);
+      carRequestDto.setId(carRequest.getId());
       queueProducer.send(carRequestDto, carRequestQueue);
-    } else if (carRequestDto.getStatus() == CarRequestStatus.ACCEPTED) {
-      queueProducer.send(carRequestDto, carRequestStatusQueue);
-    }
+    } else {
+      carRequest = CarRequest.builder().customer(customer)
+          .callCenter(callCenter)
+          .pickingAddress(carRequestDto.getPickingAddress())
+          .status(carRequestDto.getStatus())
+          .carType(CarType.valueOf(carRequestDto.getCarType())).build();
 
+      carRequestRepository.save(carRequest);
+      carRequestDto.setId(carRequest.getId());
+      queueProducer.send(carRequestDto, locateRequestQueue);
+    }
     return carRequest.getId();
   }
 }

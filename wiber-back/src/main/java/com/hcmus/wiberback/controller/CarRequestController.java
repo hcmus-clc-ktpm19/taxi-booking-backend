@@ -55,10 +55,9 @@ public class CarRequestController extends AbstractApplicationController {
     return ResponseEntity.ok(id);
   }
 
-  @PostMapping("/callcenter/{callcenterId}/create-or-update")
-  public ResponseEntity<String> saveOrUpdateCarRequest(@PathVariable String callcenterId,
-      @RequestBody CarRequestDto carRequestDto) {
-    String id = carRequestService.saveOrUpdateCarRequest(carRequestDto, callcenterId);
+  @PostMapping("/callcenter/create-or-update")
+  public ResponseEntity<String> saveCarRequestCallCenter(@RequestBody CarRequestDto carRequestDto) {
+    String id = carRequestService.saveCarRequestCallCenter(carRequestDto);
     return ResponseEntity.ok(id);
   }
 }
