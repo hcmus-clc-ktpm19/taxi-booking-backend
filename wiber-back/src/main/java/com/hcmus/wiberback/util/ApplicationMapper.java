@@ -61,6 +61,7 @@ public class ApplicationMapper {
         .customerPhone(entity.getCustomer().getAccount().getPhone())
         .driverId(entity.getDriver().getId())
         .driverName(entity.getDriver().getName())
+        .driverPhone(entity.getDriver().getAccount().getPhone())
         .pickingAddress(entity.getPickingAddress())
         .arrivingAddress(entity.getArrivingAddress())
         .lngPickingAddress(entity.getLngPickingAddress())
