@@ -1,4 +1,4 @@
-package com.hcmus.wiberback.model.entity.mongo;
+package com.hcmus.wiberback.model.entity;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @ToString
 @Document
-public class Driver extends BaseEntity {
+public class CallCenter extends BaseEntity {
 
   @NotEmpty
   @NotBlank
@@ -20,4 +20,5 @@ public class Driver extends BaseEntity {
   @NotNull
   @DBRef
   private Account account;
+
 }

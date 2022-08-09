@@ -1,4 +1,4 @@
-package com.hcmus.wiberback.model.entity.mongo;
+package com.hcmus.wiberback.model.entity;
 
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -18,15 +18,15 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.redis.core.index.Indexed;
 
+@Document
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Document
 @Builder
 public class CarRequest extends BaseEntity {
 
@@ -39,7 +39,7 @@ public class CarRequest extends BaseEntity {
 
   @NotEmpty
   @NotBlank
-  @Indexed
+  @TextIndexed
   private String pickingAddress;
 
   private String arrivingAddress;
