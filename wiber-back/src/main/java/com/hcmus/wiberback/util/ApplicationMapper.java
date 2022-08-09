@@ -59,6 +59,9 @@ public class ApplicationMapper {
         .id(entity.getId())
         .customerId(entity.getCustomer().getId())
         .customerPhone(entity.getCustomer().getAccount().getPhone())
+        .driverId(entity.getDriver().getId())
+        .driverName(entity.getDriver().getName())
+        .driverPhone(entity.getDriver().getAccount().getPhone())
         .pickingAddress(entity.getPickingAddress())
         .arrivingAddress(entity.getArrivingAddress())
         .lngPickingAddress(entity.getLngPickingAddress())
@@ -66,6 +69,8 @@ public class ApplicationMapper {
         .lngArrivingAddress(entity.getLngArrivingAddress())
         .latArrivingAddress(entity.getLatArrivingAddress())
         .status(entity.getStatus())
+        .price(entity.getPrice())
+        .distance(entity.getDistance())
         .build();
   }
 }

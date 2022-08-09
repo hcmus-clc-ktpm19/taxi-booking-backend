@@ -49,7 +49,7 @@ public class WebSocketController {
 
   @RabbitListener(queues = {"${queue.car-request-status.name}"})
   public void sendToCustomer(CarRequestDto carRequestDto) {
-    Message message = new Message("Driver ABC has accepted your request!");
+    Message message = new Message("Driver " + carRequestDto.getDriverName() + " with phone number = " + carRequestDto.getDriverPhone() +  " has accepted your request!");
     simpMessagingTemplate.convertAndSendToUser(String.valueOf(carRequestDto.getId()), "/msg", message);
   }
 
