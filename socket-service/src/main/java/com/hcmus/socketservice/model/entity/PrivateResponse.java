@@ -14,7 +14,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PrivateResponse {
-  private int customerId;
-  private int driverId;
   private String message;
 }
