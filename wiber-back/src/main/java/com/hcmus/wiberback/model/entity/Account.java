@@ -1,4 +1,4 @@
-package com.hcmus.wiberback.model.entity.mongo;
+package com.hcmus.wiberback.model.entity;
 
 import com.hcmus.wiberback.model.enums.Role;
 import java.util.Objects;
@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data

@@ -5,11 +5,11 @@ import com.hcmus.wiberback.model.dto.CallCenterDto;
 import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.model.dto.CustomerDto;
 import com.hcmus.wiberback.model.dto.DriverDto;
-import com.hcmus.wiberback.model.entity.mongo.Account;
-import com.hcmus.wiberback.model.entity.mongo.CallCenter;
-import com.hcmus.wiberback.model.entity.mongo.CarRequest;
-import com.hcmus.wiberback.model.entity.mongo.Customer;
-import com.hcmus.wiberback.model.entity.mongo.Driver;
+import com.hcmus.wiberback.model.entity.Account;
+import com.hcmus.wiberback.model.entity.CallCenter;
+import com.hcmus.wiberback.model.entity.CarRequest;
+import com.hcmus.wiberback.model.entity.Customer;
+import com.hcmus.wiberback.model.entity.Driver;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -59,6 +59,7 @@ public class ApplicationMapper {
         .id(entity.getId())
         .customerId(entity.getCustomer().getId())
         .customerPhone(entity.getCustomer().getAccount().getPhone())
+        .customerName(entity.getCustomer().getName())
         .driverId(entity.getDriver().getId())
         .driverName(entity.getDriver().getName())
         .driverPhone(entity.getDriver().getAccount().getPhone())

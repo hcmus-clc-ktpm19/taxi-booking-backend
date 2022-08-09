@@ -1,4 +1,4 @@
-package com.hcmus.wiberback.model.entity.mongo;
+package com.hcmus.wiberback.model.entity;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;

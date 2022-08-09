@@ -1,13 +1,13 @@
 spring:
   config:
-    import: secret.yaml
+    import: optional:secret.yaml
 
 server:
   port: 8080
 
 logging:
-  file:
-    name: './wiber-back/src/main/resources/log/wiber-back.log'
+  #  file:
+  #    name: './wiber-back/src/main/resources/log/wiber-back.log'
   level:
     org:
       springframework:

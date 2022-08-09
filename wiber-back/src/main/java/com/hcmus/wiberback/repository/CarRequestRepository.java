@@ -1,7 +1,7 @@
-package com.hcmus.wiberback.repository.mongo;
+package com.hcmus.wiberback.repository;
 
-import com.hcmus.wiberback.model.entity.mongo.CarRequest;
-import com.hcmus.wiberback.model.entity.mongo.Customer;
+import com.hcmus.wiberback.model.entity.CarRequest;
+import com.hcmus.wiberback.model.entity.Customer;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CarRequestRepository extends MongoRepository<CarRequest, String> {
+
+  List<CarRequest> findByCustomer(Customer customer);
+
   List<CarRequest> findCarRequestsByCustomer(Customer customer);
   List<CarRequest> findCarRequestByPickingAddress(String pickingAddress);
 }

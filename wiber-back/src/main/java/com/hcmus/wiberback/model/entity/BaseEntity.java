@@ -1,4 +1,4 @@
-package com.hcmus.wiberback.model.entity.mongo;
+package com.hcmus.wiberback.model.entity;
 
 import java.io.Serializable;
 import java.util.Objects;

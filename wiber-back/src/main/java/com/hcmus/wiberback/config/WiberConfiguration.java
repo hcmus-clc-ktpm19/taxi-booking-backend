@@ -1,9 +1,5 @@
 package com.hcmus.wiberback.config;
 
-import com.hcmus.wiberback.model.entity.mongo.CarRequest;
-import com.hcmus.wiberback.model.entity.redis.CarRequestRedis;
-import com.hcmus.wiberback.repository.mongo.CarRequestRepository;
-import com.hcmus.wiberback.repository.redis.CarRequestRedisRepository;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -14,9 +10,8 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -27,8 +22,6 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 @EnableCaching
 @EnableRabbit
 @EnableMongoAuditing
-@EnableMongoRepositories(basePackageClasses = {CarRequest.class, CarRequestRepository.class})
-@EnableRedisRepositories(basePackageClasses = {CarRequestRedis.class, CarRequestRedisRepository.class})
 public class WiberConfiguration {
 
   @Value("${queue.sms.name}")
