@@ -69,16 +69,13 @@ public class WebSocketController {
   }
 
   /**
-   * Send message to specify user depend on {@link ChatMessage#getUserID}, each user will subscribe
-   * himself/herself's endpoint {@code /user/<userId>/msg}, just like point to point chat.
-   *
-   * @param chatMessage ChatMessage
+   * Send message to specify user.
    */
   @MessageMapping("/chat")
   public void chat(ChatMessage chatMessage) {
-    log.info("Receive point-to-point chat message: [" + chatMessage.getFromUserID() + " -> "
-        + chatMessage.getUserID() + ", " + chatMessage.getMessage() + "]");
-    //Response response = new Response("Receive message from user " + chatMessage.getFromUserID() + ": " + chatMessage.getMessage());
-    //simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatMessage.getUserID()), "/msg", response);
+    log.info("Receive point-to-point chat message: [" + chatMessage.getFromUserId() + " -> "
+        + chatMessage.getToCarRequestId() + ", " + chatMessage.getMessage() + "]");
+    PrivateResponse privateResponse = new PrivateResponse("Receive message from user " + chatMessage.getFromUserId() + ": " + chatMessage.getMessage());
+    simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatMessage.getToCarRequestId()), "/msg", privateResponse);
   }
 }
