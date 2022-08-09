@@ -37,12 +37,17 @@ public class CarRequest extends BaseEntity {
   @DBRef
   private CallCenter callCenter;
 
+  @DBRef
+  private Driver driver;
+
   @NotEmpty
   @NotBlank
   @Indexed
   private String pickingAddress;
 
   private String arrivingAddress;
+
+  private Double distance;
 
   private Double lngPickingAddress;
 
@@ -51,6 +56,9 @@ public class CarRequest extends BaseEntity {
   private Double lngArrivingAddress;
 
   private Double latArrivingAddress;
+
+  @NotNull
+  private Double price;
 
   @NotNull
   private CarRequestStatus status;

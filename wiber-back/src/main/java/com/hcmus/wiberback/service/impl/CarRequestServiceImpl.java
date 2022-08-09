@@ -4,6 +4,7 @@ import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.model.entity.mongo.CallCenter;
 import com.hcmus.wiberback.model.entity.mongo.CarRequest;
 import com.hcmus.wiberback.model.entity.mongo.Customer;
+import com.hcmus.wiberback.model.entity.mongo.Driver;
 import com.hcmus.wiberback.model.enums.CarRequestStatus;
 import com.hcmus.wiberback.model.enums.CarType;
 import com.hcmus.wiberback.model.exception.CarRequestNotFoundException;
@@ -11,6 +12,7 @@ import com.hcmus.wiberback.model.exception.UserNotFoundException;
 import com.hcmus.wiberback.repository.mongo.CallCenterRepository;
 import com.hcmus.wiberback.repository.mongo.CarRequestRepository;
 import com.hcmus.wiberback.repository.mongo.CustomerRepository;
+import com.hcmus.wiberback.repository.mongo.DriverRepository;
 import com.hcmus.wiberback.repository.redis.CarRequestRedisRepository;
 import com.hcmus.wiberback.service.CarRequestMessageSender;
 import com.hcmus.wiberback.service.CarRequestService;
@@ -27,6 +29,7 @@ public class CarRequestServiceImpl implements CarRequestService {
   private final CarRequestRepository carRequestRepository;
   private final CustomerRepository customerRepository;
   private final CallCenterRepository callCenterRepository;
+  private final DriverRepository driverRepository;
   private final CarRequestMessageSender queueProducer;
   private final CarRequestRedisRepository carRequestRedisRepository;
   @Qualifier("carRequestQueue")
@@ -88,7 +91,8 @@ public class CarRequestServiceImpl implements CarRequestService {
 
     CarRequest carRequest;
     if (carRequestDto.getId() == null) {
-      carRequest = CarRequest.builder().customer(customer)
+      carRequest = CarRequest.builder()
+          .customer(customer)
           .pickingAddress(carRequestDto.getPickingAddress())
           .arrivingAddress(carRequestDto.getArrivingAddress())
           .lngPickingAddress(carRequestDto.getLngPickingAddress())
@@ -96,11 +100,17 @@ public class CarRequestServiceImpl implements CarRequestService {
           .lngArrivingAddress(carRequestDto.getLngArrivingAddress())
           .latArrivingAddress(carRequestDto.getLatArrivingAddress())
           .status(carRequestDto.getStatus())
+          .price(carRequestDto.getPrice())
+          .distance(carRequestDto.getDistance())
           .carType(CarType.valueOf(carRequestDto.getCarType())).build();
     } else {
       carRequest = carRequestRepository.findById(carRequestDto.getId())
           .orElseThrow(() -> new CarRequestNotFoundException("Car request not found",
               carRequestDto.getId()));
+      Driver driver = driverRepository.findById(carRequestDto.getDriverId())
+          .orElseThrow(
+              () -> new UserNotFoundException("Driver not found", carRequestDto.getDriverId()));
+      carRequest.setDriver(driver);
       carRequest.setPickingAddress(carRequestDto.getPickingAddress());
       carRequest.setArrivingAddress(carRequestDto.getArrivingAddress());
       carRequest.setLngPickingAddress(carRequestDto.getLngPickingAddress());
@@ -108,12 +118,14 @@ public class CarRequestServiceImpl implements CarRequestService {
       carRequest.setLngArrivingAddress(carRequestDto.getLngArrivingAddress());
       carRequest.setLatArrivingAddress(carRequestDto.getLatArrivingAddress());
       carRequest.setStatus(carRequestDto.getStatus());
+      carRequest.setPrice(carRequestDto.getPrice());
+      carRequest.setDistance(carRequestDto.getDistance());
       carRequest.setCarType(CarType.valueOf(carRequestDto.getCarType()));
     }
     String carRequestId = carRequestRepository.save(carRequest).getId();
 
-    carRequestDto.setId(carRequestId);
     // create a new car request to car-request-queue
+    carRequestDto.setId(carRequestId);
     if (carRequestDto.getStatus() == CarRequestStatus.WAITING) {
       queueProducer.send(carRequestDto, carRequestQueue);
     } else if (carRequestDto.getStatus() == CarRequestStatus.ACCEPTED) {
@@ -142,7 +154,8 @@ public class CarRequestServiceImpl implements CarRequestService {
           return customerRepository.save(newCustomer);
         });
 
-    List<CarRequest> oldCarRequests = carRequestRepository.findCarRequestByPickingAddress(carRequestDto.getPickingAddress());
+    List<CarRequest> oldCarRequests = carRequestRepository.findCarRequestByPickingAddress(
+        carRequestDto.getPickingAddress());
     for (CarRequest carRequest : oldCarRequests) {
       if (carRequest.getLngPickingAddress() != null && carRequest.getLatPickingAddress() != null) {
         carRequestDto.setLngPickingAddress(carRequest.getLngPickingAddress());
@@ -151,8 +164,10 @@ public class CarRequestServiceImpl implements CarRequestService {
       }
     }
     CarRequest carRequest;
-    if(carRequestDto.getLngPickingAddress() != null && carRequestDto.getLatPickingAddress() != null) {
-      carRequest = CarRequest.builder().customer(customer)
+    if (carRequestDto.getLngPickingAddress() != null
+        && carRequestDto.getLatPickingAddress() != null) {
+      carRequest = CarRequest.builder()
+          .customer(customer)
           .callCenter(callCenter)
           .pickingAddress(carRequestDto.getPickingAddress())
           .lngPickingAddress(carRequestDto.getLngPickingAddress())
@@ -164,7 +179,8 @@ public class CarRequestServiceImpl implements CarRequestService {
       carRequestDto.setId(carRequest.getId());
       queueProducer.send(carRequestDto, carRequestQueue);
     } else {
-      carRequest = CarRequest.builder().customer(customer)
+      carRequest = CarRequest.builder()
+          .customer(customer)
           .callCenter(callCenter)
           .pickingAddress(carRequestDto.getPickingAddress())
           .status(carRequestDto.getStatus())

@@ -14,6 +14,8 @@ public class CarRequestDto {
   private String id;
   private String customerId;
   private String customerPhone;
+  private String driverId;
+  private String driverName;
   private String pickingAddress;
   private String arrivingAddress;
   private Double lngArrivingAddress;
@@ -22,4 +24,6 @@ public class CarRequestDto {
   private Double latPickingAddress;
   private String carType;
   private String status;
+  private Double price;
+  private Double distance;
 }

@@ -11,4 +11,5 @@ public enum CarRequestStatus {
     FREE,
     WAITING,
     ACCEPTED,
+    FINISHED,
 }
