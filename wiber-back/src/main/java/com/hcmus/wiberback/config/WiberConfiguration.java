@@ -33,6 +33,9 @@ public class WiberConfiguration {
   @Value("${queue.car-request-status.name}")
   private String carRequestStatusQueueName;
 
+  @Value("${queue.locate-request.name}")
+  private String locateRequestQueueName;
+
   @Bean
   public BCryptPasswordEncoder bCryptPasswordEncoder() {
     return new BCryptPasswordEncoder();
@@ -73,6 +76,11 @@ public class WiberConfiguration {
   @Bean
   public Queue carRequestStatusQueue() {
     return new Queue(carRequestStatusQueueName, true);
+  }
+
+  @Bean
+  public Queue locateRequestQueue() {
+    return new Queue(locateRequestQueueName, true);
   }
 
   @Bean

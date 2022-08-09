@@ -23,6 +23,9 @@ public class CarRequestDto {
   private String id;
   private String customerId;
   private String customerName;
+  private String driverId;
+  private String driverName;
+  private String driverPhone;
   private String callCenterId;
   private String arrivingAddress;
   private Double lngArrivingAddress;
@@ -41,8 +44,13 @@ public class CarRequestDto {
 
   @NotEmpty
   @NotBlank
-  private CarType carType;
+  private String carType;
 
   @NotNull
   private CarRequestStatus status;
+
+  @NotNull
+  private Double price;
+  @NotNull
+  private Double distance;
 }

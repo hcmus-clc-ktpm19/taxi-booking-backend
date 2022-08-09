@@ -36,11 +36,12 @@ public class ApplicationMapper {
 
   public DriverDto toDriverDto(Driver entity) {
     return DriverDto.builder()
-        .id(entity.getId())
-        .name(entity.getName())
-        .phone(entity.getAccount().getPhone())
-        .role(entity.getAccount().getRole())
-        .build();
+            .id(entity.getId())
+            .name(entity.getName())
+            .phone(entity.getAccount().getPhone())
+            .carType(entity.getCarType())
+            .role(entity.getAccount().getRole())
+            .build();
   }
 
   public CallCenterDto toCallCenterDto(CallCenter entity) {
@@ -59,6 +60,9 @@ public class ApplicationMapper {
         .customerId(entity.getCustomer().getId())
         .customerPhone(entity.getCustomer().getAccount().getPhone())
         .customerName(entity.getCustomer().getName())
+        .driverId(entity.getDriver().getId())
+        .driverName(entity.getDriver().getName())
+        .driverPhone(entity.getDriver().getAccount().getPhone())
         .pickingAddress(entity.getPickingAddress())
         .arrivingAddress(entity.getArrivingAddress())
         .lngPickingAddress(entity.getLngPickingAddress())
@@ -66,6 +70,8 @@ public class ApplicationMapper {
         .lngArrivingAddress(entity.getLngArrivingAddress())
         .latArrivingAddress(entity.getLatArrivingAddress())
         .status(entity.getStatus())
+        .price(entity.getPrice())
+        .distance(entity.getDistance())
         .build();
   }
 }
