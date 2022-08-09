@@ -1,6 +1,6 @@
-package com.hcmus.wiberback.repository.mongo;
+package com.hcmus.wiberback.repository;
 
-import com.hcmus.wiberback.model.entity.mongo.Account;
+import com.hcmus.wiberback.model.entity.Account;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

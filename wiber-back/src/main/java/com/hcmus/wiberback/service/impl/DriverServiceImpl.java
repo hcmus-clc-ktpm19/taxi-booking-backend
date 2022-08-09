@@ -1,17 +1,15 @@
 package com.hcmus.wiberback.service.impl;
 
 import com.hcmus.wiberback.model.dto.DriverDto;
-import com.hcmus.wiberback.model.entity.mongo.Account;
-import com.hcmus.wiberback.model.entity.mongo.Driver;
+import com.hcmus.wiberback.model.entity.Account;
+import com.hcmus.wiberback.model.entity.Driver;
 import com.hcmus.wiberback.model.exception.AccountNotFoundException;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
-import com.hcmus.wiberback.repository.mongo.AccountRepository;
-import com.hcmus.wiberback.repository.mongo.DriverRepository;
+import com.hcmus.wiberback.repository.AccountRepository;
+import com.hcmus.wiberback.repository.DriverRepository;
 import com.hcmus.wiberback.service.DriverService;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,9 +34,9 @@ public class DriverServiceImpl implements DriverService {
   @Override
   public Driver findDriverByPhone(String phone) {
     Account account = accountRepository.findAccountByPhone(phone).orElseThrow(
-            () -> new AccountNotFoundException("Account with phone number not found", phone));
+        () -> new AccountNotFoundException("Account with phone number not found", phone));
     return driverRepository.findDriverByAccount(account).orElseThrow(
-            () -> new UserNotFoundException("Driver with phone number not found", phone));
+        () -> new UserNotFoundException("Driver with phone number not found", phone));
   }
 
   @Override
@@ -65,13 +63,13 @@ public class DriverServiceImpl implements DriverService {
     }
     return driverRepository.save(updateDriver).getId();
   }
-  
+
   @Override
   public Driver saveOrUpdateDriver(DriverDto driverDto) {
     Account account = accountRepository
-            .findAccountByPhone(driverDto.getPhone())
-            .orElseThrow(() -> new AccountNotFoundException("Account not found",
-                    driverDto.getPhone()));
+        .findAccountByPhone(driverDto.getPhone())
+        .orElseThrow(() -> new AccountNotFoundException("Account not found",
+            driverDto.getPhone()));
 
     Driver driver;
     if (driverRepository.existsByAccount(account)) {

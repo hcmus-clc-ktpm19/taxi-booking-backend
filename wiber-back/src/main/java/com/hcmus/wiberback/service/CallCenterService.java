@@ -1,10 +1,11 @@
 package com.hcmus.wiberback.service;
 
 import com.hcmus.wiberback.model.dto.CallCenterDto;
-import com.hcmus.wiberback.model.entity.mongo.CallCenter;
+import com.hcmus.wiberback.model.entity.CallCenter;
 import java.util.List;
 
 public interface CallCenterService {
+
   List<CallCenter> getAllCallCenter();
 
   CallCenter saveOrUpdateCallCenter(CallCenterDto callCenterDto);

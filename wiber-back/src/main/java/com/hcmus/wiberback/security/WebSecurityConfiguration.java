@@ -35,9 +35,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   private final UserDetailsService userDetailsService;
   private final PasswordEncoder passwordEncoder;
   private final JwtUtil jwtUtil;
-  private AuthEntryPointJwt unauthorizedHandler;
+  private final AuthEntryPointJwt unauthorizedHandler;
   public WebSecurityConfiguration(UserDetailsService userDetailsService,
-      PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+      PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthEntryPointJwt unauthorizedHandler) {
     this.userDetailsService = userDetailsService;
     this.passwordEncoder = passwordEncoder;
     this.jwtUtil = jwtUtil;

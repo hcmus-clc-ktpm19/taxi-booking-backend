@@ -1,19 +1,16 @@
 package com.hcmus.wiberback.service.impl;
 
 import com.hcmus.wiberback.model.dto.CarRequestDto;
-import com.hcmus.wiberback.model.entity.mongo.CallCenter;
-import com.hcmus.wiberback.model.entity.mongo.CarRequest;
-import com.hcmus.wiberback.model.entity.mongo.Customer;
-import com.hcmus.wiberback.model.entity.mongo.Driver;
+import com.hcmus.wiberback.model.entity.CallCenter;
+import com.hcmus.wiberback.model.entity.CarRequest;
+import com.hcmus.wiberback.model.entity.Customer;
 import com.hcmus.wiberback.model.enums.CarRequestStatus;
 import com.hcmus.wiberback.model.enums.CarType;
 import com.hcmus.wiberback.model.exception.CarRequestNotFoundException;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
-import com.hcmus.wiberback.repository.mongo.CallCenterRepository;
-import com.hcmus.wiberback.repository.mongo.CarRequestRepository;
-import com.hcmus.wiberback.repository.mongo.CustomerRepository;
-import com.hcmus.wiberback.repository.mongo.DriverRepository;
-import com.hcmus.wiberback.repository.redis.CarRequestRedisRepository;
+import com.hcmus.wiberback.repository.CallCenterRepository;
+import com.hcmus.wiberback.repository.CarRequestRepository;
+import com.hcmus.wiberback.repository.CustomerRepository;
 import com.hcmus.wiberback.service.CarRequestMessageSender;
 import com.hcmus.wiberback.service.CarRequestService;
 import java.util.List;
@@ -31,7 +28,6 @@ public class CarRequestServiceImpl implements CarRequestService {
   private final CallCenterRepository callCenterRepository;
   private final DriverRepository driverRepository;
   private final CarRequestMessageSender queueProducer;
-  private final CarRequestRedisRepository carRequestRedisRepository;
   @Qualifier("carRequestQueue")
   private final Queue carRequestQueue;
   @Qualifier("carRequestStatusQueue")
@@ -43,17 +39,6 @@ public class CarRequestServiceImpl implements CarRequestService {
 
   @Override
   public List<CarRequest> findAllCarRequests() {
-    // TODO: Fix this later
-    /*List<CarRequest> carRequests = new ArrayList<>();
-    carRequestRedisRepository.findAll().forEach(carRequests::add);
-
-    if (carRequests.isEmpty()) {
-      carRequests = carRequestRepository.findAll();
-      carRequestRedisRepository.saveAll(
-          carRequests.stream().map(CarRequestRedis::new).collect(
-              Collectors.toList()));
-    }*/
-
     return carRequestRepository.findAll();
   }
 
@@ -132,9 +117,6 @@ public class CarRequestServiceImpl implements CarRequestService {
       queueProducer.send(carRequestDto, carRequestStatusQueue);
     }
 
-    // TODO: Fix this later
-    /*CarRequestRedis carRequestRedis = new CarRequestRedis(carRequest);
-    carRequestRedisRepository.save(carRequestRedis);*/
     return carRequestId;
   }
 

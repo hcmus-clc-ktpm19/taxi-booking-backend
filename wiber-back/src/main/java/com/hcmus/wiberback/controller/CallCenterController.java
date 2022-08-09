@@ -1,8 +1,11 @@
 package com.hcmus.wiberback.controller;
 
 import com.hcmus.wiberback.model.dto.CallCenterDto;
-import com.hcmus.wiberback.model.entity.mongo.CallCenter;
+import com.hcmus.wiberback.model.dto.CarRequestDto;
+import com.hcmus.wiberback.model.dto.CustomerDto;
+import com.hcmus.wiberback.model.entity.CallCenter;
 import com.hcmus.wiberback.service.CallCenterService;
+import com.hcmus.wiberback.service.SearchService;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CallCenterController extends AbstractApplicationController {
 
   private final CallCenterService callCenterService;
+  private final SearchService searchService;
 
   @GetMapping("/all")
   public ResponseEntity<List<CallCenterDto>> getAllCallCenter() {
@@ -39,6 +44,13 @@ public class CallCenterController extends AbstractApplicationController {
   public ResponseEntity<CallCenterDto> getCallCenterByPhone(@PathVariable String phone) {
     return ResponseEntity.ok(
         mapper.toCallCenterDto(callCenterService.findCallCenterByPhone(phone)));
+  }
+
+  @GetMapping("/search-address")
+  public ResponseEntity<List<CarRequestDto>> searchAddress(@RequestParam String phone, @RequestParam String q) {
+    return ResponseEntity.ok(searchService.searchAddress(phone, q).stream()
+        .map(mapper::toCarRequestDto)
+        .collect(Collectors.toList()));
   }
 
   @PostMapping

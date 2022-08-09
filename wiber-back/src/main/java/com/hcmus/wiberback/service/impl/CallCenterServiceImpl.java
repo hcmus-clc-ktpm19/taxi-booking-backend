@@ -1,22 +1,21 @@
 package com.hcmus.wiberback.service.impl;
 
 import com.hcmus.wiberback.model.dto.CallCenterDto;
-import com.hcmus.wiberback.model.entity.mongo.Account;
-import com.hcmus.wiberback.model.entity.mongo.CallCenter;
+import com.hcmus.wiberback.model.entity.Account;
+import com.hcmus.wiberback.model.entity.CallCenter;
 import com.hcmus.wiberback.model.exception.AccountNotFoundException;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
-import com.hcmus.wiberback.repository.mongo.AccountRepository;
-import com.hcmus.wiberback.repository.mongo.CallCenterRepository;
+import com.hcmus.wiberback.repository.AccountRepository;
+import com.hcmus.wiberback.repository.CallCenterRepository;
 import com.hcmus.wiberback.service.CallCenterService;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class CallCenterServiceImpl implements CallCenterService {
+
   private final CallCenterRepository callCenterRepository;
   private final AccountRepository accountRepository;
 
@@ -34,7 +33,7 @@ public class CallCenterServiceImpl implements CallCenterService {
                 callCenterDto.getPhone()));
 
     CallCenter callCenter;
-    if(callCenterRepository.existsByAccount(account)) {
+    if (callCenterRepository.existsByAccount(account)) {
       callCenter = findCallCenterByPhone(callCenterDto.getPhone());
       callCenter.setName(callCenterDto.getName());
     } else {
