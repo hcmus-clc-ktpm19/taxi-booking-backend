@@ -14,5 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PrivateResponse {
-  private String message;
+  private Double latDriver;
+  private Double lngDriver;
 }
