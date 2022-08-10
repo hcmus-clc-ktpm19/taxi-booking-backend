@@ -73,9 +73,9 @@ public class WebSocketController {
    */
   @MessageMapping("/chat")
   public void chat(ChatMessage chatMessage) {
-    log.info("Receive point-to-point chat message: [" + chatMessage.getFromUserId() + " -> "
-        + chatMessage.getToCarRequestId() + ", " + chatMessage.getMessage() + "]");
-    PrivateResponse privateResponse = new PrivateResponse("Receive message from user " + chatMessage.getFromUserId() + ": " + chatMessage.getMessage());
+    log.info("Receive point-to-point chat message: [" + chatMessage.getLatDriver() + " -> "
+        + chatMessage.getToCarRequestId() + ", " + chatMessage.getLngDriver() + "]");
+    PrivateResponse privateResponse = new PrivateResponse(chatMessage.getLatDriver(), chatMessage.getLngDriver());
     simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatMessage.getToCarRequestId()), "/msg", privateResponse);
   }
 }
