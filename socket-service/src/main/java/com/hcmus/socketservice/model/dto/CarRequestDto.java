@@ -1,6 +1,9 @@
 package com.hcmus.socketservice.model.dto;
 
 
+import com.hcmus.socketservice.model.enums.CarRequestStatus;
+import com.hcmus.socketservice.model.enums.CarType;
+import com.hcmus.socketservice.model.enums.SenderServiceType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,8 +26,9 @@ public class CarRequestDto {
   private Double latArrivingAddress;
   private Double lngPickingAddress;
   private Double latPickingAddress;
-  private String carType;
-  private String status;
+  private CarType carType;
+  private CarRequestStatus status;
   private Double price;
   private Double distance;
+  private SenderServiceType senderServiceType;
 }

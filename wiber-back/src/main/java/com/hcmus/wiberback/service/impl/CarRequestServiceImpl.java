@@ -13,7 +13,7 @@ import com.hcmus.wiberback.repository.CallCenterRepository;
 import com.hcmus.wiberback.repository.CarRequestRepository;
 import com.hcmus.wiberback.repository.CustomerRepository;
 import com.hcmus.wiberback.repository.DriverRepository;
-import com.hcmus.wiberback.service.CarRequestMessageSender;
+import com.hcmus.wiberback.service.CarRequestPub;
 import com.hcmus.wiberback.service.CarRequestService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class CarRequestServiceImpl implements CarRequestService {
   private final CustomerRepository customerRepository;
   private final CallCenterRepository callCenterRepository;
   private final DriverRepository driverRepository;
-  private final CarRequestMessageSender queueProducer;
+  private final CarRequestPub carRequestPub;
   @Qualifier("carRequestQueue")
   private final Queue carRequestQueue;
   @Qualifier("carRequestStatusQueue")
@@ -114,9 +114,9 @@ public class CarRequestServiceImpl implements CarRequestService {
     // create a new car request to car-request-queue
     carRequestDto.setId(carRequestId);
     if (carRequestDto.getStatus() == CarRequestStatus.WAITING) {
-      queueProducer.send(carRequestDto, carRequestQueue);
+      carRequestPub.send(carRequestQueue, carRequestDto);
     } else if (carRequestDto.getStatus() == CarRequestStatus.ACCEPTED) {
-      queueProducer.send(carRequestDto, carRequestStatusQueue);
+      carRequestPub.send(carRequestStatusQueue, carRequestDto);
     }
 
     return carRequestId;
@@ -161,7 +161,7 @@ public class CarRequestServiceImpl implements CarRequestService {
 
       carRequestRepository.save(carRequest);
       carRequestDto.setId(carRequest.getId());
-      queueProducer.send(carRequestDto, carRequestQueue);
+      carRequestPub.send(carRequestQueue, carRequestDto);
     } else {
       carRequest = CarRequest.builder()
           .customer(customer)
@@ -172,7 +172,7 @@ public class CarRequestServiceImpl implements CarRequestService {
 
       carRequestRepository.save(carRequest);
       carRequestDto.setId(carRequest.getId());
-      queueProducer.send(carRequestDto, locateRequestQueue);
+      carRequestPub.send(locateRequestQueue, carRequestDto);
     }
     return carRequest.getId();
   }

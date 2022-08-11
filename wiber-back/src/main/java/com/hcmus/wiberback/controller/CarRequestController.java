@@ -1,7 +1,6 @@
 package com.hcmus.wiberback.controller;
 
 import com.hcmus.wiberback.model.dto.CarRequestDto;
-import com.hcmus.wiberback.service.CarRequestMessageSender;
 import com.hcmus.wiberback.service.CarRequestService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/car-request")
 public class CarRequestController extends AbstractApplicationController {
 
-  private final CarRequestMessageSender queueProducer;
   private final CarRequestService carRequestService;
+
   @Qualifier("smsQueue")
   private final Queue smsQueue;
 

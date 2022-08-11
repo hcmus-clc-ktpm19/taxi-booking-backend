@@ -1,9 +1,8 @@
 package com.hcmus.smsservice.model.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import com.hcmus.smsservice.model.enums.CarRequestStatus;
+import com.hcmus.smsservice.model.enums.CarType;
+import com.hcmus.smsservice.model.enums.SenderServiceType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,25 +13,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CarRequestDto {
-
   private String id;
   private String customerId;
+  private String customerPhone;
+  private String driverId;
+  private String driverName;
+  private String driverPhone;
+  private String pickingAddress;
   private String arrivingAddress;
   private Double lngArrivingAddress;
   private Double latArrivingAddress;
-
-  @NotEmpty
-  @NotBlank
-  @Size(min = 10, max = 10, message = "Phone number must be 10 digits")
-  private String customerPhone;
-
-  @NotEmpty
-  @NotBlank
-  private String pickingAddress;
-
-  @NotNull
   private Double lngPickingAddress;
-
-  @NotNull
   private Double latPickingAddress;
+  private CarType carType;
+  private CarRequestStatus status;
+  private Double price;
+  private Double distance;
+  private SenderServiceType senderServiceType;
 }
