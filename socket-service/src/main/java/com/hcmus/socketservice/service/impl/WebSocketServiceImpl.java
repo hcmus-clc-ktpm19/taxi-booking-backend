@@ -1,12 +1,12 @@
 package com.hcmus.socketservice.service.impl;
 
+import com.hcmus.socketservice.annotation.EnableSenderService;
 import com.hcmus.socketservice.model.dto.CarRequestDto;
 import com.hcmus.socketservice.model.entity.ChatMessage;
 import com.hcmus.socketservice.model.entity.Message;
 import com.hcmus.socketservice.model.entity.PrivateResponse;
 import com.hcmus.socketservice.model.entity.Response;
 import com.hcmus.socketservice.service.WebSocketService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -31,12 +31,14 @@ public class WebSocketServiceImpl implements WebSocketService {
   }
 
   @Override
+  @EnableSenderService
   public void sendAcceptMessageToCustomer(CarRequestDto carRequestDto) {
     Message message = new Message(
         "Driver " + carRequestDto.getDriverName() + " with phone number = "
             + carRequestDto.getDriverPhone() + " has accepted your request!");
-    simpMessagingTemplate.convertAndSendToUser(String.valueOf(carRequestDto.getId()), "/msg",
-        message);
+    log.info("Send message: {}", message.getMessage());
+
+    simpMessagingTemplate.convertAndSendToUser(String.valueOf(carRequestDto.getId()), "/msg", message);
   }
 
   @Override

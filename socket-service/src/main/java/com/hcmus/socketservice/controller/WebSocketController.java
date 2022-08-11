@@ -2,16 +2,11 @@ package com.hcmus.socketservice.controller;
 
 import com.hcmus.socketservice.model.dto.CarRequestDto;
 import com.hcmus.socketservice.model.entity.ChatMessage;
-import com.hcmus.socketservice.model.entity.Message;
-import com.hcmus.socketservice.model.entity.PrivateResponse;
-import com.hcmus.socketservice.model.entity.Response;
 import com.hcmus.socketservice.service.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 @Controller

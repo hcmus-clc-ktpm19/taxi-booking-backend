@@ -1,17 +1,13 @@
 package com.hcmus.socketservice.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NonNull;
 
 /**
  * Message sent to server by browser
  */
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class Message {
-    private String message;
+  @NonNull
+  private String message;
 }
