@@ -16,4 +16,5 @@ import lombok.Setter;
 public class PrivateResponse {
   private Double latDriver;
   private Double lngDriver;
+  private String message;
 }
