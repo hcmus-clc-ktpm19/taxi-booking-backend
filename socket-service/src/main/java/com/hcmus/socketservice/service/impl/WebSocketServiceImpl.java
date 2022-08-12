@@ -38,16 +38,18 @@ public class WebSocketServiceImpl implements WebSocketService {
             + carRequestDto.getDriverPhone() + " has accepted your request!");
     log.info("Send message: {}", message.getMessage());
 
-    simpMessagingTemplate.convertAndSendToUser(String.valueOf(carRequestDto.getId()), "/msg", message);
+    simpMessagingTemplate.convertAndSendToUser(String.valueOf(carRequestDto.getId()), "/msg",
+        message);
   }
 
   @Override
   public void sendPrivateMessageToCustomer(ChatMessage chatMessage) {
     log.info("Receive point-to-point chat message: [" + chatMessage.getLatDriver() + " -> "
-        + chatMessage.getToCarRequestId() + ", " + chatMessage.getLngDriver() + "]");
+        + chatMessage.getToCarRequestId() + ", " + chatMessage.getLngDriver() + " -> "
+        + chatMessage.getMessage() + "]");
     PrivateResponse privateResponse = new PrivateResponse(chatMessage.getLatDriver(),
-        chatMessage.getLngDriver());
-    simpMessagingTemplate.convertAndSendToUser(chatMessage.getToCarRequestId(),
+        chatMessage.getLngDriver(), chatMessage.getMessage());
+    simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatMessage.getToCarRequestId()),
         "/msg", privateResponse);
   }
 }
