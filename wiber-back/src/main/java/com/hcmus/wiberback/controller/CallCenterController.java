@@ -1,8 +1,7 @@
 package com.hcmus.wiberback.controller;
 
 import com.hcmus.wiberback.model.dto.CallCenterDto;
-import com.hcmus.wiberback.model.dto.CarRequestDto;
-import com.hcmus.wiberback.model.dto.CustomerDto;
+import com.hcmus.wiberback.model.dto.SearchAddressDto;
 import com.hcmus.wiberback.model.entity.CallCenter;
 import com.hcmus.wiberback.service.CallCenterService;
 import com.hcmus.wiberback.service.SearchService;
@@ -47,10 +46,8 @@ public class CallCenterController extends AbstractApplicationController {
   }
 
   @GetMapping("/search-address")
-  public ResponseEntity<List<CarRequestDto>> searchAddress(@RequestParam String phone, @RequestParam String q) {
-    return ResponseEntity.ok(searchService.searchAddress(phone, q).stream()
-        .map(mapper::toCarRequestDto)
-        .collect(Collectors.toList()));
+  public ResponseEntity<SearchAddressDto> searchAddress(@RequestParam String phone, @RequestParam String q) {
+    return ResponseEntity.ok(mapper.toSearchAddressDto(searchService.searchAddress(phone, q)));
   }
 
   @PostMapping
