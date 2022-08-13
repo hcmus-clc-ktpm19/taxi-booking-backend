@@ -73,14 +73,16 @@ public class CarRequestServiceImpl implements CarRequestService {
           .orElseThrow(
               () -> new UserNotFoundException("Customer not found", carRequestDto.getCustomerId()));
     } else {
-      customer = customerRepository
-          .findCustomerByAccount(
-              accountRepository
-                  .findAccountByPhone(carRequestDto.getCustomerPhone())
-                  .orElseThrow(() -> new AccountNotFoundException("Account not found",
-                      carRequestDto.getCustomerPhone())))
-          .orElseThrow(() -> new UserNotFoundException("Customer not found",
-              carRequestDto.getCustomerPhone()));
+      customer = customerRepository.findCustomerByPhone(carRequestDto.getCustomerPhone()).orElseGet(
+          () -> customerRepository
+              .findCustomerByAccount(
+                  accountRepository
+                      .findAccountByPhone(carRequestDto.getCustomerPhone())
+                      .orElseThrow(() -> new AccountNotFoundException("Account not found",
+                          carRequestDto.getCustomerPhone())))
+              .orElseThrow(() -> new UserNotFoundException("Customer not found",
+                  carRequestDto.getCustomerPhone()))
+      );
     }
 
     CarRequest carRequest;
