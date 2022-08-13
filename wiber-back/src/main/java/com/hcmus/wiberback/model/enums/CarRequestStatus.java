@@ -12,4 +12,6 @@ public enum CarRequestStatus {
     WAITING,
     ACCEPTED,
     FINISHED,
+
+    LOCATING
 }

@@ -1,5 +1,6 @@
 package com.hcmus.wiberback.controller;
 
+import com.hcmus.wiberback.model.dto.CallCenterCarRequestDto;
 import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.service.CarRequestMessageSender;
 import com.hcmus.wiberback.service.CarRequestService;
@@ -32,6 +33,14 @@ public class CarRequestController extends AbstractApplicationController {
   public ResponseEntity<List<CarRequestDto>> findAllCarRequests() {
     return ResponseEntity.ok(carRequestService.findAllCarRequests().stream()
         .map(mapper::toCarRequestDto)
+        .collect(Collectors.toList()));
+  }
+
+  @GetMapping("/callcenter/locating")
+  public ResponseEntity<List<CallCenterCarRequestDto>> findLocatingCarRequests() {
+//    List<CarRequest> cars =  carRequestService.findLocatingCarRequests();
+    return ResponseEntity.ok(carRequestService.findLocatingCarRequests().stream()
+        .map(mapper::toCallCenterCarRequestDto)
         .collect(Collectors.toList()));
   }
 

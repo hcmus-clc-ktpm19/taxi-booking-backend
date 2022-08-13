@@ -1,14 +1,12 @@
 package com.hcmus.wiberback.model.dto;
 
 import com.hcmus.wiberback.model.enums.CarRequestStatus;
-import com.hcmus.wiberback.model.enums.CarType;
-import java.util.Date;
+import com.hcmus.wiberback.model.enums.Role;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,20 +16,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarRequestDto {
-
+public class CallCenterCarRequestDto {
+  @NotEmpty
+  @NotBlank
   private String id;
-  private String customerId;
+
+  @NotEmpty
+  @NotBlank
   private String customerName;
-  private String driverId;
-  private String driverName;
-  private String driverPhone;
-  private String callCenterId;
-  private String arrivingAddress;
-  private Double lngArrivingAddress;
-  private Double latArrivingAddress;
-  private Double lngPickingAddress;
-  private Double latPickingAddress;
 
   @NotEmpty
   @NotBlank
@@ -41,16 +33,4 @@ public class CarRequestDto {
   @NotEmpty
   @NotBlank
   private String pickingAddress;
-
-  @NotEmpty
-  @NotBlank
-  private String carType;
-
-  @NotNull
-  private CarRequestStatus status;
-
-//  @NotNull
-  private Double price;
-//  @NotNull
-  private Double distance;
 }

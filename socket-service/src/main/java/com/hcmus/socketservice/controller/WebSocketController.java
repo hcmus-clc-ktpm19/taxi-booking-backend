@@ -53,6 +53,15 @@ public class WebSocketController {
     simpMessagingTemplate.convertAndSendToUser(String.valueOf(carRequestDto.getId()), "/msg", message);
   }
 
+  @RabbitListener(queues = {"${queue.locate-request.name}"})
+  public void sendToLocateStaff(CarRequestDto carRequestDto) {
+    val response = new Response("Token check failed!", carRequestDto);
+    log.info("Received full message: {}", carRequestDto);
+    response.setResponse("Locate a new request with phone number: " + carRequestDto.getCustomerPhone());
+    log.info("Broadcast message: {}", response.getResponse());
+    simpMessagingTemplate.convertAndSend("/locate", response);
+  }
+
   /**
    * Add a placeholder in <code>@MessageMapping</code> to get the dynamic param in websocket url,
    * for dynamic resending. Message sent to this endpoint will be resent to any clients that
