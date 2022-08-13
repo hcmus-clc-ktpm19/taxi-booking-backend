@@ -2,6 +2,7 @@ package com.hcmus.wiberback.controller;
 
 import com.hcmus.wiberback.model.dto.CallCenterCarRequestDto;
 import com.hcmus.wiberback.model.dto.CarRequestDto;
+import com.hcmus.wiberback.model.entity.CarRequest;
 import com.hcmus.wiberback.service.CarRequestService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,8 +65,9 @@ public class CarRequestController extends AbstractApplicationController {
   }
 
   @PostMapping("/callcenter/create-or-update")
-  public ResponseEntity<String> saveCarRequestCallCenter(@RequestBody CarRequestDto carRequestDto) {
-    String id = carRequestService.saveCarRequestCallCenter(carRequestDto);
-    return ResponseEntity.ok(id);
+  public ResponseEntity<CarRequest> saveOrUpdateCarRequestCallCenter(@RequestBody CarRequestDto carRequestDto) {
+    String id = carRequestService.saveOrUpdateCarRequestCallCenter(carRequestDto);
+    CarRequest result = carRequestService.findCarRequestById(id);
+    return ResponseEntity.ok(result);
   }
 }

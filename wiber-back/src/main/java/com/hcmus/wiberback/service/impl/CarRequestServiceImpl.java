@@ -130,7 +130,7 @@ public class CarRequestServiceImpl implements CarRequestService {
   }
 
   @Override
-  public String saveCarRequestCallCenter(CarRequestDto carRequestDto) {
+  public String saveOrUpdateCarRequestCallCenter(CarRequestDto carRequestDto) {
     CallCenter callCenter = callCenterRepository
         .findById(carRequestDto.getCallCenterId())
         .orElseThrow(
