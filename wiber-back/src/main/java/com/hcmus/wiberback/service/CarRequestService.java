@@ -17,4 +17,6 @@ public interface CarRequestService {
   String saveOrUpdateCarRequest(CarRequestDto carRequestDto);
 
   String saveOrUpdateCarRequestCallCenter(CarRequestDto carRequestDto);
+
+  String updateCarRequestArrivingAddress(CarRequestDto carRequestDto);
 }

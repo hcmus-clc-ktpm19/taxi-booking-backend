@@ -65,6 +65,19 @@ public class CarRequestServiceImpl implements CarRequestService {
   }
 
   @Override
+  public String updateCarRequestArrivingAddress(CarRequestDto carRequestDto) {
+    CarRequest carRequest = carRequestRepository
+        .findById(carRequestDto.getId())
+        .orElseThrow(() -> new CarRequestNotFoundException("Car request not found", carRequestDto.getId()));
+    carRequest.setArrivingAddress(carRequestDto.getArrivingAddress());
+    carRequest.setLngArrivingAddress(carRequestDto.getLngArrivingAddress());
+    carRequest.setLatArrivingAddress(carRequestDto.getLatArrivingAddress());
+    carRequest.setPrice(carRequestDto.getPrice());
+    carRequest.setDistance(carRequestDto.getDistance());
+    return carRequestRepository.save(carRequest).getId();
+  }
+
+  @Override
   public String saveOrUpdateCarRequest(CarRequestDto carRequestDto) {
     Customer customer;
     if (carRequestDto.getCustomerId() != null) {
@@ -107,16 +120,7 @@ public class CarRequestServiceImpl implements CarRequestService {
           .orElseThrow(
               () -> new UserNotFoundException("Driver not found", carRequestDto.getDriverId()));
       carRequest.setDriver(driver);
-      carRequest.setPickingAddress(carRequestDto.getPickingAddress());
-      carRequest.setArrivingAddress(carRequestDto.getArrivingAddress());
-      carRequest.setLngPickingAddress(carRequestDto.getLngPickingAddress());
-      carRequest.setLatPickingAddress(carRequestDto.getLatPickingAddress());
-      carRequest.setLngArrivingAddress(carRequestDto.getLngArrivingAddress());
-      carRequest.setLatArrivingAddress(carRequestDto.getLatArrivingAddress());
       carRequest.setStatus(carRequestDto.getStatus());
-      carRequest.setPrice(carRequestDto.getPrice());
-      carRequest.setDistance(carRequestDto.getDistance());
-      carRequest.setCarType(CarType.valueOf(carRequestDto.getCarType()));
     }
     String carRequestId = carRequestRepository.save(carRequest).getId();
 

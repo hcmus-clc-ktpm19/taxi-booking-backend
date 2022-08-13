@@ -64,6 +64,12 @@ public class CarRequestController extends AbstractApplicationController {
     return ResponseEntity.ok(id);
   }
 
+  @PostMapping("/update-arriving-address")
+  public ResponseEntity<String> updateCarRequestArrivingAddress(@RequestBody CarRequestDto carRequestDto) {
+    String id = carRequestService.updateCarRequestArrivingAddress(carRequestDto);
+    return ResponseEntity.ok(id);
+  }
+
   @PostMapping("/callcenter/create-or-update")
   public ResponseEntity<CarRequest> saveOrUpdateCarRequestCallCenter(@RequestBody CarRequestDto carRequestDto) {
     String id = carRequestService.saveOrUpdateCarRequestCallCenter(carRequestDto);
