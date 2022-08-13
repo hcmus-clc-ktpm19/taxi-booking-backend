@@ -52,5 +52,14 @@ public class WebSocketServiceImpl implements WebSocketService {
     simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatMessage.getToCarRequestId()),
         "/msg", privateResponse);
   }
+
+  @Override
+  public void broadcastToLocateStaff(CarRequestDto carRequestDto) {
+    val response = new Response("Token check failed!", carRequestDto);
+    log.info("Received full message: {}", carRequestDto);
+    response.setResponse("Locate a new request with phone number: " + carRequestDto.getCustomerPhone());
+    log.info("Broadcast message: {}", response.getResponse());
+    simpMessagingTemplate.convertAndSend("/locate", response);
+  }
 }
 

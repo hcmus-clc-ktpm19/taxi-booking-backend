@@ -11,4 +11,6 @@ public interface WebSocketService {
   void sendAcceptMessageToCustomer(CarRequestDto carRequestDto);
 
   void sendPrivateMessageToCustomer(ChatMessage chatMessage);
+
+  void broadcastToLocateStaff(CarRequestDto carRequestDto);
 }

@@ -143,8 +143,7 @@ public class CarRequestServiceImpl implements CarRequestService {
           return customerRepository.save(newCustomer);
         });
 
-    List<CarRequest> oldCarRequests = carRequestRepository.findCarRequestByPickingAddress(
-        carRequestDto.getPickingAddress());
+    List<CarRequest> oldCarRequests = carRequestRepository.findCarRequestByPickingAddress(carRequestDto.getPickingAddress());
     for (CarRequest carRequest : oldCarRequests) {
       if (carRequest.getLngPickingAddress() != null && carRequest.getLatPickingAddress() != null) {
         carRequestDto.setLngPickingAddress(carRequest.getLngPickingAddress());
@@ -152,6 +151,7 @@ public class CarRequestServiceImpl implements CarRequestService {
         break;
       }
     }
+
     CarRequest carRequest;
     if (carRequestDto.getId() == null) {
       if (carRequestDto.getLngPickingAddress() != null
@@ -167,7 +167,7 @@ public class CarRequestServiceImpl implements CarRequestService {
 
         carRequestRepository.save(carRequest);
         carRequestDto.setId(carRequest.getId());
-        queueProducer.send(carRequestDto, carRequestQueue);
+        carRequestPub.send(carRequestQueue, carRequestDto);
       } else {
         carRequest = CarRequest.builder()
             .customer(customer)
@@ -175,20 +175,8 @@ public class CarRequestServiceImpl implements CarRequestService {
             .pickingAddress(carRequestDto.getPickingAddress())
             .status(carRequestDto.getStatus())
             .carType(CarType.valueOf(carRequestDto.getCarType())).build();
-      carRequestRepository.save(carRequest);
-      carRequestDto.setId(carRequest.getId());
-      carRequestPub.send(carRequestQueue, carRequestDto);
-    } else {
-      carRequest = CarRequest.builder()
-          .customer(customer)
-          .callCenter(callCenter)
-          .pickingAddress(carRequestDto.getPickingAddress())
-          .status(carRequestDto.getStatus())
-          .carType(CarType.valueOf(carRequestDto.getCarType())).build();
-
         carRequestRepository.save(carRequest);
-        carRequestDto.setId(carRequest.getId());
-        queueProducer.send(carRequestDto, locateRequestQueue);
+        carRequestPub.send(locateRequestQueue, carRequestDto);
       }
     } else {
       carRequest = carRequestRepository.findById(carRequestDto.getId())
@@ -198,10 +186,7 @@ public class CarRequestServiceImpl implements CarRequestService {
       carRequest.setLatPickingAddress(carRequestDto.getLatPickingAddress());
       carRequest.setStatus(CarRequestStatus.WAITING);
       carRequestRepository.save(carRequest);
-      queueProducer.send(carRequestDto, carRequestQueue);
-      carRequestRepository.save(carRequest);
-      carRequestDto.setId(carRequest.getId());
-      carRequestPub.send(locateRequestQueue, carRequestDto);
+      carRequestPub.send(carRequestQueue, carRequestDto);
     }
     return carRequest.getId();
   }
