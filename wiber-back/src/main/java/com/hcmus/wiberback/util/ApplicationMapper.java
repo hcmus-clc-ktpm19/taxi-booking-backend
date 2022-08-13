@@ -6,11 +6,14 @@ import com.hcmus.wiberback.model.dto.CallCenterDto;
 import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.model.dto.CustomerDto;
 import com.hcmus.wiberback.model.dto.DriverDto;
+import com.hcmus.wiberback.model.dto.SearchAddressDto;
 import com.hcmus.wiberback.model.entity.Account;
 import com.hcmus.wiberback.model.entity.CallCenter;
 import com.hcmus.wiberback.model.entity.CarRequest;
 import com.hcmus.wiberback.model.entity.Customer;
 import com.hcmus.wiberback.model.entity.Driver;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -83,5 +86,12 @@ public class ApplicationMapper {
         .customerName(entity.getCustomer().getName())
         .pickingAddress(entity.getPickingAddress())
         .build();
+  }
+
+  public SearchAddressDto toSearchAddressDto(List<CarRequest> entities) {
+    return SearchAddressDto.builder()
+        .customerId(entities.get(0).getCustomer().getId())
+        .address(entities.stream().map(CarRequest::getPickingAddress).collect(
+            Collectors.toList())).build();
   }
 }

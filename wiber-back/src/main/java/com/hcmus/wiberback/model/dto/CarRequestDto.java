@@ -1,14 +1,6 @@
 package com.hcmus.wiberback.model.dto;
 
 import com.hcmus.wiberback.model.enums.CarRequestStatus;
-import com.hcmus.wiberback.model.enums.CarType;
-import java.util.Date;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,25 +24,10 @@ public class CarRequestDto {
   private Double latArrivingAddress;
   private Double lngPickingAddress;
   private Double latPickingAddress;
-
-  @NotEmpty
-  @NotBlank
-  @Size(min = 10, max = 10, message = "Phone number must be 10 digits")
   private String customerPhone;
-
-  @NotEmpty
-  @NotBlank
   private String pickingAddress;
-
-  @NotEmpty
-  @NotBlank
   private String carType;
-
-  @NotNull
   private CarRequestStatus status;
-
-//  @NotNull
   private Double price;
-//  @NotNull
   private Double distance;
 }
