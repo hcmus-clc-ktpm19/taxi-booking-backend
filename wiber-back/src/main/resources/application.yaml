@@ -21,7 +21,7 @@ logging:
 
 queue:
   sms:
-    name: 'wiber-queue'
+    name: 'sms-queue'
   car-request:
     name: 'car-request-queue'
   car-request-status:
