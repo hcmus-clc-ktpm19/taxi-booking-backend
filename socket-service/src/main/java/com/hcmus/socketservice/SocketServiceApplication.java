@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @EnableRabbit
 public class SocketServiceApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(SocketServiceApplication.class, args);
 	}

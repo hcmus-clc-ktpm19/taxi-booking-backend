@@ -1,14 +1,16 @@
 spring:
   config:
-    import: secret.yaml
+    import: optional:secret.yaml
 
 server:
   port: 8082
 
 queue:
   sms:
-    name: 'wiber-queue'
+    name: 'sms-queue'
   car-request:
     name: 'car-request-queue'
   car-request-status:
     name: 'car-request-status-queue'
+  locate-request:
+    name: 'locate-request-queue'

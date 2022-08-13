@@ -8,6 +8,8 @@ public interface CarRequestService {
 
   List<CarRequest> findAllCarRequests();
 
+  List<CarRequest> findLocatingCarRequests();
+
   CarRequest findCarRequestById(String id);
 
   List<CarRequest> findCarRequestsByCustomerId(String customerId);

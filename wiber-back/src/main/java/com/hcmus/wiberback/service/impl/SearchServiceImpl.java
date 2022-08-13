@@ -6,7 +6,6 @@ import com.hcmus.wiberback.model.entity.Customer;
 import com.hcmus.wiberback.model.enums.CarRequestStatus;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
 import com.hcmus.wiberback.service.SearchService;
-import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

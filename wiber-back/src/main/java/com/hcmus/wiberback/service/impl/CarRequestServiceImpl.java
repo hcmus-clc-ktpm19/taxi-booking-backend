@@ -15,7 +15,7 @@ import com.hcmus.wiberback.repository.CallCenterRepository;
 import com.hcmus.wiberback.repository.CarRequestRepository;
 import com.hcmus.wiberback.repository.CustomerRepository;
 import com.hcmus.wiberback.repository.DriverRepository;
-import com.hcmus.wiberback.service.CarRequestMessageSender;
+import com.hcmus.wiberback.service.CarRequestPub;
 import com.hcmus.wiberback.service.CarRequestService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class CarRequestServiceImpl implements CarRequestService {
   private final CallCenterRepository callCenterRepository;
   private final DriverRepository driverRepository;
   private final AccountRepository accountRepository;
-  private final CarRequestMessageSender queueProducer;
+  private final CarRequestPub carRequestPub;
   @Qualifier("carRequestQueue")
   private final Queue carRequestQueue;
   @Qualifier("carRequestStatusQueue")
@@ -43,6 +43,11 @@ public class CarRequestServiceImpl implements CarRequestService {
   @Override
   public List<CarRequest> findAllCarRequests() {
     return carRequestRepository.findAll();
+  }
+
+  @Override
+  public List<CarRequest> findLocatingCarRequests() {
+    return carRequestRepository.findCarRequestByStatus(CarRequestStatus.LOCATING);
   }
 
   @Override
@@ -116,9 +121,9 @@ public class CarRequestServiceImpl implements CarRequestService {
     // create a new car request to car-request-queue
     carRequestDto.setId(carRequestId);
     if (carRequestDto.getStatus() == CarRequestStatus.WAITING) {
-      queueProducer.send(carRequestDto, carRequestQueue);
+      carRequestPub.send(carRequestQueue, carRequestDto);
     } else if (carRequestDto.getStatus() == CarRequestStatus.ACCEPTED) {
-      queueProducer.send(carRequestDto, carRequestStatusQueue);
+      carRequestPub.send(carRequestStatusQueue, carRequestDto);
     }
 
     return carRequestId;
@@ -140,8 +145,7 @@ public class CarRequestServiceImpl implements CarRequestService {
           return customerRepository.save(newCustomer);
         });
 
-    List<CarRequest> oldCarRequests = carRequestRepository.findCarRequestByPickingAddress(
-        carRequestDto.getPickingAddress());
+    List<CarRequest> oldCarRequests = carRequestRepository.findCarRequestByPickingAddress(carRequestDto.getPickingAddress());
     for (CarRequest carRequest : oldCarRequests) {
       if (carRequest.getLngPickingAddress() != null && carRequest.getLatPickingAddress() != null) {
         carRequestDto.setLngPickingAddress(carRequest.getLngPickingAddress());
@@ -149,32 +153,42 @@ public class CarRequestServiceImpl implements CarRequestService {
         break;
       }
     }
+
     CarRequest carRequest;
-    if (carRequestDto.getLngPickingAddress() != null
-        && carRequestDto.getLatPickingAddress() != null) {
-      carRequest = CarRequest.builder()
-          .customer(customer)
-          .callCenter(callCenter)
-          .pickingAddress(carRequestDto.getPickingAddress())
-          .lngPickingAddress(carRequestDto.getLngPickingAddress())
-          .latPickingAddress(carRequestDto.getLatPickingAddress())
-          .status(carRequestDto.getStatus())
-          .carType(CarType.valueOf(carRequestDto.getCarType())).build();
+    if (carRequestDto.getId() == null) {
+      if (carRequestDto.getLngPickingAddress() != null
+          && carRequestDto.getLatPickingAddress() != null) {
+        carRequest = CarRequest.builder()
+            .customer(customer)
+            .callCenter(callCenter)
+            .pickingAddress(carRequestDto.getPickingAddress())
+            .lngPickingAddress(carRequestDto.getLngPickingAddress())
+            .latPickingAddress(carRequestDto.getLatPickingAddress())
+            .status(CarRequestStatus.WAITING)
+            .carType(CarType.valueOf(carRequestDto.getCarType())).build();
 
-      carRequestRepository.save(carRequest);
-      carRequestDto.setId(carRequest.getId());
-      queueProducer.send(carRequestDto, carRequestQueue);
+        carRequestRepository.save(carRequest);
+        carRequestDto.setId(carRequest.getId());
+        carRequestPub.send(carRequestQueue, carRequestDto);
+      } else {
+        carRequest = CarRequest.builder()
+            .customer(customer)
+            .callCenter(callCenter)
+            .pickingAddress(carRequestDto.getPickingAddress())
+            .status(carRequestDto.getStatus())
+            .carType(CarType.valueOf(carRequestDto.getCarType())).build();
+        carRequestRepository.save(carRequest);
+        carRequestPub.send(locateRequestQueue, carRequestDto);
+      }
     } else {
-      carRequest = CarRequest.builder()
-          .customer(customer)
-          .callCenter(callCenter)
-          .pickingAddress(carRequestDto.getPickingAddress())
-          .status(carRequestDto.getStatus())
-          .carType(CarType.valueOf(carRequestDto.getCarType())).build();
-
+      carRequest = carRequestRepository.findById(carRequestDto.getId())
+          .orElseThrow(() -> new CarRequestNotFoundException("Car request not found",
+              carRequestDto.getId()));
+      carRequest.setLngPickingAddress(carRequestDto.getLngPickingAddress());
+      carRequest.setLatPickingAddress(carRequestDto.getLatPickingAddress());
+      carRequest.setStatus(CarRequestStatus.WAITING);
       carRequestRepository.save(carRequest);
-      carRequestDto.setId(carRequest.getId());
-      queueProducer.send(carRequestDto, locateRequestQueue);
+      carRequestPub.send(carRequestQueue, carRequestDto);
     }
     return carRequest.getId();
   }

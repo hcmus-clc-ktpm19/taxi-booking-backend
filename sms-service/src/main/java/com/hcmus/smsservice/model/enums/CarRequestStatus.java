@@ -1,4 +1,4 @@
-package com.hcmus.wiberback.model.enums;
+package com.hcmus.smsservice.model.enums;
 
 /**
  * com.hcmus.wiberback.model.enums
@@ -12,6 +12,4 @@ public enum CarRequestStatus {
     WAITING,
     ACCEPTED,
     FINISHED,
-
-    LOCATING
 }

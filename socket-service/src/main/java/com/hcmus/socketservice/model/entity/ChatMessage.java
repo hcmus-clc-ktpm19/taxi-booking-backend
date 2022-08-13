@@ -8,7 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatMessage {
-    private int userID;
-    private int fromUserID;
+    private String toCarRequestId;
+    private Double latDriver;
+    private Double lngDriver;
     private String message;
 }
