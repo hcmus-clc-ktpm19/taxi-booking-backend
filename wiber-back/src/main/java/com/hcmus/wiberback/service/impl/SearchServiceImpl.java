@@ -1,15 +1,26 @@
 package com.hcmus.wiberback.service.impl;
 
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toCollection;
+
 import com.hcmus.wiberback.model.entity.Account;
 import com.hcmus.wiberback.model.entity.CarRequest;
 import com.hcmus.wiberback.model.entity.Customer;
 import com.hcmus.wiberback.model.enums.CarRequestStatus;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
 import com.hcmus.wiberback.service.SearchService;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -27,6 +38,7 @@ public class SearchServiceImpl implements SearchService {
   private final MongoTemplate mongoTemplate;
 
   @Override
+  @Cacheable(cacheNames = "search-address", key = "#phone", unless = "#result.empty")
   public List<CarRequest> searchAddress(String phone, String address) {
     log.info("Searching address by phone: {}", phone);
     Customer customer;
@@ -54,9 +66,15 @@ public class SearchServiceImpl implements SearchService {
         .sortByScore()
         .addCriteria(Criteria.where("customer.$id").is(new ObjectId(customer.getId()))
                 .and("status").is(CarRequestStatus.FINISHED))
-        .with(Sort.by(Direction.DESC, "createdAt"))
-        .limit(5);
+        .with(Sort.by(Direction.DESC, "createdAt"));
 
-    return mongoTemplate.find(query, CarRequest.class, "carRequest");
+    Set<String> addresses = new HashSet<>();
+    return mongoTemplate
+        .find(query, CarRequest.class, "carRequest")
+        .parallelStream()
+        .filter(c -> addresses.add(c.getPickingAddress()))
+        .sorted(Comparator.comparing(CarRequest::getCreatedAt).reversed())
+        .limit(5)
+        .collect(Collectors.toList());
   }
 }

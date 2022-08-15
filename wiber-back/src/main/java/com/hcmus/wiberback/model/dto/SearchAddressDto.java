@@ -8,5 +8,5 @@ import lombok.Data;
 @Builder
 public class SearchAddressDto {
   private String customerId;
-  private List<String> address;
+  private List<String> addresses;
 }

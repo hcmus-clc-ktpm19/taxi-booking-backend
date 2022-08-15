@@ -91,7 +91,7 @@ public class ApplicationMapper {
   public SearchAddressDto toSearchAddressDto(List<CarRequest> entities) {
     return SearchAddressDto.builder()
         .customerId(entities.get(0).getCustomer().getId())
-        .address(entities.stream().map(CarRequest::getPickingAddress).collect(
+        .addresses(entities.stream().map(CarRequest::getPickingAddress).collect(
             Collectors.toList())).build();
   }
 }
