@@ -7,3 +7,5 @@ FROM docker.elastic.co/logstash/logstash:${ELASTIC_VERSION}
 # Example: RUN logstash-plugin install logstash-filter-json
 RUN cd /usr/share
 RUN mkdir wiber-back-log
+RUN mkdir socket-service-log
+RUN mkdir sms-service-log

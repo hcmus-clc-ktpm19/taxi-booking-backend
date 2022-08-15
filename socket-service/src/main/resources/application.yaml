@@ -5,6 +5,15 @@ spring:
 server:
   port: 8082
 
+logging:
+  file:
+    name: './socket-service/src/main/resources/log/wiber-socket-service.log'
+  level:
+    org:
+      springframework:
+        web:
+          socket: DEBUG
+
 queue:
   sms:
     name: 'sms-queue'
