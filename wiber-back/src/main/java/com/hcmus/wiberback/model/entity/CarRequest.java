@@ -57,7 +57,6 @@ public class CarRequest extends BaseEntity {
 
   private Double latArrivingAddress;
 
-//  @NotNull
   private Double price;
 
   @NotNull

@@ -23,6 +23,10 @@ public class CallCenterCarRequestDto {
 
   @NotEmpty
   @NotBlank
+  private String callCenterId;
+
+  @NotEmpty
+  @NotBlank
   private String customerName;
 
   @NotEmpty
@@ -33,4 +37,7 @@ public class CallCenterCarRequestDto {
   @NotEmpty
   @NotBlank
   private String pickingAddress;
+
+  private Double lngPickingAddress;
+  private Double latPickingAddress;
 }

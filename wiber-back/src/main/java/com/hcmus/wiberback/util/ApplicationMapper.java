@@ -82,6 +82,7 @@ public class ApplicationMapper {
   public CallCenterCarRequestDto toCallCenterCarRequestDto(CarRequest entity) {
     return CallCenterCarRequestDto.builder()
         .id(entity.getId())
+        .callCenterId(entity.getCallCenter().getId())
         .customerPhone(entity.getCustomer().getPhone())
         .customerName(entity.getCustomer().getName())
         .pickingAddress(entity.getPickingAddress())
