@@ -15,9 +15,12 @@ logging:
           mongodb:
             core:
               MongoTemplate: DEBUG
+        amqp:
+          rabbit: DEBUG
         web:
           filter:
             CommonsRequestLoggingFilter: DEBUG
+        aop: DEBUG
 
 queue:
   sms:

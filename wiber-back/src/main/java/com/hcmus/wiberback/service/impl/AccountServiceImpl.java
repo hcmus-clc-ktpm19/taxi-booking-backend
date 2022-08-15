@@ -60,6 +60,11 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
   }
 
   @Override
+  public void saveAccount(Account account) {
+    accountRepository.save(account);
+  }
+
+  @Override
   public String updatePasswordById(String id, AccountDto accountDto) {
     Account account = accountRepository
         .findById(id)
