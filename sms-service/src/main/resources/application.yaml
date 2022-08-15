@@ -6,11 +6,13 @@ server:
   port: '8081'
 
 logging:
+  file:
+    name: './sms-service/src/main/resources/log/wiber-sms-service.log'
   level:
     org:
       springframework:
-        amqp:
-          rabbit: DEBUG
+      amqp:
+      rabbit: DEBUG
     com:
       twilio: DEBUG
 
