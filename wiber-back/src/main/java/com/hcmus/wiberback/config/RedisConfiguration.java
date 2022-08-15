@@ -1,5 +1,6 @@
 package com.hcmus.wiberback.config;
 
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
@@ -7,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -25,24 +25,13 @@ public class RedisConfiguration {
         .cacheDefaults(
             RedisCacheConfiguration
                 .defaultCacheConfig()
+                .entryTtl(Duration.ofDays(1))
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(
                     new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
                     new GenericJackson2JsonRedisSerializer()))
+                .disableCachingNullValues()
         )
         .build();
-  }
-
-  @Bean
-  public RedisTemplate<String, ?> redisTemplate() {
-    RedisTemplate<String, ?> redisTemplate = new RedisTemplate<>();
-    redisTemplate.setConnectionFactory(redisConnectionFactory);
-    redisTemplate.setKeySerializer(new StringRedisSerializer());
-    redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-    redisTemplate.setHashKeySerializer(new GenericJackson2JsonRedisSerializer());
-    redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-    redisTemplate.setEnableTransactionSupport(true);
-    redisTemplate.afterPropertiesSet();
-    return redisTemplate;
   }
 }
