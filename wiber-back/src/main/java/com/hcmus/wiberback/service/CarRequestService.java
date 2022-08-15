@@ -2,6 +2,7 @@ package com.hcmus.wiberback.service;
 
 import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.model.entity.CarRequest;
+import com.hcmus.wiberback.model.enums.CarRequestStatus;
 import java.util.List;
 
 public interface CarRequestService {
@@ -13,6 +14,8 @@ public interface CarRequestService {
   CarRequest findCarRequestById(String id);
 
   List<CarRequest> findCarRequestsByCustomerId(String customerId);
+
+  List<CarRequest> getCarRequestsByPhoneAndStatus(String phone, CarRequestStatus status);
 
   String saveOrUpdateCarRequest(CarRequestDto carRequestDto);
 

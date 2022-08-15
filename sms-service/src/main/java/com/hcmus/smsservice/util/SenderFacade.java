@@ -1,7 +1,7 @@
 package com.hcmus.smsservice.util;
 
 import com.hcmus.smsservice.config.TwilioConfiguration;
-import com.hcmus.smsservice.model.dto.CarRequestDto;
+import com.hcmus.smsservice.model.dto.MessageDto;
 import com.hcmus.smsservice.model.entity.AbstractContent;
 import com.hcmus.smsservice.model.entity.SendGridContent;
 import com.hcmus.smsservice.model.entity.TwilioContent;
@@ -17,35 +17,36 @@ public class SenderFacade {
   private final TwilioConfiguration twilioConfiguration;
   private final SenderFactory senderFactory;
 
-  private AbstractContent generateSendGridContent(CarRequestDto carRequestDto) {
+  private AbstractContent generateSendGridContent(MessageDto message) {
     SendGridContent content = new SendGridContent();
     content.setFrom("hcmus.test.1@gmail.com");
     content.setSubject("Car Request");
     content.setTo("hcmus.test.1@gmail.com");
-    content.setBody(carRequestDto.getPickingAddress() + " hehe");
+    content.setBody(message.getContent());
 
     return content;
   }
 
-  private AbstractContent generateTwilioContent(CarRequestDto carRequestDto) {
+  private AbstractContent generateTwilioContent(MessageDto message) {
     TwilioContent content = new TwilioContent();
     content.setFrom(twilioConfiguration.getPhoneNumber());
     content.setSubject("Car Request");
-    content.setTo("+84835221101");
-    content.setBody(carRequestDto.getPickingAddress() + " hehe");
+//    content.setTo("+18046101470"); // TODO: For test only
+    content.setTo("+" + message.getCarRequestDto().getCustomerPhone());
+    content.setBody(message.getContent());
 
     return content;
   }
 
-  public void send(CarRequestDto carRequestDto, SenderServiceType serviceType) throws IOException {
+  public void send(MessageDto message, SenderServiceType serviceType) throws IOException {
     AbstractContent content;
 
     switch (serviceType) {
       case SENDGRID:
-        content = generateSendGridContent(carRequestDto);
+        content = generateSendGridContent(message);
         break;
       case TWILIO:
-        content = generateTwilioContent(carRequestDto);
+        content = generateTwilioContent(message);
         break;
       default:
         throw new IllegalArgumentException("Unknown service type: " + serviceType);

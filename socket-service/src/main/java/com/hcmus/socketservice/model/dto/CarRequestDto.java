@@ -3,7 +3,6 @@ package com.hcmus.socketservice.model.dto;
 
 import com.hcmus.socketservice.model.enums.CarRequestStatus;
 import com.hcmus.socketservice.model.enums.CarType;
-import com.hcmus.socketservice.model.enums.SenderServiceType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,5 +29,4 @@ public class CarRequestDto {
   private CarRequestStatus status;
   private Double price;
   private Double distance;
-  private SenderServiceType senderServiceType;
 }

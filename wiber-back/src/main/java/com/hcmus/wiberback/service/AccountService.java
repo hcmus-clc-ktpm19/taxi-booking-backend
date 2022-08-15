@@ -9,5 +9,7 @@ public interface AccountService {
 
   String saveAccount(AccountDto accountDto);
 
+  void saveAccount(Account account);
+
   String updatePasswordById(String id, AccountDto accountDto);
 }

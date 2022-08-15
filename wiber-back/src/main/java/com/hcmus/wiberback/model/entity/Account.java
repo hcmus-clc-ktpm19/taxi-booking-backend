@@ -26,7 +26,7 @@ public class Account extends BaseEntity {
 
   @NotEmpty
   @NotBlank
-  @Size(min = 10, max = 10, message = "Phone number must be 10 digits")
+  @Size(min = 10, message = "Phone number must be 10 digits")
   private String phone;
 
   @NotNull

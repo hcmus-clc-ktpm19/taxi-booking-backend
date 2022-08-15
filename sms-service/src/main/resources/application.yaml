@@ -5,6 +5,15 @@ spring:
 server:
   port: '8081'
 
+logging:
+  level:
+    org:
+      springframework:
+        amqp:
+          rabbit: DEBUG
+    com:
+      twilio: DEBUG
+
 queue:
   sms:
     name: 'sms-queue'

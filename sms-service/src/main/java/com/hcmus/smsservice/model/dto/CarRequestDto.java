@@ -2,13 +2,10 @@ package com.hcmus.smsservice.model.dto;
 
 import com.hcmus.smsservice.model.enums.CarRequestStatus;
 import com.hcmus.smsservice.model.enums.CarType;
-import com.hcmus.smsservice.model.enums.SenderServiceType;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,5 +26,4 @@ public class CarRequestDto {
   private CarRequestStatus status;
   private Double price;
   private Double distance;
-  private SenderServiceType senderServiceType;
 }

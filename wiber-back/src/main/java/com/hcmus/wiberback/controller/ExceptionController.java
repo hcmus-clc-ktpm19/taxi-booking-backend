@@ -72,7 +72,7 @@ public class ExceptionController {
   @ExceptionHandler(Throwable.class)
   public ResponseEntity<Map<String, String>> handleTokenExpiredException(Throwable e) {
     String message = e.getMessage();
-    log.error(message);
+    log.error("Unexpected error: {}", message);
 
     return ResponseEntity
         .internalServerError()

@@ -1,5 +1,6 @@
 package com.hcmus.wiberback.service.impl;
 
+import com.hcmus.wiberback.annotation.EnableCustomerPromotion;
 import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.model.entity.CallCenter;
 import com.hcmus.wiberback.model.entity.CarRequest;
@@ -78,6 +79,12 @@ public class CarRequestServiceImpl implements CarRequestService {
   }
 
   @Override
+  public List<CarRequest> getCarRequestsByPhoneAndStatus(String phone, CarRequestStatus status) {
+    return carRequestRepository.getCarRequestsByPhoneAndStatus(phone, status);
+  }
+
+  @Override
+  @EnableCustomerPromotion
   public String saveOrUpdateCarRequest(CarRequestDto carRequestDto) {
     Customer customer;
     if (carRequestDto.getCustomerId() != null) {

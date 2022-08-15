@@ -1,6 +1,6 @@
 package com.hcmus.smsservice.service.impl;
 
-import com.hcmus.smsservice.model.dto.CarRequestDto;
+import com.hcmus.smsservice.model.dto.MessageDto;
 import com.hcmus.smsservice.service.CarRequestSub;
 import com.hcmus.smsservice.util.SenderFacade;
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class CarRequestSubImpl implements CarRequestSub {
 
   @Override
   @RabbitListener(queues = {"${queue.sms.name}"})
-  public void receive(@Payload CarRequestDto carRequestDto) throws IOException {
-    senderFacade.send(carRequestDto, carRequestDto.getSenderServiceType());
+  public void receive(@Payload MessageDto message) throws IOException {
+    senderFacade.send(message, message.getSenderServiceType());
   }
 }
