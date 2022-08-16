@@ -7,4 +7,6 @@ import java.util.List;
 public interface CarRequestRepositoryCustom {
 
   List<CarRequest> getCarRequestsByPhoneAndStatus(String phone, CarRequestStatus status);
+
+  List<CarRequest> searchAddress(String phone);
 }

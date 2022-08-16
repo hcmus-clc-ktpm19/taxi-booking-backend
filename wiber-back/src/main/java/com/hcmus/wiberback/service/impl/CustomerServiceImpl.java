@@ -10,6 +10,8 @@ import com.hcmus.wiberback.repository.CustomerRepository;
 import com.hcmus.wiberback.service.CustomerService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,6 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
+  @Cacheable(value = "customer", key = "#phone", unless = "#result == null", cacheManager = "userCacheManager")
   public Customer findCustomerByPhone(String phone) {
     Account account = accountRepository.findAccountByPhone(phone).orElseThrow(
         () -> new AccountNotFoundException("Account with phone number not found", phone));
@@ -41,6 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
+  @CachePut(value = "customer", key = "#customerDto.phone", unless = "#result == null", cacheManager = "userCacheManager")
   public Customer saveOrUpdateCustomer(CustomerDto customerDto) {
     Account account = accountRepository
         .findAccountByPhone(customerDto.getPhone())
