@@ -46,8 +46,8 @@ public class CallCenterController extends AbstractApplicationController {
   }
 
   @GetMapping("/search-address")
-  public ResponseEntity<SearchAddressDto> searchAddress(@RequestParam String phone, @RequestParam String q) {
-    return ResponseEntity.ok(mapper.toSearchAddressDto(searchService.searchAddress(phone, q)));
+  public ResponseEntity<SearchAddressDto> searchAddress(@RequestParam String phone) {
+    return ResponseEntity.ok(mapper.toSearchAddressDto(phone, searchService.searchAddress(phone)));
   }
 
   @PostMapping

@@ -8,5 +8,5 @@ public interface CarRequestRepositoryCustom {
 
   List<CarRequest> getCarRequestsByPhoneAndStatus(String phone, CarRequestStatus status);
 
-  List<CarRequest> searchAddress(String phone, String address);
+  List<CarRequest> searchAddress(String phone);
 }

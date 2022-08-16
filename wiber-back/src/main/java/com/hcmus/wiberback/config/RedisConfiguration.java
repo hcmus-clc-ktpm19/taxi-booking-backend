@@ -33,7 +33,7 @@ public class RedisConfiguration {
   public CacheManager cacheManager() {
     return RedisCacheManager.RedisCacheManagerBuilder
         .fromConnectionFactory(redisConnectionFactory)
-        .cacheDefaults(redisCacheConfiguration.entryTtl(Duration.ofDays(1)))
+        .cacheDefaults(redisCacheConfiguration.entryTtl(Duration.ofHours(6)))
         .build();
   }
 

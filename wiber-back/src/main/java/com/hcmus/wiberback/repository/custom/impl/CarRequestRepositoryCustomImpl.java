@@ -6,6 +6,7 @@ import com.hcmus.wiberback.model.entity.Customer;
 import com.hcmus.wiberback.model.enums.CarRequestStatus;
 import com.hcmus.wiberback.model.exception.UserNotFoundException;
 import com.hcmus.wiberback.repository.custom.CarRequestRepositoryCustom;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -19,8 +20,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.stereotype.Repository;
 
 @Slf4j
@@ -68,7 +67,7 @@ public class CarRequestRepositoryCustomImpl implements CarRequestRepositoryCusto
   }
 
   @Override
-  public List<CarRequest> searchAddress(String phone, String address) {
+  public List<CarRequest> searchAddress(String phone) {
     log.info("Searching address by phone: {}", phone);
     Customer customer;
 
@@ -90,10 +89,8 @@ public class CarRequestRepositoryCustomImpl implements CarRequestRepositoryCusto
     }
     customer = customers.get(0);
 
-    Query query = TextQuery
-        .queryText(TextCriteria.forDefaultLanguage().matchingAny(address))
-        .sortByScore()
-        .addCriteria(Criteria.where("customer.$id").is(new ObjectId(customer.getId()))
+    Query query = Query.query(
+        Criteria.where("customer.$id").is(new ObjectId(customer.getId()))
             .and("status").is(CarRequestStatus.FINISHED))
         .with(Sort.by(Direction.DESC, "createdAt"));
 

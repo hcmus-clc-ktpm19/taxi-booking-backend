@@ -6,6 +6,7 @@ import com.hcmus.wiberback.service.SearchService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +17,8 @@ public class SearchServiceImpl implements SearchService {
   private final CarRequestRepository carRequestRepository;
 
   @Override
-  public List<CarRequest> searchAddress(String phone, String address) {
-    return carRequestRepository.searchAddress(phone, address);
+  @Cacheable(cacheNames = "search-address", key = "#phone", unless = "#result.empty")
+  public List<CarRequest> searchAddress(String phone) {
+    return carRequestRepository.searchAddress(phone);
   }
 }
