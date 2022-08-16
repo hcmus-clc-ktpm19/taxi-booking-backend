@@ -10,6 +10,8 @@ import com.hcmus.wiberback.repository.DriverRepository;
 import com.hcmus.wiberback.service.DriverService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,6 +34,7 @@ public class DriverServiceImpl implements DriverService {
   }
 
   @Override
+  @Cacheable(value = "driver", key = "#phone", unless = "#result == null", cacheManager = "userCacheManager")
   public Driver findDriverByPhone(String phone) {
     Account account = accountRepository.findAccountByPhone(phone).orElseThrow(
         () -> new AccountNotFoundException("Account with phone number not found", phone));
@@ -65,6 +68,7 @@ public class DriverServiceImpl implements DriverService {
   }
 
   @Override
+  @CachePut(value = "driver", key = "#driverDto.phone", unless = "#result == null", cacheManager = "userCacheManager")
   public Driver saveOrUpdateDriver(DriverDto driverDto) {
     Account account = accountRepository
         .findAccountByPhone(driverDto.getPhone())
