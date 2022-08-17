@@ -25,9 +25,6 @@ public class CarRequestController extends AbstractApplicationController {
 
   private final CarRequestService carRequestService;
 
-  @Qualifier("smsQueue")
-  private final Queue smsQueue;
-
   @PreAuthorize("hasAnyRole('ADMIN', 'CALLCENTER')")
   @GetMapping("/all")
   public ResponseEntity<List<CarRequestDto>> findAllCarRequests() {
@@ -49,11 +46,11 @@ public class CarRequestController extends AbstractApplicationController {
     return ResponseEntity.ok(mapper.toCarRequestDto(carRequestService.findCarRequestById(id)));
   }
 
-  @GetMapping("/customer-car-requests/{customerId}")
-  public ResponseEntity<List<CarRequestDto>> findCarRequestsByCustomerId(
-      @PathVariable String customerId) {
+  @GetMapping("/{customer-phone}/get-all")
+  public ResponseEntity<List<CarRequestDto>> findCarRequestsByCustomerPhone(
+      @PathVariable("customer-phone") String customerPhone) {
     return ResponseEntity.ok(
-        carRequestService.findCarRequestsByCustomerId(customerId).stream()
+        carRequestService.findCarRequestsByCustomerPhone(customerPhone).stream()
             .map(mapper::toCarRequestDto)
             .collect(Collectors.toList()));
   }

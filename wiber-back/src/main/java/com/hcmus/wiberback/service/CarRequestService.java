@@ -13,7 +13,7 @@ public interface CarRequestService {
 
   CarRequest findCarRequestById(String id);
 
-  List<CarRequest> findCarRequestsByCustomerId(String customerId);
+  List<CarRequest> findCarRequestsByCustomerPhone(String customerPhone);
 
   List<CarRequest> getCarRequestsByPhoneAndStatus(String phone, CarRequestStatus status);
 

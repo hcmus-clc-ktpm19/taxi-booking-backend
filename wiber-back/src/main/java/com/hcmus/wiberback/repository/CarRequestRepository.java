@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface CarRequestRepository extends MongoRepository<CarRequest, String>,
     CarRequestRepositoryCustom {
   List<CarRequest> findByCustomer(Customer customer);
-  List<CarRequest> findCarRequestsByCustomer(Customer customer);
+  List<CarRequest> findCarRequestsByCustomerAndStatus(Customer customer, CarRequestStatus status);
   List<CarRequest> findCarRequestByPickingAddress(String pickingAddress);
   List<CarRequest> findCarRequestByStatus(CarRequestStatus status);
 }

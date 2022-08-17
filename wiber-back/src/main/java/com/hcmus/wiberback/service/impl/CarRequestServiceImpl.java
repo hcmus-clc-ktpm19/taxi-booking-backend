@@ -1,5 +1,7 @@
 package com.hcmus.wiberback.service.impl;
 
+import static com.hcmus.wiberback.model.exception.UserNotFoundException.*;
+
 import com.hcmus.wiberback.annotation.EnableCustomerPromotion;
 import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.model.entity.CallCenter;
@@ -58,11 +60,18 @@ public class CarRequestServiceImpl implements CarRequestService {
   }
 
   @Override
-  public List<CarRequest> findCarRequestsByCustomerId(String customerId) {
-    return carRequestRepository.findCarRequestsByCustomer(
+  public List<CarRequest> findCarRequestsByCustomerPhone(String customerPhone) {
+    return carRequestRepository.findCarRequestsByCustomerAndStatus(
         customerRepository
-            .findById(customerId)
-            .orElseThrow(() -> new UserNotFoundException("Customer not found", customerId)));
+            .findCustomerByPhone(customerPhone)
+            .orElseGet(() -> customerRepository
+                .findCustomerByAccount(accountRepository
+                    .findAccountByPhone(customerPhone)
+                    .orElseThrow(
+                        () -> new AccountNotFoundException("Account not found", customerPhone))
+                ).orElseThrow(
+                    () -> new UserNotFoundException(CUSTOMER_NOT_FOUND_MESSAGE, customerPhone))),
+        CarRequestStatus.FINISHED);
   }
 
   @Override
@@ -91,7 +100,7 @@ public class CarRequestServiceImpl implements CarRequestService {
       customer = customerRepository
           .findById(carRequestDto.getCustomerId())
           .orElseThrow(
-              () -> new UserNotFoundException("Customer not found", carRequestDto.getCustomerId()));
+              () -> new UserNotFoundException(CUSTOMER_NOT_FOUND_MESSAGE, carRequestDto.getCustomerId()));
     } else {
       customer = customerRepository.findCustomerByPhone(carRequestDto.getCustomerPhone()).orElseGet(
           () -> customerRepository
@@ -100,7 +109,7 @@ public class CarRequestServiceImpl implements CarRequestService {
                       .findAccountByPhone(carRequestDto.getCustomerPhone())
                       .orElseThrow(() -> new AccountNotFoundException("Account not found",
                           carRequestDto.getCustomerPhone())))
-              .orElseThrow(() -> new UserNotFoundException("Customer not found",
+              .orElseThrow(() -> new UserNotFoundException(CUSTOMER_NOT_FOUND_MESSAGE,
                   carRequestDto.getCustomerPhone()))
       );
     }
