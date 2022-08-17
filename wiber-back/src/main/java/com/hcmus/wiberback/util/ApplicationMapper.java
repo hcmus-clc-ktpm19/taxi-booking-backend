@@ -13,6 +13,7 @@ import com.hcmus.wiberback.model.entity.CarRequest;
 import com.hcmus.wiberback.model.entity.Customer;
 import com.hcmus.wiberback.model.entity.Driver;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -62,17 +63,19 @@ public class ApplicationMapper {
     return CarRequestDto.builder()
         .id(entity.getId())
         .customerId(entity.getCustomer().getId())
-        .customerPhone(entity.getCustomer().getAccount().getPhone())
+        .customerPhone(Objects.isNull(entity.getCustomer().getAccount()) ? entity.getCustomer().getPhone() : entity.getCustomer().getAccount().getPhone())
         .customerName(entity.getCustomer().getName())
-        .driverId(entity.getDriver().getId())
-        .driverName(entity.getDriver().getName())
-        .driverPhone(entity.getDriver().getAccount().getPhone())
+        .driverId(Objects.isNull(entity.getDriver()) ? null : entity.getDriver().getId())
+        .driverName(Objects.isNull(entity.getDriver()) ? null : entity.getDriver().getName())
+        .driverPhone(Objects.isNull(entity.getDriver()) ? null : entity.getDriver().getAccount().getPhone())
+        .callCenterId(Objects.isNull(entity.getCallCenter()) ? null : entity.getCallCenter().getId())
         .pickingAddress(entity.getPickingAddress())
         .arrivingAddress(entity.getArrivingAddress())
         .lngPickingAddress(entity.getLngPickingAddress())
         .latPickingAddress(entity.getLatPickingAddress())
         .lngArrivingAddress(entity.getLngArrivingAddress())
         .latArrivingAddress(entity.getLatArrivingAddress())
+        .carType(entity.getCarType().toString())
         .status(entity.getStatus())
         .price(entity.getPrice())
         .distance(entity.getDistance())

@@ -48,7 +48,7 @@ public class CarRequestController extends AbstractApplicationController {
   public ResponseEntity<List<CarRequestDto>> findHistoryByCustomerPhone(
       @PathVariable("customer-phone") String customerPhone) {
     return ResponseEntity.ok(
-        carRequestService.findHistoryCustomerPhone(customerPhone).stream()
+        carRequestService.findHistoryByCustomerPhone(customerPhone).stream()
             .map(mapper::toCarRequestDto)
             .collect(Collectors.toList()));
   }
