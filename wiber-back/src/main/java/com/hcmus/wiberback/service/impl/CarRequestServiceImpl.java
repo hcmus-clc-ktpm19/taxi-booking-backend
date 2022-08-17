@@ -60,7 +60,7 @@ public class CarRequestServiceImpl implements CarRequestService {
   }
 
   @Override
-  public List<CarRequest> findCarRequestsByCustomerPhone(String customerPhone) {
+  public List<CarRequest> findHistoryCustomerPhone(String customerPhone) {
     return carRequestRepository.findCarRequestsByCustomerAndStatus(
         customerRepository
             .findCustomerByPhone(customerPhone)
