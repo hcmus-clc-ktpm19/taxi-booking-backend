@@ -7,8 +7,6 @@ import com.hcmus.wiberback.service.CarRequestService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.core.Queue;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,11 +44,11 @@ public class CarRequestController extends AbstractApplicationController {
     return ResponseEntity.ok(mapper.toCarRequestDto(carRequestService.findCarRequestById(id)));
   }
 
-  @GetMapping("/{customer-phone}/get-all")
-  public ResponseEntity<List<CarRequestDto>> findCarRequestsByCustomerPhone(
+  @GetMapping("/{customer-phone}/history")
+  public ResponseEntity<List<CarRequestDto>> findHistoryByCustomerPhone(
       @PathVariable("customer-phone") String customerPhone) {
     return ResponseEntity.ok(
-        carRequestService.findCarRequestsByCustomerPhone(customerPhone).stream()
+        carRequestService.findHistoryCustomerPhone(customerPhone).stream()
             .map(mapper::toCarRequestDto)
             .collect(Collectors.toList()));
   }
