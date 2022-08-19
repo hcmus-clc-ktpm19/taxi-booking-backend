@@ -8,6 +8,7 @@ import com.hcmus.wiberback.model.entity.CarRequest;
 import com.hcmus.wiberback.model.enums.CarRequestStatus;
 import com.hcmus.wiberback.model.enums.Role;
 import com.hcmus.wiberback.model.enums.SenderServiceType;
+import com.hcmus.wiberback.repository.AccountRepository;
 import com.hcmus.wiberback.service.AccountService;
 import com.hcmus.wiberback.service.CarRequestService;
 import com.hcmus.wiberback.service.SmsPub;
@@ -31,6 +32,7 @@ public class CustomerAspect {
   private final CarRequestService carRequestService;
 
   private final AccountService accountService;
+  private final AccountRepository accountRepository;
 
   private final SmsPub smsPub;
 
@@ -43,33 +45,35 @@ public class CustomerAspect {
 
     CarRequestDto carRequestDto = (CarRequestDto) joinPoint.getArgs()[0];
     log.info("Check if customer {} can promote vip", carRequestDto.getCustomerId());
-    Account account = accountService.findAccountByPhone(carRequestDto.getCustomerPhone());
-    if (carRequestDto.getStatus() == CarRequestStatus.FINISHED && account.getRole() == Role.CUSTOMER) {
-      double sum = carRequestService
-          .getCarRequestsByPhoneAndStatus(carRequestDto.getCustomerPhone(), CarRequestStatus.FINISHED)
-          .stream()
-          .mapToDouble(CarRequest::getPrice)
-          .sum();
+    Account account = accountRepository.findAccountByPhone(carRequestDto.getCustomerPhone()).orElse(null);
+    if (account != null) {
+      if (carRequestDto.getStatus() == CarRequestStatus.FINISHED && account.getRole() == Role.CUSTOMER) {
+        double sum = carRequestService
+            .getCarRequestsByPhoneAndStatus(carRequestDto.getCustomerPhone(), CarRequestStatus.FINISHED)
+            .stream()
+            .mapToDouble(CarRequest::getPrice)
+            .sum();
 
-      if (sum >= 500_000.0) {
-        account.setRole(Role.VIP_CUSTOMER);
-        accountService.saveAccount(account);
+        if (sum >= 500_000.0) {
+          account.setRole(Role.VIP_CUSTOMER);
+          accountService.saveAccount(account);
 
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        SenderServiceType senderType = signature
-            .getMethod()
-            .getAnnotation(EnableCustomerPromotion.class)
-            .value();
-        log.info("EnableCustomerPromotion annotation value: {}", senderType);
+          MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+          SenderServiceType senderType = signature
+              .getMethod()
+              .getAnnotation(EnableCustomerPromotion.class)
+              .value();
+          log.info("EnableCustomerPromotion annotation value: {}", senderType);
 
-        MessageDto messageDto = MessageDto.builder()
-            .carRequestDto(carRequestDto)
-            .content("CONGRATULATIONS! You are now a VIP customer!. "
-                + "From now on, your next service will be discounted by 10% and will receive some extra services.")
-            .senderServiceType(senderType)
-            .build();
+          MessageDto messageDto = MessageDto.builder()
+              .carRequestDto(carRequestDto)
+              .content("CONGRATULATIONS! You are now a VIP customer!. "
+                  + "From now on, your next service will be discounted by 10% and will receive some extra services.")
+              .senderServiceType(senderType)
+              .build();
 
-        smsPub.send(messageDto);
+          smsPub.send(messageDto);
+        }
       }
     }
   }
