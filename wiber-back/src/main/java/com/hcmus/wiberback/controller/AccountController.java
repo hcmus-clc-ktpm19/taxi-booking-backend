@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -46,9 +47,15 @@ public class AccountController extends AbstractApplicationController {
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
     User user = (User) authentication.getPrincipal();
-    String accessToken = jwtUtil.generateAccessToken(user,"http://localhost:8080/api/v1/auth/signin");
-    Map<String, String> tokens = Map.of("accessToken", accessToken, "phone", user.getUsername());
-    return ResponseEntity.ok(tokens);
+    for(GrantedAuthority role : user.getAuthorities()){
+      if (role.getAuthority().equals(accountDto.getRole().toString())) {
+        String accessToken = jwtUtil.generateAccessToken(user,"http://localhost:8080/api/v1/auth/signin");
+        Map<String, String> tokens = Map.of("accessToken", accessToken, "phone", user.getUsername(), "role", accountDto.getRole().toString());
+        return ResponseEntity.ok(tokens);
+      }
+    }
+
+    return ResponseEntity.badRequest().body("You don't have permission to access this resource");
   }
 
   @PostMapping("/register")

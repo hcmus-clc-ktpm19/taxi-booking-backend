@@ -5,5 +5,7 @@ public enum Role {
   CUSTOMER,
   VIP_CUSTOMER,
   DRIVER,
-  CALLCENTER
+  CALLCENTER,
+
+  LOCATORSTAFF
 }
