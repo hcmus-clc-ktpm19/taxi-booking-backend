@@ -1,7 +1,6 @@
 package com.hcmus.wiberback.util;
 
 import com.hcmus.wiberback.model.dto.AccountDto;
-import com.hcmus.wiberback.model.dto.CallCenterCarRequestDto;
 import com.hcmus.wiberback.model.dto.CallCenterDto;
 import com.hcmus.wiberback.model.dto.CarRequestDto;
 import com.hcmus.wiberback.model.dto.CustomerDto;
@@ -79,16 +78,6 @@ public class ApplicationMapper {
         .status(entity.getStatus())
         .price(entity.getPrice())
         .distance(entity.getDistance())
-        .build();
-  }
-
-  public CallCenterCarRequestDto toCallCenterCarRequestDto(CarRequest entity) {
-    return CallCenterCarRequestDto.builder()
-        .id(entity.getId())
-        .callCenterId(entity.getCallCenter().getId())
-        .customerPhone(entity.getCustomer().getPhone())
-        .customerName(entity.getCustomer().getName())
-        .pickingAddress(entity.getPickingAddress())
         .build();
   }
 
