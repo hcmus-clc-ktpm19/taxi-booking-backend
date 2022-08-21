@@ -24,4 +24,8 @@ public class Driver extends BaseEntity {
   @NotNull
   @DBRef
   private Account account;
+
+  @NotEmpty
+  @NotBlank
+  private String avatar;
 }

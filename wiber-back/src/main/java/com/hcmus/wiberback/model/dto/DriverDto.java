@@ -12,4 +12,5 @@ public class DriverDto {
     private String name;
     private String carType;
     private Role role;
+    private String avatar;
 }

@@ -33,9 +33,8 @@ public class WebSocketServiceImpl implements WebSocketService {
   @Override
   @EnableSenderService
   public void sendAcceptMessageToCustomer(CarRequestDto carRequestDto) {
-    Message message = new Message(
-        "Driver " + carRequestDto.getDriverName() + " with phone number: "
-            + carRequestDto.getDriverPhone() + " has accepted your request!");
+    Message message = new Message(carRequestDto.getDriverName() + " | "
+            + carRequestDto.getDriverPhone() + " | " + carRequestDto.getDriverAvatar());
     log.info("Send message: {}", message.getMessage());
 
     simpMessagingTemplate.convertAndSendToUser(String.valueOf(carRequestDto.getId()), "/msg",

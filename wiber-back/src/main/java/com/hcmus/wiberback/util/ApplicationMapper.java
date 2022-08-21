@@ -40,12 +40,13 @@ public class ApplicationMapper {
 
   public DriverDto toDriverDto(Driver entity) {
     return DriverDto.builder()
-            .id(entity.getId())
-            .name(entity.getName())
-            .phone(entity.getAccount().getPhone())
-            .carType(entity.getCarType())
-            .role(entity.getAccount().getRole())
-            .build();
+        .id(entity.getId())
+        .name(entity.getName())
+        .phone(entity.getAccount().getPhone())
+        .carType(entity.getCarType())
+        .role(entity.getAccount().getRole())
+        .avatar(entity.getAvatar())
+        .build();
   }
 
   public CallCenterDto toCallCenterDto(CallCenter entity) {
@@ -62,12 +63,18 @@ public class ApplicationMapper {
     return CarRequestDto.builder()
         .id(entity.getId())
         .customerId(entity.getCustomer().getId())
-        .customerPhone(Objects.isNull(entity.getCustomer().getAccount()) ? entity.getCustomer().getPhone() : entity.getCustomer().getAccount().getPhone())
+        .customerPhone(
+            Objects.isNull(entity.getCustomer().getAccount()) ? entity.getCustomer().getPhone()
+                : entity.getCustomer().getAccount().getPhone())
         .customerName(entity.getCustomer().getName())
         .driverId(Objects.isNull(entity.getDriver()) ? null : entity.getDriver().getId())
         .driverName(Objects.isNull(entity.getDriver()) ? null : entity.getDriver().getName())
-        .driverPhone(Objects.isNull(entity.getDriver()) ? null : entity.getDriver().getAccount().getPhone())
-        .callCenterId(Objects.isNull(entity.getCallCenter()) ? null : entity.getCallCenter().getId())
+        .driverPhone(
+            Objects.isNull(entity.getDriver()) ? null : entity.getDriver().getAccount().getPhone())
+        .driverAvatar(
+            Objects.isNull(entity.getDriver()) ? null : entity.getDriver().getAvatar())
+        .callCenterId(
+            Objects.isNull(entity.getCallCenter()) ? null : entity.getCallCenter().getId())
         .pickingAddress(entity.getPickingAddress())
         .arrivingAddress(entity.getArrivingAddress())
         .lngPickingAddress(entity.getLngPickingAddress())

@@ -52,6 +52,7 @@ public class DriverServiceImpl implements DriverService {
     driver.setName(driverDto.getName());
     driver.setCarType(driverDto.getCarType());
     driver.setAccount(account);
+    driver.setAvatar(driverDto.getAvatar());
     return driverRepository.save(driver).getId();
   }
 
@@ -80,11 +81,13 @@ public class DriverServiceImpl implements DriverService {
       driver = findDriverByPhone(driverDto.getPhone());
       driver.setName(driverDto.getName());
       driver.setCarType(driverDto.getCarType());
+      driver.setAvatar(driverDto.getAvatar());
     } else {
       driver = new Driver();
       driver.setName(driverDto.getName());
       driver.setAccount(account);
       driver.setCarType(driverDto.getCarType());
+      driver.setAvatar(driverDto.getAvatar());
     }
 
     return driverRepository.save(driver);

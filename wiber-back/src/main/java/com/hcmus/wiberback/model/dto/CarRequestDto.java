@@ -18,6 +18,7 @@ public class CarRequestDto {
   private String driverId;
   private String driverName;
   private String driverPhone;
+  private String driverAvatar;
   private String callCenterId;
   private String arrivingAddress;
   private Double lngArrivingAddress;
